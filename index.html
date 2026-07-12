@@ -332,36 +332,6 @@
   }
 
   /* ============================================================
-     FAIXA DE MARCAS
-     ============================================================ */
-  .marcas{
-    padding: 40px 0;
-    border-top: 1px solid var(--borda);
-    border-bottom: 1px solid var(--borda);
-  }
-  .marcas-titulo{
-    text-align:center;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: rgba(20,17,13,0.55);
-    margin-bottom: 24px;
-  }
-  .marcas-track{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap: 20px 48px;
-  }
-  .marcas-track span{
-    font-family: var(--fonte-titulo);
-    font-size: 1.25rem;
-    font-style: italic;
-    color: rgba(20,17,13,0.75);
-  }
-
-  /* ============================================================
      SOBRE
      ============================================================ */
   .sobre-grid{
@@ -997,16 +967,6 @@
   </section>
 
   <!-- ============================================================
-       3. FAIXA DE MARCAS
-       ============================================================ -->
-  <section class="marcas revelar">
-    <div class="container">
-      <p class="marcas-titulo">Marcas que já confiaram no meu trabalho</p>
-      <div class="marcas-track" id="lista-marcas"></div>
-    </div>
-  </section>
-
-  <!-- ============================================================
        4. SOBRE
        ============================================================ -->
   <section id="sobre">
@@ -1215,12 +1175,6 @@
       manifesto: "Porque as pessoas se conectam com histórias que poderiam viver também."
     },
 
-    // EDITE AQUI: nomes das marcas que já trabalharam com ela (aparecem na faixa abaixo do hero)
-    marcas: [
-      "Nívea", "O Boticário", "Época Cosméticos", "Renner", "Riachuelo",
-      "Seara", "Netshoes", "Shein Brasil", "Adcos", "Quero Suco"
-    ],
-
     // EDITE AQUI: texto da seção Sobre. As classes "destaque-azul-sobre" e
     // "destaque-laranja-sobre" pintam a palavra na cor correspondente (definidas no CSS).
     sobre: {
@@ -1417,11 +1371,6 @@
     document.getElementById('hero-titulo').innerHTML = CONFIG.hero.tituloHtml;
     document.getElementById('hero-subtitulo').textContent = CONFIG.hero.subtitulo;
     document.getElementById('hero-manifesto').textContent = CONFIG.hero.manifesto;
-  }
-
-  function montarMarcas(){
-    document.getElementById('lista-marcas').innerHTML =
-      CONFIG.marcas.map(marca => `<span>${marca}</span>`).join('');
   }
 
   function montarSobre(){
@@ -1765,7 +1714,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     montarCabecalho();
     montarHero();
-    montarMarcas();
     montarSobre();
     montarGaleriaVideosPortfolio();
     montarFiltros();
