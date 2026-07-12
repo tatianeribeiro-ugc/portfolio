@@ -380,10 +380,12 @@
   .sobre-saudacao{
     font-family: var(--fonte-titulo);
     font-style: italic;
-    font-size: 1.2rem;
-    color: var(--azul);
-    margin-bottom: 18px;
+    font-size: 1.45rem;
+    font-weight: 500;
+    color: var(--tinta);
+    margin-bottom: 20px;
   }
+  .sobre-nome-destaque{ color: var(--laranja); font-style: italic; font-weight: 600; }
   .sobre-texto p{ font-size: 1.03rem; color: rgba(20,17,13,0.8); }
 
   /* Cores de destaque específicas desta seção (hex exatos pedidos para o texto Sobre). */
@@ -405,8 +407,8 @@
   .sobre-colagem{
     position: relative;
     width: 100%;
-    max-width: 380px;
-    aspect-ratio: 1 / 1.1;
+    max-width: 400px;
+    aspect-ratio: 1 / 1.2;
     margin: 0 auto;
   }
   .polaroid{
@@ -431,23 +433,23 @@
     object-fit: cover;
   }
   .polaroid-pet{
-    width: 56%;
+    width: 50%;
     aspect-ratio: 4/5;
-    top: 0; left: 2%;
-    transform: rotate(-9deg);
+    top: 0; left: -6%;
+    transform: rotate(-11deg);
     z-index: 1;
   }
   .polaroid-lifestyle{
-    width: 56%;
+    width: 50%;
     aspect-ratio: 4/5;
-    top: 2%; right: 0;
-    transform: rotate(8deg);
+    top: 0; right: -6%;
+    transform: rotate(10deg);
     z-index: 1;
   }
   .polaroid-trabalho{
-    width: 60%;
+    width: 50%;
     aspect-ratio: 4/5;
-    bottom: 0;
+    top: 40%;
     left: 50%;
     transform: translateX(-50%) rotate(-3deg);
     z-index: 2;
@@ -1196,7 +1198,7 @@
     // "destaque-laranja-sobre" pintam a palavra na cor correspondente (definidas no CSS).
     sobre: {
       titulo: "Sobre Mim",
-      saudacao: "Oii, eu sou a Tati Ribeiro!",
+      saudacaoHtml: "Oii, eu sou a <span class=\"sobre-nome-destaque\">Tati Ribeiro</span>!",
       corpoHtml: `
         <p>Moro em Campinas, tenho 34 anos, sou cristã, mãe, esposa, nutricionista por formação e criadora de <span class="destaque-azul-sobre">conteúdo</span> por paixão.</p>
         <p>Sempre fui aquela pessoa que observa tudo, cria <span class="destaque-laranja-sobre">histórias</span> na cabeça e enxerga possibilidades nas pequenas coisas do dia a dia. Talvez seja por isso que me apaixonei pelo UGC.</p>
@@ -1357,7 +1359,7 @@
 
   function montarSobre(){
     document.getElementById('sobre-titulo').textContent = CONFIG.sobre.titulo;
-    document.getElementById('sobre-saudacao').textContent = CONFIG.sobre.saudacao;
+    document.getElementById('sobre-saudacao').innerHTML = CONFIG.sobre.saudacaoHtml;
     document.getElementById('sobre-corpo').innerHTML = CONFIG.sobre.corpoHtml;
   }
 
