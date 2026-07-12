@@ -652,6 +652,10 @@
     height:100%;
     object-fit: cover;
   }
+  /* Ajustes finos de enquadramento por foto (quando o corte padrão, centralizado,
+     acaba cortando um rosto). EDITE AQUI: para uma foto nova que cortar errado,
+     adicione uma regra como esta usando um trecho do nome do arquivo. */
+  .portfolio-foto[src*="casaelimpeza-2"]{ object-position: center 12%; }
   .portfolio-legenda{
     display:flex;
     align-items:center;
