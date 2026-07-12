@@ -241,8 +241,7 @@
   }
   .intro-videos-conteudo{ max-width: 640px; }
   .intro-videos h1{ font-size: clamp(2.2rem, 4.5vw, 3.2rem); }
-  .intro-videos p{ font-size: 1.08rem; color: rgba(20,17,13,0.78); }
-  .intro-videos-acoes{ display:flex; gap:16px; flex-wrap:wrap; margin-top: 24px; }
+  .titulo-laranja{ color: var(--laranja); font-style: italic; }
 
   @media (max-width: 900px){ .intro-videos{ padding-top: 140px; } }
 
@@ -432,13 +431,8 @@
   <section class="intro-videos">
     <div class="container">
       <div class="intro-videos-conteudo revelar">
-        <span class="rotulo-secao">Portfólio de vídeos</span>
-        <h1>Vídeos <em>UGC</em> por nicho</h1>
-        <p>Esta página vai reunir os vídeos UGC completos entregues para marcas parceiras, organizados por nicho. As fotos dos trabalhos continuam na página principal do portfólio.</p>
-        <div class="intro-videos-acoes">
-          <a href="index.html#portfolio" class="botao botao-secundario" data-rastreio="videos_ver_portfolio_fotos">Ver portfólio de fotos</a>
-          <a href="index.html#contato" class="botao botao-primario" data-rastreio="videos_fale_comigo">Fale comigo</a>
-        </div>
+        <span class="rotulo-secao">Portfólio de Vídeos</span>
+        <h1>Vídeos <span class="titulo-laranja">UGC</span></h1>
       </div>
     </div>
   </section>
@@ -586,7 +580,7 @@
       const cards = bloco.videos.map((video, indiceVideo) => `
         <div class="video-item revelar">
           <button type="button" class="video-card" data-youtube="${video.youtubeId}" data-titulo="${bloco.nicho} ${indiceVideo + 1}" aria-label="Assistir vídeo ${indiceVideo + 1} de ${bloco.nicho}">
-            <img class="video-card-thumb" src="https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg" alt="" loading="lazy">
+            <img class="video-card-thumb" src="https://i.ytimg.com/vi/${video.youtubeId}/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${video.youtubeId}/sddefault.jpg'" alt="" loading="lazy">
             <span class="video-card-play" aria-hidden="true">${ICONE_PLAY}</span>
           </button>
         </div>
