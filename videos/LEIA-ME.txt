@@ -1,0 +1,37 @@
+COMO ADICIONAR SEUS VÍDEOS AO SITE
+
+Arraste seus vídeos para dentro desta pasta ("videos") e renomeie cada um
+exatamente com o nome indicado abaixo. Formato: .mp4 (o mais compatível
+com todos os navegadores e celulares).
+
+Os 3 vídeos em destaque aparecem em dois lugares do site:
+1) Na página principal (index.html), logo no topo da seção Portfólio,
+   antes da galeria de fotos.
+2) Na página videos.html, na galeria completa de vídeos.
+
+Um vídeo por nicho:
+
+  video-01-beleza.mp4          -> nicho Beleza
+  video-02-casa-e-limpeza.mp4  -> nicho Casa e Limpeza
+  video-03-pet.mp4             -> nicho Pet
+
+DICAS IMPORTANTES
+
+Formato e proporção
+  Grave ou exporte na vertical (formato Reels/Stories), proporção 9:16.
+  Isso é o que os cards do site esperam.
+
+Tamanho do arquivo
+  Tente manter cada vídeo entre 10 MB e 30 MB. Vídeos muito grandes
+  deixam o site lento para carregar, especialmente no celular.
+  Se o vídeo original estiver muito pesado, comprima antes de subir
+  (o próprio celular ou apps como o HandBrake fazem isso de graça).
+
+Duração
+  Vídeos curtos (15 a 60 segundos) funcionam melhor como prévia.
+
+Se quiser adicionar um vídeo em um nicho que ainda não existe, ou mais
+de um vídeo por nicho, é só falar que eu ajusto o código para receber.
+
+Depois de colocar os vídeos aqui, avise para eu enviar (commit e push)
+as novidades para o site no ar.

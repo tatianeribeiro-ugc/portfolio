@@ -267,6 +267,7 @@
     display:flex;
     flex-direction:column;
     justify-content:flex-end;
+    background: var(--tinta);
     transition: transform 0.4s ease, opacity 0.4s ease;
   }
   .video-item:hover{ transform: translateY(-6px); }
@@ -277,6 +278,7 @@
     width:100%;
     height:100%;
     object-fit: cover;
+    background: var(--tinta);
     z-index:0;
   }
   .video-item::after{
@@ -287,6 +289,11 @@
     z-index:1;
     pointer-events:none;
   }
+  /* Vídeo local com controles nativos: sem overlay escuro nem título por cima,
+     para não atrapalhar a visibilidade da barra de controles do navegador. */
+  .video-item-arquivo::after{ content: none; }
+  .video-item-arquivo .video-foto{ z-index: 1; }
+  .video-item-arquivo .video-tag{ z-index: 2; }
   .video-tag{
     align-self:flex-start;
     margin: 16px;
@@ -490,15 +497,20 @@
     // EDITE AQUI: categorias do filtro (mesmos nichos usados no portfólio de fotos)
     categorias: ["Todos", "Beleza", "Casa e Limpeza", "Pet"],
 
-    // EDITE AQUI: vídeos UGC. Comece vazio ([]) e adicione um item para cada vídeo pronto, assim:
+    // EDITE AQUI: vídeos UGC. Cada item precisa ter "arquivo" (vídeo .mp4 dentro da
+    // pasta /videos) OU "url" (link externo, tipo Instagram/YouTube/TikTok). Se tiver os
+    // dois, o arquivo local tem prioridade e toca direto na página.
     // {
     //   titulo: "Nome do vídeo",
-    //   categoria: "beleza",                          // precisa bater com uma categoria acima, em minúsculo
-    //   url: "https://www.instagram.com/reel/XXXXX/",  // link do vídeo (Instagram, YouTube, TikTok etc.)
-    //   capa: "fotos/capa-video-01.jpg",                // imagem de capa do vídeo, dentro da pasta /fotos
-    //   gradiente: "linear-gradient(150deg, #df7900, #0049a4)" // usado enquanto não houver capa
+    //   categoria: "beleza",                     // precisa bater com uma categoria acima, em minúsculo
+    //   arquivo: "videos/video-01-beleza.mp4",   // vídeo local, dentro da pasta /videos
+    //   url: "https://www.instagram.com/reel/XXXXX/" // opcional: link externo, usado se não houver "arquivo"
     // }
-    videos: []
+    videos: [
+      { titulo: "Rotina de skincare", categoria: "beleza", arquivo: "videos/video-01-beleza.mp4" },
+      { titulo: "Rotina de limpeza prática", categoria: "casa e limpeza", arquivo: "videos/video-02-casa-e-limpeza.mp4" },
+      { titulo: "Cuidados com o pet", categoria: "pet", arquivo: "videos/video-03-pet.mp4" }
+    ]
   };
 
   /* ============================================================================================
@@ -557,14 +569,27 @@
       return;
     }
 
-    grade.innerHTML = CONFIG.videos.map(video => `
-      <a class="video-item revelar" data-categoria="${video.categoria}" href="${video.url}" target="_blank" rel="noopener noreferrer" aria-label="Assistir: ${video.titulo}" style="background:${video.gradiente};">
-        ${video.capa ? `<img class="video-foto" src="${video.capa}" alt="${video.titulo}" onerror="this.style.display='none'">` : ''}
-        <span class="video-tag">${video.categoria}</span>
-        <span class="video-play">${ICONE_PLAY}</span>
-        <span class="video-item-titulo">${video.titulo}</span>
-      </a>
-    `).join('');
+    grade.innerHTML = CONFIG.videos.map(video => {
+      // Vídeo local: toca direto na página com os controles nativos do navegador.
+      if(video.arquivo){
+        return `
+          <div class="video-item video-item-arquivo revelar" data-categoria="${video.categoria}">
+            <video class="video-foto" controls preload="metadata" playsinline aria-label="${video.titulo}">
+              <source src="${video.arquivo}" type="video/mp4">
+            </video>
+            <span class="video-tag">${video.categoria}</span>
+          </div>
+        `;
+      }
+      // Sem arquivo local: card que abre o link externo (Instagram, YouTube etc.) em nova aba.
+      return `
+        <a class="video-item revelar" data-categoria="${video.categoria}" href="${video.url}" target="_blank" rel="noopener noreferrer" aria-label="Assistir: ${video.titulo}" style="background:${video.gradiente || 'linear-gradient(150deg, #0049a4, #df7900)'};">
+          <span class="video-tag">${video.categoria}</span>
+          <span class="video-play">${ICONE_PLAY}</span>
+          <span class="video-item-titulo">${video.titulo}</span>
+        </a>
+      `;
+    }).join('');
   }
 
   function filtrarVideos(categoria){

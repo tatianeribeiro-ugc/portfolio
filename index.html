@@ -370,6 +370,58 @@
     margin-bottom: 40px;
   }
   .portfolio-intro{ max-width: 560px; }
+
+  /* ============================================================
+     VÍDEOS EM DESTAQUE (dentro da seção Portfólio, antes das fotos)
+     ============================================================ */
+  .videos-destaque-cabecalho h3,
+  .fotos-cabecalho h3{
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+  .fotos-cabecalho{ margin-top: 56px; }
+
+  .video-grade{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-bottom: 8px;
+  }
+  .video-item{
+    aspect-ratio: 9/16;
+    border-radius: var(--raio);
+    box-shadow: var(--sombra);
+    position:relative;
+    overflow:hidden;
+    background: var(--tinta);
+  }
+  .video-foto{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit: cover;
+    background: var(--tinta);
+  }
+  .video-tag{
+    position:absolute;
+    z-index:2;
+    top:16px; left:16px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    background: rgba(255,255,255,0.22);
+    backdrop-filter: blur(6px);
+    color: var(--branco);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    pointer-events:none;
+  }
+
+  @media (max-width: 900px){ .video-grade{ grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px){ .video-grade{ grid-template-columns: 1fr; } }
+
   .filtros{
     display:flex;
     flex-wrap:wrap;
@@ -767,11 +819,22 @@
     <div class="container">
       <div class="portfolio-cabecalho">
         <div class="portfolio-intro revelar">
-          <span class="rotulo-secao">Portfólio de fotos</span>
-          <h2>Fotos dos trabalhos por <em>nicho</em></h2>
-          <p style="color: rgba(20,17,13,0.7); font-size:0.98rem; max-width:520px;">Esta galeria reúne fotos dos conteúdos já entregues para marcas parceiras. Os vídeos UGC estão reunidos em uma página exclusiva.</p>
+          <span class="rotulo-secao">Portfólio</span>
+          <h2>Trabalhos por <em>nicho</em>, em vídeo e em foto</h2>
+          <p style="color: rgba(20,17,13,0.7); font-size:0.98rem; max-width:520px;">Alguns vídeos em destaque logo abaixo, um de cada nicho. A galeria completa de fotos vem na sequência.</p>
         </div>
-        <a href="videos.html" class="botao botao-secundario revelar">Ver portfólio de vídeos</a>
+        <a href="videos.html" class="botao botao-secundario revelar">Ver todos os vídeos</a>
+      </div>
+
+      <!-- VÍDEOS EM DESTAQUE (aparecem antes das fotos, um vídeo por nicho) -->
+      <div class="videos-destaque-cabecalho revelar">
+        <h3>Vídeos em destaque</h3>
+      </div>
+      <div class="video-grade video-grade-destaque" id="grade-videos-destaque"></div>
+
+      <!-- GALERIA DE FOTOS COM FILTRO POR NICHO -->
+      <div class="fotos-cabecalho revelar">
+        <h3>Fotos por nicho</h3>
       </div>
       <div class="filtros revelar" id="filtros" role="group" aria-label="Filtrar portfólio por categoria"></div>
       <div class="portfolio-grade" id="grade-portfolio"></div>
@@ -927,6 +990,15 @@
     // EDITE AQUI: categorias do filtro de portfólio (a primeira deve ser sempre "Todos")
     categorias: ["Todos", "Beleza", "Casa e Limpeza", "Pet"],
 
+    // EDITE AQUI: vídeos em destaque no topo do Portfólio (aparecem antes das fotos).
+    // O campo "arquivo" aponta para um vídeo .mp4 dentro da pasta /videos.
+    // Coloque um vídeo por nicho aqui. A galeria completa fica em videos.html.
+    videosDestaque: [
+      { titulo: "Rotina de skincare", categoria: "beleza", arquivo: "videos/video-01-beleza.mp4" },
+      { titulo: "Rotina de limpeza prática", categoria: "casa e limpeza", arquivo: "videos/video-02-casa-e-limpeza.mp4" },
+      { titulo: "Cuidados com o pet", categoria: "pet", arquivo: "videos/video-03-pet.mp4" }
+    ],
+
     // EDITE AQUI: trabalhos do portfólio. A "categoria" precisa bater com uma das opções da lista acima (em minúsculo).
     // O campo "foto" aponta para um arquivo dentro da pasta /fotos. Se o arquivo não existir
     // ainda, o card mostra só o gradiente (nada quebra).
@@ -1043,6 +1115,21 @@
     document.getElementById('sobre-corpo').innerHTML = CONFIG.sobre.corpoHtml;
     document.getElementById('sobre-lista').innerHTML =
       CONFIG.sobre.diferenciais.map(item => `<li>${item}</li>`).join('');
+  }
+
+  function montarVideosDestaque(){
+    const grade = document.getElementById('grade-videos-destaque');
+    // Cada vídeo usa a tag <video> com controles nativos do navegador.
+    // EDITE AQUI: para trocar um vídeo, troque o arquivo dentro de /videos
+    // mantendo o mesmo nome, ou ajuste o campo "arquivo" no CONFIG.videosDestaque acima.
+    grade.innerHTML = CONFIG.videosDestaque.map(video => `
+      <div class="video-item revelar">
+        <video class="video-foto" controls preload="metadata" playsinline aria-label="${video.titulo}">
+          <source src="${video.arquivo}" type="video/mp4">
+        </video>
+        <span class="video-tag">${video.categoria}</span>
+      </div>
+    `).join('');
   }
 
   function montarFiltros(){
@@ -1275,6 +1362,7 @@
     montarHero();
     montarMarcas();
     montarSobre();
+    montarVideosDestaque();
     montarFiltros();
     montarPortfolio();
     montarServicos();
