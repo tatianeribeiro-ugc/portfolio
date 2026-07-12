@@ -380,11 +380,12 @@
   .sobre-texto p.sobre-saudacao{
     font-family: var(--fonte-titulo);
     font-style: italic;
-    font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+    font-size: clamp(1.3rem, 2.6vw, 1.9rem);
     font-weight: 500;
     line-height: 1.15;
     color: var(--tinta);
     margin-bottom: 24px;
+    white-space: nowrap;
   }
   .sobre-nome-destaque{ color: var(--laranja); font-style: italic; font-weight: 600; }
   .sobre-texto p{ font-size: 1.03rem; color: rgba(20,17,13,0.8); }
@@ -472,6 +473,9 @@
   @media (max-width: 900px){
     .sobre-grid{ grid-template-columns: 1fr; }
     .sobre-colagem{ max-width: 320px; margin-bottom: 24px; }
+  }
+  @media (max-width: 420px){
+    .sobre-texto p.sobre-saudacao{ font-size: 1.1rem; }
   }
 
   /* ============================================================
