@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel | meu.painel</title>
+
+<!-- Fontes do Google Fonts (única fonte externa permitida além do Supabase) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     VARIÁVEIS DE DESIGN (o mesmo design system usado em login.html)
+     ============================================================ */
+  :root{
+    --coral: #D4572A;
+    --coral-escuro: #B8461F;
+    --creme: #F5F3EF;
+    --branco: #FFFFFF;
+    --grafite: #1A1816;
+    --texto-suave: #6B645C;
+    --borda: #DDD8D0;
+    --sucesso: #2D7A4F;
+    --erro: #C4453C;
+    --fonte-titulo: 'Fraunces', serif;
+    --fonte-corpo: 'DM Sans', sans-serif;
+    --raio: 20px;
+    --raio-pequeno: 12px;
+    --sombra: 0 6px 20px rgba(26,24,22,0.05);
+    --sidebar-largura: 260px;
+  }
+
+  *{ box-sizing: border-box; }
+
+  /* A tela só aparece depois que o guarda de autenticação confirma a sessão,
+     assim ninguém vê o conteúdo do painel piscando antes de checar o login. */
+  body{
+    margin:0;
+    visibility: hidden;
+    opacity: 0;
+    background: var(--creme);
+    color: var(--grafite);
+    font-family: var(--fonte-corpo);
+    line-height: 1.5;
+    transition: opacity 0.25s ease;
+  }
+  body.pronto{ visibility: visible; opacity: 1; }
+
+  h1,h2,h3{ font-family: var(--fonte-titulo); font-weight: 500; margin:0; }
+  p{ margin:0; }
+  img{ max-width:100%; display:block; }
+  a{ color:inherit; }
+
+  /* ============================================================
+     ESTRUTURA GERAL
+     ============================================================ */
+  .app-shell{ display:flex; min-height:100vh; }
+
+  .topo-mobile{
+    display:none;
+    align-items:center;
+    gap:14px;
+    padding:16px 20px;
+    background:var(--branco);
+    border-bottom:1px solid var(--borda);
+    position:sticky;
+    top:0;
+    z-index:90;
+  }
+  .logo-mobile{ font-family: var(--fonte-titulo); font-weight:600; font-size:1.1rem; }
+  .logo-mobile .ponto{ color: var(--coral); }
+  #botao-menu-mobile{
+    width:40px; height:40px;
+    border-radius:10px;
+    border:1px solid var(--borda);
+    background:transparent;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    color: var(--grafite);
+  }
+  #botao-menu-mobile:focus-visible{ outline:3px solid var(--coral); outline-offset:2px; }
+
+  .overlay-mobile{ display:none; position:fixed; inset:0; background:rgba(26,24,22,0.4); z-index:99; }
+  .overlay-mobile.visivel{ display:block; }
+
+  /* ============================================================
+     SIDEBAR
+     ============================================================ */
+  .sidebar{
+    width: var(--sidebar-largura);
+    flex-shrink:0;
+    background: var(--branco);
+    border-right:1px solid var(--borda);
+    display:flex;
+    flex-direction:column;
+    padding: 28px 20px;
+    position:fixed;
+    top:0; left:0; bottom:0;
+    overflow-y:auto;
+    z-index:100;
+    transition: transform 0.3s ease;
+  }
+  .sidebar-logo{ font-family: var(--fonte-titulo); font-size:1.3rem; font-weight:600; margin-bottom:36px; }
+  .sidebar-logo .ponto{ color: var(--coral); }
+
+  .sidebar-nav{ display:flex; flex-direction:column; gap:6px; flex-grow:1; }
+  .nav-item{
+    display:flex; align-items:center; gap:12px;
+    padding: 12px 14px;
+    border-radius: var(--raio-pequeno);
+    border:none;
+    background:transparent;
+    color: var(--texto-suave);
+    font-family: var(--fonte-corpo);
+    font-weight:600;
+    font-size:0.94rem;
+    cursor:pointer;
+    text-align:left;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+  .nav-item svg{ flex-shrink:0; }
+  .nav-item:hover{ background: var(--creme); color: var(--grafite); }
+  .nav-item.ativo{ background: var(--coral); color: var(--branco); }
+  .nav-item:focus-visible{ outline:3px solid var(--coral-escuro); outline-offset:2px; }
+
+  .sidebar-rodape{
+    border-top:1px solid var(--borda);
+    padding-top:18px;
+    margin-top:18px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  #email-usuario{ font-size:0.8rem; color: var(--texto-suave); word-break:break-all; }
+  #botao-sair{
+    align-self:flex-start;
+    padding: 8px 16px;
+    border-radius:100px;
+    border:1.5px solid var(--borda);
+    background:transparent;
+    color: var(--grafite);
+    font-family: var(--fonte-corpo);
+    font-weight:600;
+    font-size:0.85rem;
+    cursor:pointer;
+    transition: all 0.2s ease;
+  }
+  #botao-sair:hover{ border-color: var(--erro); color: var(--erro); }
+  #botao-sair:focus-visible{ outline:3px solid var(--coral); outline-offset:2px; }
+
+  /* ============================================================
+     CONTEÚDO
+     ============================================================ */
+  .conteudo{ margin-left: var(--sidebar-largura); flex-grow:1; padding: 40px 44px 60px 44px; max-width:100%; }
+
+  .conteudo-topo{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:16px;
+    margin-bottom:32px;
+  }
+  #titulo-pagina{ font-size:1.8rem; }
+
+  .filtro-periodo{
+    display:flex;
+    gap:4px;
+    background: var(--branco);
+    border:1px solid var(--borda);
+    border-radius:100px;
+    padding:4px;
+  }
+  .filtro-periodo button{
+    padding: 8px 16px;
+    border-radius:100px;
+    border:none;
+    background:transparent;
+    color: var(--texto-suave);
+    font-family: var(--fonte-corpo);
+    font-weight:600;
+    font-size:0.85rem;
+    cursor:pointer;
+    transition: all 0.2s ease;
+  }
+  .filtro-periodo button.ativo{ background: var(--grafite); color: var(--branco); }
+  .filtro-periodo button:focus-visible{ outline:3px solid var(--coral); outline-offset:2px; }
+
+  .faixa-erro-global{
+    background:#FBEAE8;
+    color: var(--erro);
+    padding:14px 18px;
+    border-radius: var(--raio-pequeno);
+    margin-bottom:24px;
+    font-weight:500;
+    font-size:0.9rem;
+  }
+
+  .painel-aba[hidden]{ display:none; }
+
+  .saudacao{ font-size:1.25rem; margin-bottom:24px; }
+
+  /* Cartões de número */
+  .cards-grade{ display:grid; grid-template-columns:repeat(5,1fr); gap:16px; margin-bottom:22px; }
+  .cartao-numero{
+    background: var(--branco);
+    border:1px solid var(--borda);
+    border-radius: var(--raio);
+    padding:22px;
+    box-shadow: var(--sombra);
+  }
+  .cartao-numero-valor{ font-family: var(--fonte-titulo); font-size:2rem; font-weight:500; }
+  .cartao-numero-rotulo{ font-size:0.84rem; color: var(--texto-suave); margin-top:6px; }
+  .cartao-numero-destaque{ background: var(--coral); border-color: var(--coral); }
+  .cartao-numero-destaque .cartao-numero-valor{ color: var(--branco); }
+  .cartao-numero-destaque .cartao-numero-rotulo{ color: rgba(255,255,255,0.85); }
+
+  /* Cartão genérico */
+  .cartao{
+    background: var(--branco);
+    border:1px solid var(--borda);
+    border-radius: var(--raio);
+    padding:26px;
+    box-shadow: var(--sombra);
+    margin-bottom:22px;
+  }
+  .cartao h3{ font-size:1.1rem; margin-bottom:18px; }
+
+  .destaque-contato{ display:flex; align-items:center; gap:22px; border-left:5px solid var(--coral); }
+  .destaque-contato-numero{ font-family: var(--fonte-titulo); font-size:2.4rem; color: var(--coral); font-weight:500; flex-shrink:0; }
+  .destaque-contato-texto strong{ display:block; font-size:1rem; margin-bottom:4px; }
+  .destaque-contato-texto p{ font-size:0.82rem; color: var(--texto-suave); }
+
+  /* Gráfico de barras (14 dias) */
+  .grafico-barras{ display:flex; align-items:flex-end; gap:6px; height:160px; }
+  .barra-dia{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; cursor:default; }
+  .barra-dia-preenchimento{ width:100%; background: var(--coral); border-radius:6px 6px 0 0; min-height:2px; transition: background 0.2s ease; }
+  .barra-dia:hover .barra-dia-preenchimento{ background: var(--coral-escuro); }
+  .barra-dia-rotulo{ font-size:0.63rem; color: var(--texto-suave); margin-top:6px; white-space:nowrap; }
+
+  .texto-vazio{ color: var(--texto-suave); font-size:0.9rem; padding:8px 0; }
+
+  /* Aba Portfólio */
+  .portfolio-grade{ display:grid; grid-template-columns:1fr 1fr; gap:22px; }
+  .cartao-largo{ grid-column: 1 / -1; }
+
+  .barra-fundo{ background: var(--creme); border-radius:100px; height:7px; overflow:hidden; }
+  .barra-preenchimento{ background: var(--coral); height:100%; border-radius:100px; }
+
+  .linha-video{ display:flex; align-items:center; gap:14px; padding:10px 0; border-bottom:1px solid var(--borda); }
+  .linha-video:last-child{ border-bottom:none; padding-bottom:0; }
+  .linha-video:first-child{ padding-top:0; }
+  .linha-video-thumb{ flex-shrink:0; width:76px; height:56px; border-radius:8px; overflow:hidden; background: var(--creme); }
+  .linha-video-thumb img{ width:100%; height:100%; object-fit:cover; }
+  .linha-video-info{ flex-grow:1; min-width:0; }
+  .linha-video-titulo{
+    display:block; font-size:0.86rem; font-weight:600; text-decoration:none; margin-bottom:6px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .linha-video-titulo:hover{ text-decoration:underline; }
+  .linha-video-contagem{ flex-shrink:0; font-weight:700; font-size:0.95rem; min-width:24px; text-align:right; }
+
+  .linha-barra{ margin-bottom:16px; }
+  .linha-barra:last-child{ margin-bottom:0; }
+  .linha-barra-topo{ display:flex; justify-content:space-between; gap:12px; font-size:0.87rem; margin-bottom:6px; }
+  .linha-barra-numero{ font-weight:700; flex-shrink:0; }
+
+  .cartao-mensagem{ border:1px solid var(--borda); border-radius: var(--raio-pequeno); margin-bottom:12px; overflow:hidden; }
+  .cartao-mensagem:last-child{ margin-bottom:0; }
+  .cartao-mensagem-topo{
+    width:100%; display:flex; align-items:center; gap:12px;
+    padding:14px 16px; background: var(--creme); border:none; cursor:pointer; text-align:left;
+    font-family: var(--fonte-corpo);
+  }
+  .cartao-mensagem-topo:focus-visible{ outline:3px solid var(--coral); outline-offset:-3px; }
+  .selo-origem{
+    font-size:0.66rem; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;
+    background: var(--branco); border:1px solid var(--borda); padding:4px 10px; border-radius:100px;
+    color: var(--texto-suave); flex-shrink:0;
+  }
+  .cartao-mensagem-nome{ font-weight:700; flex-grow:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .cartao-mensagem-data{ font-size:0.78rem; color: var(--texto-suave); flex-shrink:0; }
+  .cartao-mensagem-seta{ transition: transform 0.2s ease; flex-shrink:0; display:flex; }
+  .cartao-mensagem.expandido .cartao-mensagem-seta{ transform: rotate(180deg); }
+  .cartao-mensagem-email{ padding:10px 16px 0 16px; font-size:0.85rem; color: var(--texto-suave); }
+  .cartao-mensagem-detalhe{ padding:12px 16px 16px 16px; font-size:0.88rem; }
+  .cartao-mensagem-detalhe[hidden]{ display:none; }
+  .cartao-mensagem-detalhe p{ margin:0 0 8px 0; }
+  .cartao-mensagem-acoes{ display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+  .botao-pequeno{
+    padding:8px 16px; border-radius:100px; background: var(--grafite); color: var(--branco);
+    font-size:0.82rem; font-weight:600; text-decoration:none;
+  }
+  .botao-pequeno-whatsapp{ background:#25D366; }
+
+  /* ============================================================
+     RESPONSIVO
+     ============================================================ */
+  @media (max-width: 980px){
+    .cards-grade{ grid-template-columns:repeat(2,1fr); }
+    .portfolio-grade{ grid-template-columns:1fr; }
+  }
+  @media (max-width: 900px){
+    .sidebar{ transform: translateX(-100%); box-shadow:0 0 40px rgba(0,0,0,0.15); }
+    .sidebar.aberta{ transform: translateX(0); }
+    .conteudo{ margin-left:0; padding:24px 20px 48px 20px; }
+    .topo-mobile{ display:flex; }
+  }
+  @media (max-width: 560px){
+    .cards-grade{ grid-template-columns:1fr 1fr; }
+    .cartao-numero-valor{ font-size:1.5rem; }
+    .conteudo-topo{ flex-direction:column; align-items:flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <!-- Barra superior, só aparece no celular -->
+  <header class="topo-mobile">
+    <button id="botao-menu-mobile" aria-label="Abrir menu" aria-expanded="false" aria-controls="sidebar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+    <span class="logo-mobile">meu<span class="ponto">.</span>painel</span>
+  </header>
+
+  <div class="overlay-mobile" id="overlay-mobile"></div>
+
+  <!-- SIDEBAR: exatamente duas abas -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">meu<span class="ponto">.</span>painel</div>
+
+    <nav class="sidebar-nav">
+      <button type="button" class="nav-item ativo" data-tab="menu-principal">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V20a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V9.5"/></svg>
+        Menu Principal
+      </button>
+      <button type="button" class="nav-item" data-tab="portfolio">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10"/><path d="M12 20V4"/><path d="M20 20v-7"/></svg>
+        Portfólio
+      </button>
+    </nav>
+
+    <div class="sidebar-rodape">
+      <span id="email-usuario"></span>
+      <button type="button" id="botao-sair">Sair</button>
+    </div>
+  </aside>
+
+  <!-- CONTEÚDO -->
+  <main class="conteudo">
+    <div class="conteudo-topo">
+      <h1 id="titulo-pagina">Menu Principal</h1>
+      <div class="filtro-periodo" id="filtro-periodo" role="group" aria-label="Filtrar por período">
+        <button type="button" class="ativo" data-periodo="tudo">Tudo</button>
+        <button type="button" data-periodo="7d">7d</button>
+        <button type="button" data-periodo="30d">30d</button>
+        <button type="button" data-periodo="90d">90d</button>
+      </div>
+    </div>
+
+    <div class="faixa-erro-global" id="erro-global" role="alert" hidden></div>
+
+    <!-- ABA 1: MENU PRINCIPAL -->
+    <section class="painel-aba" id="painel-menu-principal">
+      <p class="saudacao">Olá! Aqui estão os números do seu portfólio.</p>
+
+      <div class="cards-grade" id="cards-numeros"></div>
+
+      <div class="cartao destaque-contato">
+        <div class="destaque-contato-numero" id="numero-contato-cliques">0</div>
+        <div class="destaque-contato-texto">
+          <strong>Clicaram para entrar em contato</strong>
+          <p>Conta quem clicou em WhatsApp, e-mail, Instagram ou no botão de enviar o formulário.</p>
+        </div>
+      </div>
+
+      <div class="cartao">
+        <h3>Visitas nos últimos 14 dias</h3>
+        <div class="grafico-barras" id="grafico-visitas"></div>
+      </div>
+    </section>
+
+    <!-- ABA 2: PORTFÓLIO -->
+    <section class="painel-aba" id="painel-portfolio" hidden>
+      <div class="portfolio-grade">
+        <div class="cartao">
+          <h3>Vídeos mais vistos</h3>
+          <div id="lista-videos-vistos"></div>
+        </div>
+
+        <div class="cartao">
+          <h3>Botões mais clicados</h3>
+          <div id="lista-botoes-clicados"></div>
+        </div>
+
+        <div class="cartao">
+          <h3>Cliques para contato</h3>
+          <div id="lista-contato-cliques"></div>
+        </div>
+
+        <div class="cartao cartao-largo">
+          <h3>Mensagens recebidas</h3>
+          <div id="lista-mensagens"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+</div>
+
+<!-- Supabase carregado por CDN, depois a lógica de autenticação compartilhada -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+<script>
+  /* ============================================================================================
+     ESTADO EM MEMÓRIA
+     Os dados são buscados uma única vez ao entrar no painel. Trocar de aba ou de
+     período só refiltra e redesenha o que já está em memória (sem nova busca).
+     ============================================================================================ */
+  let cacheEventos = [];
+  let cacheLeads = [];
+  let periodoAtual = 'tudo';
+
+  /* ============================================================================================
+     BUSCA PAGINADA
+     O Supabase devolve no máximo 1000 linhas por consulta. Para tabelas que
+     crescem além disso, é preciso buscar em blocos de 1000 até o bloco vir
+     menor que 1000 (sinal de que chegou ao fim).
+     ============================================================================================ */
+  async function buscarTudo(tabela){
+    const TAMANHO_BLOCO = 1000;
+    let inicio = 0;
+    let todos = [];
+
+    while(true){
+      const { data, error } = await Auth.client
+        .from(tabela)
+        .select('*')
+        .order('created_at', { ascending: false })
+        .range(inicio, inicio + TAMANHO_BLOCO - 1);
+
+      if(error) throw error;
+
+      todos = todos.concat(data || []);
+      if(!data || data.length < TAMANHO_BLOCO) break;
+      inicio += TAMANHO_BLOCO;
+    }
+
+    return todos;
+  }
+
+  function mostrarErroGlobal(mensagem){
+    const el = document.getElementById('erro-global');
+    el.textContent = mensagem;
+    el.hidden = false;
+  }
+
+  async function carregarDados(){
+    try{
+      const [eventos, leads] = await Promise.all([
+        buscarTudo('portfolio_events'),
+        buscarTudo('portfolio_leads')
+      ]);
+      cacheEventos = eventos;
+      cacheLeads = leads;
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível carregar os dados agora. Tente recarregar a página em alguns instantes.');
+      cacheEventos = [];
+      cacheLeads = [];
+    }
+    renderizarTudo();
+  }
+
+  /* ============================================================================================
+     FILTRO DE PERÍODO (aplicado em memória, sem nova busca)
+     ============================================================================================ */
+  function filtrarPorPeriodo(lista, periodo){
+    if(periodo === 'tudo') return lista;
+    const dias = { '7d': 7, '30d': 30, '90d': 90 }[periodo];
+    const limite = new Date();
+    limite.setDate(limite.getDate() - dias);
+    return lista.filter(item => new Date(item.created_at) >= limite);
+  }
+
+  /* ============================================================================================
+     FORMATAÇÃO
+     ============================================================================================ */
+  function formatarData(dataStr){
+    return new Date(dataStr).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+  function formatarDataCurta(data){
+    return data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+  }
+  function formatarNomeEvento(nome){
+    return nome.replace(/_/g, ' ').replace(/\b\w/g, letra => letra.toUpperCase());
+  }
+
+  /* ============================================================================================
+     CÁLCULOS
+     ============================================================================================ */
+  function calcularResumo(eventosFiltrados, leadsFiltrados){
+    const pageViews = eventosFiltrados.filter(e => e.event_type === 'page_view');
+    const cliques = eventosFiltrados.filter(e => e.event_type === 'button_click');
+    const videos = eventosFiltrados.filter(e => e.event_type === 'video_view');
+    const contatoCliques = cliques.filter(e => e.event_name && e.event_name.startsWith('contact_'));
+
+    return {
+      visitas: pageViews.length,
+      visitantesUnicos: new Set(pageViews.map(e => e.session_id)).size,
+      cliques: cliques.length,
+      videos: videos.length,
+      mensagens: leadsFiltrados.length,
+      contatoCliques: contatoCliques.length
+    };
+  }
+
+  function agruparVideos(eventosFiltrados){
+    const mapa = new Map();
+    eventosFiltrados.filter(e => e.event_type === 'video_view').forEach(e => {
+      const id = e.event_name || 'desconhecido';
+      if(!mapa.has(id)) mapa.set(id, { id, titulo: null, contagem: 0 });
+      const item = mapa.get(id);
+      item.contagem++;
+      if(!item.titulo && e.metadata && e.metadata.title) item.titulo = e.metadata.title;
+    });
+    return Array.from(mapa.values())
+      .map(v => ({ ...v, titulo: v.titulo || v.id }))
+      .sort((a, b) => b.contagem - a.contagem);
+  }
+
+  function agruparPorNome(eventosFiltrados, tipo){
+    const mapa = new Map();
+    eventosFiltrados.filter(e => e.event_type === tipo).forEach(e => {
+      const nome = e.event_name || 'desconhecido';
+      mapa.set(nome, (mapa.get(nome) || 0) + 1);
+    });
+    return Array.from(mapa.entries())
+      .map(([nome, contagem]) => ({ nome, contagem }))
+      .sort((a, b) => b.contagem - a.contagem);
+  }
+
+  function agruparContato(eventosFiltrados){
+    const mapa = new Map();
+    eventosFiltrados
+      .filter(e => e.event_type === 'button_click' && e.event_name && e.event_name.startsWith('contact_'))
+      .forEach(e => {
+        const nome = e.event_name.replace(/^contact_/, '');
+        mapa.set(nome, (mapa.get(nome) || 0) + 1);
+      });
+    return Array.from(mapa.entries())
+      .map(([nome, contagem]) => ({ nome, contagem }))
+      .sort((a, b) => b.contagem - a.contagem);
+  }
+
+  /* ============================================================================================
+     RENDERIZAÇÃO: ABA MENU PRINCIPAL
+     ============================================================================================ */
+  function renderCardsNumeros(resumo){
+    const cards = [
+      { rotulo: 'Visitas', valor: resumo.visitas, destaque: true },
+      { rotulo: 'Visitantes únicos', valor: resumo.visitantesUnicos },
+      { rotulo: 'Cliques em botões', valor: resumo.cliques },
+      { rotulo: 'Vídeos vistos', valor: resumo.videos },
+      { rotulo: 'Mensagens', valor: resumo.mensagens }
+    ];
+
+    document.getElementById('cards-numeros').innerHTML = cards.map(c => `
+      <div class="cartao-numero ${c.destaque ? 'cartao-numero-destaque' : ''}">
+        <div class="cartao-numero-valor">${c.valor.toLocaleString('pt-BR')}</div>
+        <div class="cartao-numero-rotulo">${c.rotulo}</div>
+      </div>
+    `).join('');
+
+    document.getElementById('numero-contato-cliques').textContent = resumo.contatoCliques.toLocaleString('pt-BR');
+  }
+
+  function renderGraficoVisitas(eventosFiltrados){
+    const container = document.getElementById('grafico-visitas');
+
+    const dias = [];
+    for(let i = 13; i >= 0; i--){
+      const d = new Date();
+      d.setHours(0, 0, 0, 0);
+      d.setDate(d.getDate() - i);
+      dias.push(d);
+    }
+
+    const contagens = dias.map(dia => {
+      const proximoDia = new Date(dia);
+      proximoDia.setDate(proximoDia.getDate() + 1);
+      const total = eventosFiltrados.filter(e => {
+        if(e.event_type !== 'page_view') return false;
+        const dataEvento = new Date(e.created_at);
+        return dataEvento >= dia && dataEvento < proximoDia;
+      }).length;
+      return { dia, total };
+    });
+
+    if(contagens.every(c => c.total === 0)){
+      container.innerHTML = '<p class="texto-vazio">Nenhuma visita registrada ainda.</p>';
+      return;
+    }
+
+    const maximo = Math.max(...contagens.map(c => c.total), 1);
+
+    container.innerHTML = contagens.map(c => `
+      <div class="barra-dia" title="${formatarDataCurta(c.dia)}: ${c.total} ${c.total === 1 ? 'visita' : 'visitas'}">
+        <div class="barra-dia-preenchimento" style="height:${c.total > 0 ? Math.max(c.total / maximo * 100, 6) : 0}%"></div>
+        <span class="barra-dia-rotulo">${formatarDataCurta(c.dia)}</span>
+      </div>
+    `).join('');
+  }
+
+  /* ============================================================================================
+     RENDERIZAÇÃO: ABA PORTFÓLIO
+     ============================================================================================ */
+  function renderVideosMaisVistos(eventosFiltrados){
+    const container = document.getElementById('lista-videos-vistos');
+    const videos = agruparVideos(eventosFiltrados);
+
+    if(videos.length === 0){
+      container.innerHTML = '<p class="texto-vazio">Nenhum vídeo assistido ainda.</p>';
+      return;
+    }
+
+    const maximo = Math.max(...videos.map(v => v.contagem), 1);
+
+    container.innerHTML = videos.map(v => `
+      <div class="linha-video">
+        <a class="linha-video-thumb" href="https://www.youtube.com/watch?v=${v.id}" target="_blank" rel="noopener noreferrer">
+          <img src="https://i.ytimg.com/vi/${v.id}/mqdefault.jpg" alt="Miniatura de ${v.titulo}" loading="lazy">
+        </a>
+        <div class="linha-video-info">
+          <a class="linha-video-titulo" href="https://www.youtube.com/watch?v=${v.id}" target="_blank" rel="noopener noreferrer">${v.titulo}</a>
+          <div class="barra-fundo"><div class="barra-preenchimento" style="width:${(v.contagem / maximo * 100).toFixed(0)}%"></div></div>
+        </div>
+        <div class="linha-video-contagem">${v.contagem}</div>
+      </div>
+    `).join('');
+  }
+
+  function renderBotoesMaisClicados(eventosFiltrados){
+    const container = document.getElementById('lista-botoes-clicados');
+    const botoes = agruparPorNome(eventosFiltrados, 'button_click');
+
+    if(botoes.length === 0){
+      container.innerHTML = '<p class="texto-vazio">Nenhum clique registrado ainda.</p>';
+      return;
+    }
+
+    const maximo = Math.max(...botoes.map(b => b.contagem), 1);
+
+    container.innerHTML = botoes.map(b => `
+      <div class="linha-barra">
+        <div class="linha-barra-topo">
+          <span>${formatarNomeEvento(b.nome)}</span>
+          <span class="linha-barra-numero">${b.contagem}</span>
+        </div>
+        <div class="barra-fundo"><div class="barra-preenchimento" style="width:${(b.contagem / maximo * 100).toFixed(0)}%"></div></div>
+      </div>
+    `).join('');
+  }
+
+  function renderCliquesContato(eventosFiltrados){
+    const container = document.getElementById('lista-contato-cliques');
+    const canais = agruparContato(eventosFiltrados);
+
+    if(canais.length === 0){
+      container.innerHTML = '<p class="texto-vazio">Ninguém clicou para contato ainda.</p>';
+      return;
+    }
+
+    const maximo = Math.max(...canais.map(c => c.contagem), 1);
+
+    container.innerHTML = canais.map(c => `
+      <div class="linha-barra">
+        <div class="linha-barra-topo">
+          <span>${formatarNomeEvento(c.nome)}</span>
+          <span class="linha-barra-numero">${c.contagem}</span>
+        </div>
+        <div class="barra-fundo"><div class="barra-preenchimento" style="width:${(c.contagem / maximo * 100).toFixed(0)}%"></div></div>
+      </div>
+    `).join('');
+  }
+
+  function renderMensagens(leadsFiltrados){
+    const container = document.getElementById('lista-mensagens');
+
+    if(leadsFiltrados.length === 0){
+      container.innerHTML = '<p class="texto-vazio">Nenhuma mensagem por enquanto.</p>';
+      return;
+    }
+
+    const iconeSeta = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+
+    container.innerHTML = leadsFiltrados.map((lead, indice) => {
+      const origem = lead.source === 'popup' ? 'Pop-up' : 'Formulário de contato';
+      const telefoneDigitos = (lead.phone || '').replace(/\D/g, '');
+      const idDetalhe = `detalhe-mensagem-${indice}`;
+
+      return `
+        <div class="cartao-mensagem">
+          <button type="button" class="cartao-mensagem-topo" data-alvo="${idDetalhe}" aria-expanded="false">
+            <span class="selo-origem">${origem}</span>
+            <span class="cartao-mensagem-nome">${lead.name || 'Sem nome'}</span>
+            <span class="cartao-mensagem-data">${formatarData(lead.created_at)}</span>
+            <span class="cartao-mensagem-seta">${iconeSeta}</span>
+          </button>
+          <div class="cartao-mensagem-email">${lead.email || ''}</div>
+          <div class="cartao-mensagem-detalhe" id="${idDetalhe}" hidden>
+            ${lead.phone ? `<p><strong>Telefone:</strong> ${lead.phone}</p>` : ''}
+            ${lead.brand ? `<p><strong>Marca:</strong> ${lead.brand}</p>` : ''}
+            ${lead.budget ? `<p><strong>Orçamento:</strong> ${lead.budget}</p>` : ''}
+            ${lead.message ? `<p><strong>Mensagem:</strong> ${lead.message}</p>` : ''}
+            <div class="cartao-mensagem-acoes">
+              ${lead.email ? `<a class="botao-pequeno" href="mailto:${lead.email}">Responder por e-mail</a>` : ''}
+              ${telefoneDigitos ? `<a class="botao-pequeno botao-pequeno-whatsapp" href="https://wa.me/${telefoneDigitos}" target="_blank" rel="noopener noreferrer">WhatsApp</a>` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    container.querySelectorAll('.cartao-mensagem-topo').forEach(botao => {
+      botao.addEventListener('click', () => {
+        const alvo = document.getElementById(botao.dataset.alvo);
+        const vaiAbrir = alvo.hidden;
+        alvo.hidden = !vaiAbrir;
+        botao.setAttribute('aria-expanded', String(vaiAbrir));
+        botao.closest('.cartao-mensagem').classList.toggle('expandido', vaiAbrir);
+      });
+    });
+  }
+
+  /* ============================================================================================
+     RENDERIZAÇÃO GERAL (chamada ao trocar de período)
+     ============================================================================================ */
+  function renderizarTudo(){
+    const eventosFiltrados = filtrarPorPeriodo(cacheEventos, periodoAtual);
+    const leadsFiltrados = filtrarPorPeriodo(cacheLeads, periodoAtual);
+
+    const resumo = calcularResumo(eventosFiltrados, leadsFiltrados);
+    renderCardsNumeros(resumo);
+    renderGraficoVisitas(eventosFiltrados);
+
+    renderVideosMaisVistos(eventosFiltrados);
+    renderBotoesMaisClicados(eventosFiltrados);
+    renderCliquesContato(eventosFiltrados);
+    renderMensagens(leadsFiltrados);
+  }
+
+  /* ============================================================================================
+     INTERAÇÕES: abas, filtro de período, sidebar mobile
+     ============================================================================================ */
+  function configurarAbas(){
+    const botoes = document.querySelectorAll('.nav-item');
+    const titulos = { 'menu-principal': 'Menu Principal', 'portfolio': 'Portfólio' };
+
+    botoes.forEach(botao => {
+      botao.addEventListener('click', () => {
+        botoes.forEach(b => b.classList.remove('ativo'));
+        botao.classList.add('ativo');
+
+        document.querySelectorAll('.painel-aba').forEach(secao => { secao.hidden = true; });
+        document.getElementById('painel-' + botao.dataset.tab).hidden = false;
+        document.getElementById('titulo-pagina').textContent = titulos[botao.dataset.tab];
+
+        fecharSidebarMobile();
+      });
+    });
+  }
+
+  function configurarFiltroPeriodo(){
+    const botoes = document.querySelectorAll('#filtro-periodo button');
+    botoes.forEach(botao => {
+      botao.addEventListener('click', () => {
+        botoes.forEach(b => b.classList.remove('ativo'));
+        botao.classList.add('ativo');
+        periodoAtual = botao.dataset.periodo;
+        renderizarTudo();
+      });
+    });
+  }
+
+  function fecharSidebarMobile(){
+    document.getElementById('sidebar').classList.remove('aberta');
+    document.getElementById('overlay-mobile').classList.remove('visivel');
+    document.getElementById('botao-menu-mobile').setAttribute('aria-expanded', 'false');
+  }
+
+  function configurarSidebarMobile(){
+    const botaoAbrir = document.getElementById('botao-menu-mobile');
+    const overlay = document.getElementById('overlay-mobile');
+
+    botaoAbrir.addEventListener('click', () => {
+      document.getElementById('sidebar').classList.add('aberta');
+      overlay.classList.add('visivel');
+      botaoAbrir.setAttribute('aria-expanded', 'true');
+    });
+
+    overlay.addEventListener('click', fecharSidebarMobile);
+  }
+
+  /* ============================================================================================
+     INICIALIZAÇÃO: o guarda de autenticação roda primeiro, antes de qualquer outra coisa
+     ============================================================================================ */
+  (async function iniciar(){
+    let usuario = null;
+    try{
+      usuario = await Auth.checkAuth();
+    } catch(erro){
+      console.error(erro);
+      document.body.classList.add('pronto');
+      mostrarErroGlobal('Não foi possível verificar sua sessão. Verifique sua internet e recarregue a página.');
+      return;
+    }
+    if(!usuario) return; // Auth.checkAuth() já redirecionou para login.html
+
+    document.getElementById('email-usuario').textContent = usuario.email;
+    document.body.classList.add('pronto');
+
+    configurarAbas();
+    configurarFiltroPeriodo();
+    configurarSidebarMobile();
+    document.getElementById('botao-sair').addEventListener('click', () => Auth.logout());
+
+    await carregarDados();
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Acesso restrito | meu.painel</title>
+
+<!-- Fontes do Google Fonts (única fonte externa permitida além do Supabase) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,500&family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     VARIÁVEIS DE DESIGN (o mesmo design system usado em painel.html)
+     ============================================================ */
+  :root{
+    --coral: #D4572A;
+    --coral-escuro: #B8461F;
+    --creme: #F5F3EF;
+    --branco: #FFFFFF;
+    --grafite: #1A1816;
+    --texto-suave: #6B645C;
+    --borda: #DDD8D0;
+    --sucesso: #2D7A4F;
+    --erro: #C4453C;
+    --fonte-titulo: 'Fraunces', serif;
+    --fonte-corpo: 'DM Sans', sans-serif;
+    --raio: 20px;
+    --raio-pequeno: 12px;
+    --sombra: 0 20px 45px rgba(26,24,22,0.10);
+  }
+
+  *{ box-sizing: border-box; }
+
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 24px;
+    background: var(--creme);
+    color: var(--grafite);
+    font-family: var(--fonte-corpo);
+    line-height: 1.5;
+  }
+
+  .cartao{
+    width:100%;
+    max-width: 420px;
+    background: var(--branco);
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    box-shadow: var(--sombra);
+    padding: 44px 36px;
+  }
+
+  .logo{
+    font-family: var(--fonte-titulo);
+    font-size: 1.6rem;
+    font-weight: 600;
+    text-align:center;
+    margin-bottom: 28px;
+  }
+  .logo .ponto{ color: var(--coral); }
+
+  h1{
+    font-family: var(--fonte-titulo);
+    font-weight: 500;
+    font-size: 1.6rem;
+    margin: 0 0 8px 0;
+    text-align:center;
+  }
+  .subtitulo{
+    text-align:center;
+    color: var(--texto-suave);
+    font-size: 0.94rem;
+    margin: 0 0 28px 0;
+  }
+
+  .faixa{
+    display:none;
+    padding: 12px 16px;
+    border-radius: var(--raio-pequeno);
+    font-size: 0.88rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+  }
+  .faixa.visivel{ display:block; }
+  .faixa-erro{ background: #FBEAE8; color: var(--erro); }
+  .faixa-sucesso{ background: #E7F3EC; color: var(--sucesso); }
+
+  .campo{ margin-bottom: 18px; }
+  .campo label{
+    display:block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 7px;
+  }
+  .campo input{
+    width:100%;
+    padding: 13px 16px;
+    border-radius: var(--raio-pequeno);
+    border: 1.5px solid var(--borda);
+    background: var(--creme);
+    font-family: var(--fonte-corpo);
+    font-size: 0.96rem;
+    color: var(--grafite);
+  }
+  .campo input:focus{
+    outline: none;
+    border-color: var(--coral);
+    box-shadow: 0 0 0 3px rgba(212,87,42,0.15);
+  }
+
+  .link-esqueci{
+    display:inline-block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--coral);
+    text-decoration: none;
+    margin-bottom: 22px;
+    cursor:pointer;
+    background:none;
+    border:none;
+    padding:0;
+    font-family: var(--fonte-corpo);
+  }
+  .link-esqueci:hover{ text-decoration: underline; }
+  .link-esqueci:focus-visible{ outline: 2px solid var(--coral); outline-offset: 3px; }
+
+  .botao{
+    width:100%;
+    padding: 14px 20px;
+    border-radius: 100px;
+    border: none;
+    background: var(--coral);
+    color: var(--branco);
+    font-family: var(--fonte-corpo);
+    font-weight: 700;
+    font-size: 0.96rem;
+    cursor:pointer;
+    transition: background 0.2s ease, opacity 0.2s ease;
+  }
+  .botao:hover{ background: var(--coral-escuro); }
+  .botao:disabled{ opacity: 0.65; cursor: not-allowed; }
+  .botao:focus-visible{ outline: 3px solid var(--coral-escuro); outline-offset: 3px; }
+
+  .voltar-login{
+    display:none;
+    background:none;
+    border:none;
+    color: var(--texto-suave);
+    font-family: var(--fonte-corpo);
+    font-size: 0.85rem;
+    text-align:center;
+    width:100%;
+    margin-top: 16px;
+    cursor:pointer;
+    text-decoration: underline;
+  }
+
+  #bloco-recuperar{ display:none; }
+</style>
+</head>
+<body>
+
+<div class="cartao">
+  <div class="logo">meu<span class="ponto">.</span>painel</div>
+  <h1>Acesso restrito</h1>
+  <p class="subtitulo">Faça login para ver os números do seu portfólio.</p>
+
+  <div class="faixa faixa-erro" id="faixa-erro" role="alert"></div>
+  <div class="faixa faixa-sucesso" id="faixa-sucesso" role="status"></div>
+
+  <!-- FORMULÁRIO DE LOGIN -->
+  <form id="form-login">
+    <div class="campo">
+      <label for="campo-email">E-mail</label>
+      <input type="email" id="campo-email" name="email" autocomplete="username" required>
+    </div>
+    <div class="campo">
+      <label for="campo-senha">Senha</label>
+      <input type="password" id="campo-senha" name="senha" autocomplete="current-password" required>
+    </div>
+    <button type="button" class="link-esqueci" id="botao-esqueci">Esqueci minha senha</button>
+    <button type="submit" class="botao" id="botao-entrar">Entrar</button>
+  </form>
+
+  <!-- BLOCO DE RECUPERAÇÃO DE SENHA (trocado no lugar do formulário) -->
+  <div id="bloco-recuperar">
+    <div class="campo">
+      <label for="campo-email-recuperar">E-mail</label>
+      <input type="email" id="campo-email-recuperar" required>
+    </div>
+    <button type="button" class="botao" id="botao-enviar-recuperar">Enviar link de recuperação</button>
+  </div>
+
+  <button type="button" class="voltar-login" id="botao-voltar">Voltar para o login</button>
+</div>
+
+<!-- Supabase carregado por CDN, depois a lógica de autenticação compartilhada -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/auth.js"></script>
+<script>
+  const formLogin = document.getElementById('form-login');
+  const botaoEntrar = document.getElementById('botao-entrar');
+  const faixaErro = document.getElementById('faixa-erro');
+  const faixaSucesso = document.getElementById('faixa-sucesso');
+
+  const blocoRecuperar = document.getElementById('bloco-recuperar');
+  const botaoEsqueci = document.getElementById('botao-esqueci');
+  const botaoVoltar = document.getElementById('botao-voltar');
+  const botaoEnviarRecuperar = document.getElementById('botao-enviar-recuperar');
+
+  function mostrarErro(mensagem){
+    faixaSucesso.classList.remove('visivel');
+    faixaErro.textContent = mensagem;
+    faixaErro.classList.add('visivel');
+  }
+
+  function mostrarSucesso(mensagem){
+    faixaErro.classList.remove('visivel');
+    faixaSucesso.textContent = mensagem;
+    faixaSucesso.classList.add('visivel');
+  }
+
+  function esconderFaixas(){
+    faixaErro.classList.remove('visivel');
+    faixaSucesso.classList.remove('visivel');
+  }
+
+  // Se já existir uma sessão ativa, pula direto para o painel.
+  (async function checarSessaoExistente(){
+    const { data } = await Auth.client.auth.getSession();
+    if(data.session){
+      window.location.href = 'painel.html';
+    }
+  })();
+
+  formLogin.addEventListener('submit', async (evento) => {
+    evento.preventDefault();
+    esconderFaixas();
+
+    const email = document.getElementById('campo-email').value.trim();
+    const senha = document.getElementById('campo-senha').value;
+
+    botaoEntrar.disabled = true;
+    botaoEntrar.textContent = 'Entrando...';
+
+    try{
+      await Auth.login(email, senha);
+      window.location.href = 'painel.html';
+    } catch(erro){
+      mostrarErro(erro.message || 'Não foi possível entrar. Tente novamente.');
+      botaoEntrar.disabled = false;
+      botaoEntrar.textContent = 'Entrar';
+    }
+  });
+
+  // Alterna entre o formulário de login e o bloco de recuperação de senha.
+  botaoEsqueci.addEventListener('click', () => {
+    esconderFaixas();
+    formLogin.style.display = 'none';
+    blocoRecuperar.style.display = 'block';
+    botaoVoltar.style.display = 'block';
+  });
+
+  botaoVoltar.addEventListener('click', () => {
+    esconderFaixas();
+    formLogin.style.display = 'block';
+    blocoRecuperar.style.display = 'none';
+    botaoVoltar.style.display = 'none';
+  });
+
+  botaoEnviarRecuperar.addEventListener('click', async () => {
+    esconderFaixas();
+    const email = document.getElementById('campo-email-recuperar').value.trim();
+    if(!email){
+      mostrarErro('Digite seu e-mail para receber o link de recuperação.');
+      return;
+    }
+
+    botaoEnviarRecuperar.disabled = true;
+    botaoEnviarRecuperar.textContent = 'Enviando...';
+
+    try{
+      await Auth.recuperarSenha(email);
+      mostrarSucesso('Se esse e-mail estiver cadastrado, você vai receber um link para redefinir sua senha.');
+    } catch(erro){
+      mostrarErro(erro.message || 'Não foi possível enviar o link. Tente novamente.');
+    } finally {
+      botaoEnviarRecuperar.disabled = false;
+      botaoEnviarRecuperar.textContent = 'Enviar link de recuperação';
+    }
+  });
+</script>
+</body>
+</html>
