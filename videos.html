@@ -229,49 +229,36 @@
   @media (max-width: 900px){ .intro-videos{ padding-top: 140px; } }
 
   /* ============================================================
-     FILTROS E GRADE DE VÍDEOS
+     GALERIA DE VÍDEOS, ORGANIZADA POR NICHO
+     Cada nicho é uma faixa horizontal com scroll (arraste ou use as setas).
      ============================================================ */
-  .filtros{
-    display:flex;
-    flex-wrap:wrap;
-    gap: 10px;
-    margin-bottom: 36px;
-  }
-  .filtro-botao{
-    padding: 9px 20px;
-    border-radius: 100px;
-    border: 1.5px solid var(--borda);
-    background: transparent;
-    font-family: var(--fonte-corpo);
-    font-weight: 600;
-    font-size: 0.88rem;
-    cursor:pointer;
-    color: var(--tinta);
-    transition: all 0.25s ease;
-  }
-  .filtro-botao:hover{ border-color: var(--tinta); }
-  .filtro-botao:focus-visible{ outline: 3px solid var(--azul); outline-offset: 2px; }
-  .filtro-botao.ativo{ background: var(--tinta); color: var(--creme); border-color: var(--tinta); }
+  .nicho-videos{ margin-bottom: 52px; }
+  .nicho-videos:last-child{ margin-bottom: 0; }
+  .nicho-titulo{ font-size: 1.3rem; margin-bottom: 20px; }
 
-  .video-grade{
-    display:grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 22px;
+  .video-scroll-wrap{ position:relative; }
+  .video-track{
+    display:flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scroll-behavior: smooth;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
+  .video-track::-webkit-scrollbar{ display:none; }
+
   .video-item{
+    flex: 0 0 190px;
     aspect-ratio: 9/16;
     border-radius: var(--raio);
     box-shadow: var(--sombra);
     position:relative;
     overflow:hidden;
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-end;
     background: var(--tinta);
-    transition: transform 0.4s ease, opacity 0.4s ease;
+    scroll-snap-align: start;
   }
-  .video-item:hover{ transform: translateY(-6px); }
-  .video-item:focus-visible{ outline: 3px solid var(--azul); outline-offset: 3px; }
   .video-foto{
     position:absolute;
     inset:0;
@@ -282,81 +269,76 @@
     border: 0;
     z-index:0;
   }
-  .video-item::after{
+
+  /* Card "fachada": mostra a capa do vídeo com um botão de play simples,
+     sem nenhuma marca do YouTube. Só carrega o player de verdade ao clicar. */
+  .video-card{
+    all: unset;
+    box-sizing: border-box;
+    position:absolute;
+    inset:0;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .video-card-thumb{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit: cover;
+  }
+  .video-card::after{
     content:'';
     position:absolute;
     inset:0;
-    background: linear-gradient(to top, rgba(20,17,13,0.65) 0%, rgba(20,17,13,0.1) 45%, rgba(20,17,13,0.15) 100%);
-    z-index:1;
+    background: linear-gradient(to top, rgba(20,17,13,0.4) 0%, rgba(20,17,13,0.05) 55%);
     pointer-events:none;
   }
-  /* Vídeo local com controles nativos: sem overlay escuro nem título por cima,
-     para não atrapalhar a visibilidade da barra de controles do navegador. */
-  .video-item-arquivo::after{ content: none; }
-  .video-item-arquivo .video-foto{ z-index: 1; }
-  .video-item-arquivo .video-tag{ z-index: 2; }
-  .video-tag{
-    align-self:flex-start;
-    margin: 16px;
-    padding: 6px 14px;
-    border-radius: 100px;
-    background: rgba(255,255,255,0.22);
-    backdrop-filter: blur(6px);
-    color: var(--branco);
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    position: relative;
-    z-index: 2;
-  }
-  .video-play{
-    position:absolute;
-    top:50%; left:50%;
-    transform: translate(-50%,-50%);
-    width: 62px; height: 62px;
+  .video-card-play{
+    position:relative;
+    z-index:2;
+    width: 54px; height: 54px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.92);
     color: var(--tinta);
     display:flex;
     align-items:center;
     justify-content:center;
-    z-index:2;
-    transition: transform 0.3s ease, background 0.3s ease;
+    transition: transform 0.25s ease, background 0.25s ease;
   }
-  .video-item:hover .video-play{ transform: translate(-50%,-50%) scale(1.08); background: var(--branco); }
-  .video-item-titulo{
-    padding: 0 20px 20px 20px;
-    color: var(--branco);
-    font-family: var(--fonte-titulo);
-    font-size: 1.05rem;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.35);
-    position: relative;
-    z-index: 2;
-  }
-  .video-item.escondido{ display:none; }
+  .video-card:hover .video-card-play,
+  .video-card:focus-visible .video-card-play{ transform: scale(1.08); background: var(--branco); }
+  .video-card:focus-visible{ outline: 3px solid var(--azul); outline-offset: 3px; }
 
-  @media (max-width: 900px){ .video-grade{ grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 560px){ .video-grade{ grid-template-columns: 1fr; } }
-
-  /* Estado vazio, exibido enquanto nenhum vídeo foi cadastrado em CONFIG.videos */
-  .videos-vazio{
-    text-align:center;
-    padding: 64px 24px;
-    border: 1.5px dashed var(--borda);
-    border-radius: var(--raio);
-    background: var(--branco);
-  }
-  .videos-vazio-icone{
-    width: 56px; height: 56px;
-    margin: 0 auto 20px auto;
+  .scroll-seta{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:absolute;
+    top:50%;
+    transform: translateY(-50%);
+    width: 40px; height: 40px;
     border-radius: 50%;
-    background: var(--tinta);
-    color: var(--creme);
-    display:flex; align-items:center; justify-content:center;
+    background: var(--branco);
+    border: 1px solid var(--borda);
+    box-shadow: var(--sombra);
+    color: var(--tinta);
+    cursor:pointer;
+    z-index: 3;
+    transition: background 0.25s ease, color 0.25s ease, opacity 0.2s ease;
   }
-  .videos-vazio h3{ font-size: 1.3rem; margin-bottom: 8px; }
-  .videos-vazio p{ color: rgba(20,17,13,0.65); max-width: 420px; margin: 0 auto; }
+  .scroll-seta:hover{ background: var(--tinta); color: var(--creme); }
+  .scroll-seta:focus-visible{ outline: 3px solid var(--azul); outline-offset: 2px; }
+  .scroll-seta-esq{ left: -8px; }
+  .scroll-seta-dir{ right: -8px; }
+  .scroll-seta[hidden]{ display:none; }
+
+  @media (max-width: 700px){
+    .video-item{ flex-basis: 42vw; }
+    .scroll-seta{ display:none; }
+  }
 
   /* ============================================================
      RODAPÉ
@@ -443,11 +425,10 @@
     </div>
   </section>
 
-  <!-- GALERIA DE VÍDEOS -->
+  <!-- GALERIA DE VÍDEOS, UM BLOCO POR NICHO -->
   <section id="galeria-videos">
     <div class="container">
-      <div class="filtros revelar" id="filtros" role="group" aria-label="Filtrar vídeos por categoria"></div>
-      <div class="video-grade" id="grade-videos"></div>
+      <div id="nichos-videos"></div>
     </div>
   </section>
 
@@ -495,23 +476,59 @@
       { texto: "Contato", href: "index.html#contato" }
     ],
 
-    // EDITE AQUI: categorias do filtro (mesmos nichos usados no portfólio de fotos)
-    categorias: ["Todos", "Beleza", "Casa e Limpeza", "Pet"],
-
-    // EDITE AQUI: vídeos UGC. Cada item precisa ter "youtubeId" (código do vídeo no
-    // YouTube, a parte final do link, depois de "shorts/" ou "watch?v=") OU "arquivo"
-    // (vídeo .mp4 dentro da pasta /videos, para hospedar direto no site). Se tiver os
-    // dois, o YouTube tem prioridade.
-    // {
-    //   titulo: "Nome do vídeo",
-    //   categoria: "beleza",              // precisa bater com uma categoria acima, em minúsculo
-    //   youtubeId: "T6X4J4uYdYQ",         // código do vídeo no YouTube
-    //   arquivo: "videos/video-01.mp4"    // opcional: vídeo local, usado se não houver "youtubeId"
-    // }
-    videos: [
-      { titulo: "Rotina de skincare", categoria: "beleza", youtubeId: "T6X4J4uYdYQ" },
-      { titulo: "Rotina de limpeza prática", categoria: "casa e limpeza", youtubeId: "1unCG49vObc" },
-      { titulo: "Cuidados com o pet", categoria: "pet", youtubeId: "0i2ZFRrx0Cg" }
+    // EDITE AQUI: vídeos UGC, organizados por nicho. Cada nicho vira um bloco na página,
+    // com o título do nicho em cima e os vídeos lado a lado (arraste ou use as setas
+    // para ver mais, sem precisar trocar de página).
+    // Cada vídeo precisa de um "youtubeId": o código do vídeo no YouTube, que é a parte
+    // final do link, depois de "shorts/" ou "watch?v=". Exemplo:
+    //   https://www.youtube.com/shorts/T6X4J4uYdYQ  ->  youtubeId: "T6X4J4uYdYQ"
+    // Para adicionar um vídeo novo num nicho existente, adicione uma linha na lista
+    // "videos" dele. Para criar um nicho novo, copie um bloco inteiro e troque o "nicho".
+    videosPorNicho: [
+      {
+        nicho: "Pet",
+        videos: [
+          { youtubeId: "0i2ZFRrx0Cg" },
+          { youtubeId: "Owc3PnPbOkY" },
+          { youtubeId: "q2CkbyxZGv8" },
+          { youtubeId: "-qoS9D5oUJs" }
+        ]
+      },
+      {
+        nicho: "Casa e Limpeza",
+        videos: [
+          { youtubeId: "1unCG49vObc" },
+          { youtubeId: "rfsXdrQ3GWA" },
+          { youtubeId: "iZKODStY1mM" },
+          { youtubeId: "4YFLYX1zwLc" },
+          { youtubeId: "uBdbW68OeYo" }
+        ]
+      },
+      {
+        nicho: "Haircare",
+        videos: [
+          { youtubeId: "3gEzz8Rir-k" },
+          { youtubeId: "kHodjMdDAfQ" },
+          { youtubeId: "T759fFIfshY" },
+          { youtubeId: "DE13lRXO3Ng" }
+        ]
+      },
+      {
+        nicho: "Skincare",
+        videos: [
+          { youtubeId: "T6X4J4uYdYQ" },
+          { youtubeId: "AmtVkRfbOzw" },
+          { youtubeId: "Z8S-dDvCah0" },
+          { youtubeId: "R5KCgbtnYJc" }
+        ]
+      },
+      {
+        nicho: "Lifestyle",
+        videos: [
+          { youtubeId: "ms8_RtA5N1c" },
+          { youtubeId: "tNqnPAUQdtU" }
+        ]
+      }
     ]
   };
 
@@ -534,79 +551,81 @@
       + `<div class="nav-cta"><a class="botao botao-primario" href="index.html#contato">Fale comigo</a></div>`;
   }
 
-  function montarFiltros(){
-    const container = document.getElementById('filtros');
-    container.innerHTML = CONFIG.categorias.map((cat, indice) => {
-      const chave = cat.toLowerCase();
-      const ativo = indice === 0 ? ' ativo' : '';
-      return `<button type="button" class="filtro-botao${ativo}" data-categoria="${chave}" aria-pressed="${indice === 0}">${cat}</button>`;
-    }).join('');
+  const ICONE_SETA_ESQ = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>';
+  const ICONE_SETA_DIR = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
 
-    container.addEventListener('click', (evento) => {
-      const botao = evento.target.closest('.filtro-botao');
+  function montarGaleriaVideos(){
+    const container = document.getElementById('nichos-videos');
+
+    container.innerHTML = CONFIG.videosPorNicho.map((bloco, indiceBloco) => {
+      const idTrack = `nicho-track-${indiceBloco}`;
+      const cards = bloco.videos.map((video, indiceVideo) => `
+        <div class="video-item revelar">
+          <button type="button" class="video-card" data-youtube="${video.youtubeId}" data-titulo="${bloco.nicho} ${indiceVideo + 1}" aria-label="Assistir vídeo ${indiceVideo + 1} de ${bloco.nicho}">
+            <img class="video-card-thumb" src="https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg" alt="" loading="lazy">
+            <span class="video-card-play" aria-hidden="true">${ICONE_PLAY}</span>
+          </button>
+        </div>
+      `).join('');
+
+      return `
+        <div class="nicho-videos revelar">
+          <h3 class="nicho-titulo">${bloco.nicho}</h3>
+          <div class="video-scroll-wrap">
+            <button type="button" class="scroll-seta scroll-seta-esq" data-alvo="${idTrack}" data-direcao="-1" aria-label="Ver vídeos anteriores de ${bloco.nicho}" hidden>${ICONE_SETA_ESQ}</button>
+            <div class="video-track" id="${idTrack}">${cards}</div>
+            <button type="button" class="scroll-seta scroll-seta-dir" data-alvo="${idTrack}" data-direcao="1" aria-label="Ver mais vídeos de ${bloco.nicho}">${ICONE_SETA_DIR}</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Cada vídeo começa como uma "fachada" (capa + botão de play simples, sem nada do
+  // YouTube visível). Só ao clicar é que o player de verdade é carregado, já tocando.
+  function configurarPlayVideos(){
+    document.getElementById('nichos-videos').addEventListener('click', (evento) => {
+      const botao = evento.target.closest('.video-card');
       if(!botao) return;
-      container.querySelectorAll('.filtro-botao').forEach(b => {
-        b.classList.remove('ativo');
-        b.setAttribute('aria-pressed', 'false');
-      });
-      botao.classList.add('ativo');
-      botao.setAttribute('aria-pressed', 'true');
-      filtrarVideos(botao.dataset.categoria);
+      const id = botao.dataset.youtube;
+      const titulo = botao.dataset.titulo;
+
+      const iframe = document.createElement('iframe');
+      iframe.className = 'video-foto';
+      iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+      iframe.title = titulo;
+      iframe.loading = 'lazy';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.allowFullscreen = true;
+
+      botao.replaceWith(iframe);
     });
   }
 
-  function montarVideos(){
-    const grade = document.getElementById('grade-videos');
+  // Setas de cada nicho: rolam a faixa de vídeos sem mudar de página, e somem
+  // sozinhas quando não há mais o que rolar naquela direção.
+  function configurarSetasScroll(){
+    document.querySelectorAll('.video-scroll-wrap').forEach(wrap => {
+      const track = wrap.querySelector('.video-track');
+      const setaEsq = wrap.querySelector('.scroll-seta-esq');
+      const setaDir = wrap.querySelector('.scroll-seta-dir');
 
-    // Enquanto CONFIG.videos estiver vazio, mostra um aviso elegante no lugar da grade.
-    if(CONFIG.videos.length === 0){
-      grade.innerHTML = `
-        <div class="videos-vazio revelar" style="grid-column: 1 / -1;">
-          <div class="videos-vazio-icone">${ICONE_PLAY}</div>
-          <h3>Vídeos chegando em breve</h3>
-          <p>Estou organizando os vídeos UGC completos para esta página. Enquanto isso, confira as fotos dos trabalhos já entregues ou fale comigo para receber exemplos direto no WhatsApp.</p>
-        </div>
-      `;
-      document.getElementById('filtros').style.display = 'none';
-      return;
-    }
-
-    grade.innerHTML = CONFIG.videos.map(video => {
-      // Vídeo do YouTube: player oficial incorporado, leve e rápido.
-      if(video.youtubeId){
-        return `
-          <div class="video-item video-item-arquivo revelar" data-categoria="${video.categoria}">
-            <iframe class="video-foto" src="https://www.youtube.com/embed/${video.youtubeId}" title="${video.titulo}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-            <span class="video-tag">${video.categoria}</span>
-          </div>
-        `;
+      function atualizarSetas(){
+        const maximo = track.scrollWidth - track.clientWidth - 2;
+        setaEsq.hidden = track.scrollLeft <= 4;
+        setaDir.hidden = maximo <= 4 || track.scrollLeft >= maximo;
       }
-      // Vídeo local: toca direto na página com os controles nativos do navegador.
-      if(video.arquivo){
-        return `
-          <div class="video-item video-item-arquivo revelar" data-categoria="${video.categoria}">
-            <video class="video-foto" controls preload="metadata" playsinline aria-label="${video.titulo}">
-              <source src="${video.arquivo}" type="video/mp4">
-            </video>
-            <span class="video-tag">${video.categoria}</span>
-          </div>
-        `;
-      }
-      // Sem YouTube nem arquivo local: card que abre o link externo em nova aba.
-      return `
-        <a class="video-item revelar" data-categoria="${video.categoria}" href="${video.url}" target="_blank" rel="noopener noreferrer" aria-label="Assistir: ${video.titulo}" style="background:${video.gradiente || 'linear-gradient(150deg, #0049a4, #df7900)'};">
-          <span class="video-tag">${video.categoria}</span>
-          <span class="video-play">${ICONE_PLAY}</span>
-          <span class="video-item-titulo">${video.titulo}</span>
-        </a>
-      `;
-    }).join('');
-  }
 
-  function filtrarVideos(categoria){
-    document.querySelectorAll('.video-item').forEach(item => {
-      const mostrar = categoria === 'todos' || item.dataset.categoria === categoria;
-      item.classList.toggle('escondido', !mostrar);
+      [setaEsq, setaDir].forEach(seta => {
+        seta.addEventListener('click', () => {
+          const direcao = Number(seta.dataset.direcao);
+          track.scrollBy({ left: direcao * track.clientWidth * 0.85, behavior: 'smooth' });
+        });
+      });
+
+      track.addEventListener('scroll', atualizarSetas);
+      window.addEventListener('resize', atualizarSetas);
+      atualizarSetas();
     });
   }
 
@@ -669,11 +688,12 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     montarCabecalho();
-    montarFiltros();
-    montarVideos();
+    montarGaleriaVideos();
     montarRodape();
     configurarMenuMobile();
     configurarAnimacaoEntrada();
+    configurarPlayVideos();
+    configurarSetasScroll();
   });
 </script>
 </body>

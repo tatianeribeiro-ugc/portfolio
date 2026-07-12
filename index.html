@@ -420,6 +420,48 @@
     pointer-events:none;
   }
 
+  /* Card "fachada": mostra a capa do vídeo com um botão de play simples,
+     sem nenhuma marca do YouTube. Só carrega o player de verdade ao clicar. */
+  .video-card{
+    all: unset;
+    box-sizing: border-box;
+    position:absolute;
+    inset:0;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .video-card-thumb{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit: cover;
+  }
+  .video-card::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background: linear-gradient(to top, rgba(20,17,13,0.4) 0%, rgba(20,17,13,0.05) 55%);
+    pointer-events:none;
+  }
+  .video-card-play{
+    position:relative;
+    z-index:2;
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.92);
+    color: var(--tinta);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition: transform 0.25s ease, background 0.25s ease;
+  }
+  .video-card:hover .video-card-play,
+  .video-card:focus-visible .video-card-play{ transform: scale(1.08); background: var(--branco); }
+  .video-card:focus-visible{ outline: 3px solid var(--azul); outline-offset: 3px; }
+
   @media (max-width: 900px){ .video-grade{ grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 560px){ .video-grade{ grid-template-columns: 1fr; } }
 
@@ -1083,6 +1125,8 @@
     caixa: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8l9-5 9 5-9 5-9-5z"/><path d="M3 8v9l9 5 9-5V8"/><path d="M12 13v9"/></svg>'
   };
 
+  const ICONE_PLAY = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 7l9 5-9 5V7z" fill="currentColor"/></svg>';
+
   /* ============================================================================================
      FUNÇÕES DE RENDERIZAÇÃO (montam o HTML das seções a partir do CONFIG)
      ============================================================================================ */
@@ -1121,15 +1165,39 @@
 
   function montarVideosDestaque(){
     const grade = document.getElementById('grade-videos-destaque');
-    // Cada vídeo é incorporado direto do YouTube (player oficial, leve e rápido).
+    // Cada vídeo começa como uma "fachada" (capa + botão de play simples, sem nada do
+    // YouTube visível). Só ao clicar é que o player de verdade é carregado, já tocando.
     // EDITE AQUI: para trocar um vídeo, troque o "youtubeId" no CONFIG.videosDestaque acima
     // pelo código do novo vídeo (a parte final do link do YouTube).
     grade.innerHTML = CONFIG.videosDestaque.map(video => `
       <div class="video-item revelar">
-        <iframe class="video-foto" src="https://www.youtube.com/embed/${video.youtubeId}" title="${video.titulo}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        <button type="button" class="video-card" data-youtube="${video.youtubeId}" data-titulo="${video.titulo}" aria-label="Assistir vídeo: ${video.titulo}">
+          <img class="video-card-thumb" src="https://i.ytimg.com/vi/${video.youtubeId}/hqdefault.jpg" alt="" loading="lazy">
+          <span class="video-card-play" aria-hidden="true">${ICONE_PLAY}</span>
+        </button>
         <span class="video-tag">${video.categoria}</span>
       </div>
     `).join('');
+  }
+
+  // Troca o card-fachada pelo player real do YouTube ao clicar (delegação de evento).
+  function configurarPlayVideos(){
+    document.getElementById('grade-videos-destaque').addEventListener('click', (evento) => {
+      const botao = evento.target.closest('.video-card');
+      if(!botao) return;
+      const id = botao.dataset.youtube;
+      const titulo = botao.dataset.titulo;
+
+      const iframe = document.createElement('iframe');
+      iframe.className = 'video-foto';
+      iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+      iframe.title = titulo;
+      iframe.loading = 'lazy';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+      iframe.allowFullscreen = true;
+
+      botao.replaceWith(iframe);
+    });
   }
 
   function montarFiltros(){
@@ -1375,6 +1443,7 @@
     configurarAnimacaoEntrada();
     configurarContadores();
     configurarFormulario();
+    configurarPlayVideos();
   });
 </script>
 </body>
