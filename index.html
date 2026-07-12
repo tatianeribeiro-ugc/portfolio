@@ -254,7 +254,15 @@
     width:100%;
     height:100%;
     object-fit: cover;
+    object-position: center 20%;
     z-index:0;
+  }
+  /* A foto de "Sobre mim" fica num quadro quadrado (1:1), então priorizamos
+     o topo da imagem para não cortar o rosto. EDITE AQUI: se trocar a foto
+     e ela cortar em outro lugar, ajuste a porcentagem vertical abaixo
+     (0% = topo da foto, 100% = base da foto). */
+  .sobre-imagem .bloco-imagem-foto{
+    object-position: center 5%;
   }
   .bloco-imagem::after{
     content:'';
@@ -759,9 +767,11 @@
     <div class="container">
       <div class="portfolio-cabecalho">
         <div class="portfolio-intro revelar">
-          <span class="rotulo-secao">Portfólio</span>
-          <h2>Trabalhos por <em>nicho</em></h2>
+          <span class="rotulo-secao">Portfólio de fotos</span>
+          <h2>Fotos dos trabalhos por <em>nicho</em></h2>
+          <p style="color: rgba(20,17,13,0.7); font-size:0.98rem; max-width:520px;">Esta galeria reúne fotos dos conteúdos já entregues para marcas parceiras. Os vídeos UGC estão reunidos em uma página exclusiva.</p>
         </div>
+        <a href="videos.html" class="botao botao-secundario revelar">Ver portfólio de vídeos</a>
       </div>
       <div class="filtros revelar" id="filtros" role="group" aria-label="Filtrar portfólio por categoria"></div>
       <div class="portfolio-grade" id="grade-portfolio"></div>
@@ -877,10 +887,12 @@
       instagramUrl: "https://instagram.com/ugc.tatiribeiro"
     },
 
-    // EDITE AQUI: links do menu de navegação (texto exibido + id da seção)
+    // EDITE AQUI: links do menu de navegação. Use "alvo" para rolar até uma
+    // seção desta mesma página, ou "href" para apontar para outra página (ex: videos.html)
     navegacao: [
       { texto: "Sobre", alvo: "sobre" },
       { texto: "Portfólio", alvo: "portfolio" },
+      { texto: "Vídeos UGC", href: "videos.html" },
       { texto: "Serviços", alvo: "servicos" },
       { texto: "Resultados", alvo: "resultados" },
       { texto: "Depoimentos", alvo: "depoimentos" },
@@ -1005,10 +1017,12 @@
     document.getElementById('logo-cabecalho').innerHTML = `${CONFIG.primeiroNome} <em>Ribeiro</em>`;
     document.getElementById('rodape-logo').innerHTML = `${CONFIG.primeiroNome} <em>Ribeiro</em>`;
 
-    const linksHtml = CONFIG.navegacao.map(item => `<a href="#${item.alvo}">${item.texto}</a>`).join('');
+    const montarLink = item => `<a href="${item.href ? item.href : '#' + item.alvo}">${item.texto}</a>`;
+
+    const linksHtml = CONFIG.navegacao.map(montarLink).join('');
     document.getElementById('nav-desktop').innerHTML = linksHtml;
 
-    const linksMobileHtml = CONFIG.navegacao.map(item => `<a href="#${item.alvo}">${item.texto}</a>`).join('')
+    const linksMobileHtml = CONFIG.navegacao.map(montarLink).join('')
       + `<div class="nav-cta"><a class="botao botao-primario" href="#contato">Fale comigo</a></div>`;
     document.getElementById('nav-mobile').innerHTML = linksMobileHtml;
   }

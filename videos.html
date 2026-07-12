@@ -1,0 +1,644 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfólio de Vídeos UGC | Tati Ribeiro</title>
+<meta name="description" content="Portfólio de vídeos UGC de Tati Ribeiro, criadora de conteúdo. Em breve, vídeos completos por nicho.">
+
+<!-- Fontes do Google Fonts (única fonte externa permitida) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     VARIÁVEIS DE DESIGN (paleta, fontes, espaçamentos)
+     As mesmas usadas em index.html, para manter a identidade visual.
+     ============================================================ */
+  :root{
+    --creme: #f3eee9;
+    --creme-escuro: #e7ded4;
+    --tinta: #14110d;
+    --azul: #0049a4;
+    --azul-escuro: #003576;
+    --laranja: #df7900;
+    --branco: #ffffff;
+    --borda: rgba(20,17,13,0.12);
+    --sombra: 0 10px 30px rgba(20,17,13,0.08);
+    --sombra-forte: 0 20px 45px rgba(20,17,13,0.14);
+    --fonte-titulo: 'Fraunces', serif;
+    --fonte-corpo: 'Plus Jakarta Sans', sans-serif;
+    --raio: 18px;
+    --raio-pequeno: 10px;
+    --container: 1180px;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    *{ animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+
+  body{
+    margin:0;
+    background: var(--creme);
+    color: var(--tinta);
+    font-family: var(--fonte-corpo);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img, svg{ max-width: 100%; display:block; }
+  a{ color: inherit; text-decoration: none; }
+
+  h1,h2,h3,h4{
+    font-family: var(--fonte-titulo);
+    font-weight: 500;
+    line-height: 1.15;
+    margin: 0 0 0.5em 0;
+    letter-spacing: -0.01em;
+  }
+  h1 em, h2 em, h3 em{ font-style: italic; font-weight: 400; color: var(--azul); }
+
+  p{ margin: 0 0 1em 0; }
+
+  .container{
+    width: 100%;
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  section{ padding: 88px 0; }
+  @media (max-width: 768px){ section{ padding: 64px 0; } }
+
+  .rotulo-secao{
+    display:inline-block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--azul);
+    margin-bottom: 14px;
+  }
+
+  .botao{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding: 15px 30px;
+    border-radius: 100px;
+    font-family: var(--fonte-corpo);
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+  }
+  .botao:hover{ transform: translateY(-2px); }
+  .botao:focus-visible{ outline: 3px solid var(--azul); outline-offset: 3px; }
+
+  .botao-primario{ background: var(--tinta); color: var(--creme); }
+  .botao-primario:hover{ background: var(--azul); box-shadow: var(--sombra-forte); }
+
+  .botao-secundario{ background: transparent; border-color: var(--tinta); color: var(--tinta); }
+  .botao-secundario:hover{ background: var(--tinta); color: var(--creme); }
+
+  .botao-laranja{ background: var(--laranja); color: var(--branco); }
+  .botao-laranja:hover{ background: #c26800; box-shadow: var(--sombra-forte); }
+
+  /* ============================================================
+     ANIMAÇÃO DE ENTRADA (fade + subida leve via IntersectionObserver)
+     ============================================================ */
+  .revelar{
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.8s cubic-bezier(.22,.61,.36,1), transform 0.8s cubic-bezier(.22,.61,.36,1);
+  }
+  .revelar.visivel{ opacity: 1; transform: translateY(0); }
+
+  /* ============================================================
+     CABEÇALHO / MENU
+     ============================================================ */
+  .cabecalho{
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    background: rgba(243,238,233,0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--borda);
+  }
+  .cabecalho-conteudo{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    height: 78px;
+  }
+  .logo{
+    font-family: var(--fonte-titulo);
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .logo em{ color: var(--azul); font-style: italic; }
+
+  .nav-desktop{ display:flex; align-items:center; gap: 36px; }
+  .nav-desktop a{
+    font-size: 0.92rem;
+    font-weight: 600;
+    position: relative;
+    padding: 4px 2px;
+  }
+  .nav-desktop a::after{
+    content:'';
+    position:absolute; left:0; bottom:-4px;
+    width:0; height:2px; background: var(--laranja);
+    transition: width 0.3s ease;
+  }
+  .nav-desktop a:hover::after, .nav-desktop a:focus-visible::after{ width:100%; }
+  .nav-desktop a:focus-visible{ outline: 3px solid var(--azul); outline-offset: 4px; border-radius: 4px; }
+  .nav-desktop a.ativo::after{ width:100%; background: var(--azul); }
+
+  .nav-cta{ display:flex; align-items:center; gap: 20px; }
+
+  .botao-menu{
+    display:none;
+    flex-direction: column;
+    justify-content:center;
+    gap:5px;
+    width: 42px; height: 42px;
+    background: transparent;
+    border: 1px solid var(--borda);
+    border-radius: var(--raio-pequeno);
+    cursor:pointer;
+  }
+  .botao-menu span{
+    display:block;
+    width: 20px; height: 2px;
+    background: var(--tinta);
+    margin: 0 auto;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  .botao-menu:focus-visible{ outline: 3px solid var(--azul); outline-offset: 3px; }
+  .botao-menu.aberto span:nth-child(1){ transform: translateY(7px) rotate(45deg); }
+  .botao-menu.aberto span:nth-child(2){ opacity: 0; }
+  .botao-menu.aberto span:nth-child(3){ transform: translateY(-7px) rotate(-45deg); }
+
+  .nav-mobile{
+    display:none;
+    position: fixed;
+    top: 78px; left:0; right:0; bottom:0;
+    background: var(--creme);
+    padding: 32px 24px;
+    flex-direction: column;
+    gap: 6px;
+    overflow-y:auto;
+  }
+  .nav-mobile.aberto{ display:flex; }
+  .nav-mobile a{
+    font-family: var(--fonte-titulo);
+    font-size: 1.6rem;
+    padding: 14px 4px;
+    border-bottom: 1px solid var(--borda);
+  }
+  .nav-mobile .nav-cta{ margin-top: 20px; flex-direction: column; align-items:stretch; }
+  .nav-mobile .botao{ width: 100%; }
+
+  @media (max-width: 900px){
+    .nav-desktop{ display:none; }
+    .nav-cta > .botao{ display:none; }
+    .botao-menu{ display:flex; }
+  }
+
+  /* ============================================================
+     INTRODUÇÃO DA PÁGINA DE VÍDEOS
+     ============================================================ */
+  .intro-videos{
+    padding-top: 168px;
+    padding-bottom: 40px;
+  }
+  .intro-videos-conteudo{ max-width: 640px; }
+  .intro-videos h1{ font-size: clamp(2.2rem, 4.5vw, 3.2rem); }
+  .intro-videos p{ font-size: 1.08rem; color: rgba(20,17,13,0.78); }
+  .intro-videos-acoes{ display:flex; gap:16px; flex-wrap:wrap; margin-top: 24px; }
+
+  @media (max-width: 900px){ .intro-videos{ padding-top: 140px; } }
+
+  /* ============================================================
+     FILTROS E GRADE DE VÍDEOS
+     ============================================================ */
+  .filtros{
+    display:flex;
+    flex-wrap:wrap;
+    gap: 10px;
+    margin-bottom: 36px;
+  }
+  .filtro-botao{
+    padding: 9px 20px;
+    border-radius: 100px;
+    border: 1.5px solid var(--borda);
+    background: transparent;
+    font-family: var(--fonte-corpo);
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor:pointer;
+    color: var(--tinta);
+    transition: all 0.25s ease;
+  }
+  .filtro-botao:hover{ border-color: var(--tinta); }
+  .filtro-botao:focus-visible{ outline: 3px solid var(--azul); outline-offset: 2px; }
+  .filtro-botao.ativo{ background: var(--tinta); color: var(--creme); border-color: var(--tinta); }
+
+  .video-grade{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  .video-item{
+    aspect-ratio: 9/16;
+    border-radius: var(--raio);
+    box-shadow: var(--sombra);
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+  }
+  .video-item:hover{ transform: translateY(-6px); }
+  .video-item:focus-visible{ outline: 3px solid var(--azul); outline-offset: 3px; }
+  .video-foto{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit: cover;
+    z-index:0;
+  }
+  .video-item::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background: linear-gradient(to top, rgba(20,17,13,0.65) 0%, rgba(20,17,13,0.1) 45%, rgba(20,17,13,0.15) 100%);
+    z-index:1;
+    pointer-events:none;
+  }
+  .video-tag{
+    align-self:flex-start;
+    margin: 16px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    background: rgba(255,255,255,0.22);
+    backdrop-filter: blur(6px);
+    color: var(--branco);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    position: relative;
+    z-index: 2;
+  }
+  .video-play{
+    position:absolute;
+    top:50%; left:50%;
+    transform: translate(-50%,-50%);
+    width: 62px; height: 62px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+    color: var(--tinta);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:2;
+    transition: transform 0.3s ease, background 0.3s ease;
+  }
+  .video-item:hover .video-play{ transform: translate(-50%,-50%) scale(1.08); background: var(--branco); }
+  .video-item-titulo{
+    padding: 0 20px 20px 20px;
+    color: var(--branco);
+    font-family: var(--fonte-titulo);
+    font-size: 1.05rem;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.35);
+    position: relative;
+    z-index: 2;
+  }
+  .video-item.escondido{ display:none; }
+
+  @media (max-width: 900px){ .video-grade{ grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px){ .video-grade{ grid-template-columns: 1fr; } }
+
+  /* Estado vazio, exibido enquanto nenhum vídeo foi cadastrado em CONFIG.videos */
+  .videos-vazio{
+    text-align:center;
+    padding: 64px 24px;
+    border: 1.5px dashed var(--borda);
+    border-radius: var(--raio);
+    background: var(--branco);
+  }
+  .videos-vazio-icone{
+    width: 56px; height: 56px;
+    margin: 0 auto 20px auto;
+    border-radius: 50%;
+    background: var(--tinta);
+    color: var(--creme);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .videos-vazio h3{ font-size: 1.3rem; margin-bottom: 8px; }
+  .videos-vazio p{ color: rgba(20,17,13,0.65); max-width: 420px; margin: 0 auto; }
+
+  /* ============================================================
+     RODAPÉ
+     ============================================================ */
+  .rodape{
+    background: var(--tinta);
+    color: rgba(243,238,233,0.85);
+    padding: 56px 0 28px 0;
+  }
+  .rodape-topo{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap: 24px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid rgba(243,238,233,0.15);
+  }
+  .rodape-logo{ font-family: var(--fonte-titulo); font-size: 1.5rem; color: var(--creme); }
+  .rodape-logo em{ font-style: italic; color: var(--laranja); }
+  .rodape-social{ display:flex; gap: 14px; }
+  .rodape-social a{
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    border: 1px solid rgba(243,238,233,0.3);
+    display:flex; align-items:center; justify-content:center;
+    transition: background 0.25s ease, transform 0.25s ease;
+  }
+  .rodape-social a:hover{ background: var(--azul); transform: translateY(-3px); border-color: var(--azul); }
+  .rodape-social a:focus-visible{ outline: 3px solid var(--laranja); outline-offset: 3px; }
+  .rodape-baixo{
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap: 10px;
+    padding-top: 24px;
+    font-size: 0.82rem;
+    color: rgba(243,238,233,0.55);
+  }
+
+  @media (max-width: 640px){ .rodape-topo, .rodape-baixo{ flex-direction:column; text-align:center; } }
+
+  .pular-link{
+    position:absolute; left:-999px; top:auto;
+    background: var(--azul); color: var(--branco);
+    padding: 12px 18px; border-radius: 8px; z-index: 2000;
+  }
+  .pular-link:focus{ left: 16px; top: 16px; }
+</style>
+</head>
+<body>
+
+<a class="pular-link" href="#conteudo-principal">Pular para o conteúdo principal</a>
+
+<!-- Cabeçalho igual ao do site principal, montado via JS a partir do CONFIG abaixo -->
+<header class="cabecalho">
+  <div class="container cabecalho-conteudo">
+    <a href="index.html" class="logo" id="logo-cabecalho"></a>
+    <nav class="nav-desktop" id="nav-desktop" aria-label="Navegação principal"></nav>
+    <div class="nav-cta">
+      <a class="botao botao-primario" id="cta-cabecalho" href="index.html#contato">Fale comigo</a>
+      <button class="botao-menu" id="botao-menu" aria-label="Abrir menu" aria-expanded="false" aria-controls="nav-mobile">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <nav class="nav-mobile" id="nav-mobile" aria-label="Navegação móvel"></nav>
+</header>
+
+<main id="conteudo-principal">
+
+  <!-- INTRODUÇÃO DA PÁGINA -->
+  <section class="intro-videos">
+    <div class="container">
+      <div class="intro-videos-conteudo revelar">
+        <span class="rotulo-secao">Portfólio de vídeos</span>
+        <h1>Vídeos <em>UGC</em> por nicho</h1>
+        <p>Esta página vai reunir os vídeos UGC completos entregues para marcas parceiras, organizados por nicho. As fotos dos trabalhos continuam na página principal do portfólio.</p>
+        <div class="intro-videos-acoes">
+          <a href="index.html#portfolio" class="botao botao-secundario">Ver portfólio de fotos</a>
+          <a href="index.html#contato" class="botao botao-primario">Fale comigo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALERIA DE VÍDEOS -->
+  <section id="galeria-videos">
+    <div class="container">
+      <div class="filtros revelar" id="filtros" role="group" aria-label="Filtrar vídeos por categoria"></div>
+      <div class="video-grade" id="grade-videos"></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- RODAPÉ igual ao do site principal -->
+<footer class="rodape">
+  <div class="container">
+    <div class="rodape-topo">
+      <span class="rodape-logo" id="rodape-logo"></span>
+      <div class="rodape-social" id="rodape-social"></div>
+    </div>
+    <div class="rodape-baixo">
+      <span id="rodape-nome-direitos"></span>
+      <span id="rodape-copyright"></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ============================================================================================
+     CONFIGURAÇÃO DESTA PÁGINA
+     Mantém os mesmos dados reais usados em index.html (nome, contato, redes sociais).
+     ============================================================================================ */
+  const CONFIG = {
+    // EDITE AQUI: nome exibido no menu e no rodapé
+    nome: "Tati Ribeiro",
+    primeiroNome: "Tati",
+    profissao: "Criadora de Conteúdo UGC",
+
+    // EDITE AQUI: dados de contato reais (iguais aos de index.html)
+    contato: {
+      email: "contatougc.tatiribeiro@gmail.com",
+      whatsappNumero: "5519974198574",
+      instagramUsuario: "@ugc.tatiribeiro",
+      instagramUrl: "https://instagram.com/ugc.tatiribeiro"
+    },
+
+    // EDITE AQUI: links do menu (voltam para as seções da página principal, index.html)
+    navegacao: [
+      { texto: "Início", href: "index.html" },
+      { texto: "Portfólio de fotos", href: "index.html#portfolio" },
+      { texto: "Vídeos UGC", href: "videos.html" },
+      { texto: "Serviços", href: "index.html#servicos" },
+      { texto: "Contato", href: "index.html#contato" }
+    ],
+
+    // EDITE AQUI: categorias do filtro (mesmos nichos usados no portfólio de fotos)
+    categorias: ["Todos", "Beleza", "Casa e Limpeza", "Pet"],
+
+    // EDITE AQUI: vídeos UGC. Comece vazio ([]) e adicione um item para cada vídeo pronto, assim:
+    // {
+    //   titulo: "Nome do vídeo",
+    //   categoria: "beleza",                          // precisa bater com uma categoria acima, em minúsculo
+    //   url: "https://www.instagram.com/reel/XXXXX/",  // link do vídeo (Instagram, YouTube, TikTok etc.)
+    //   capa: "fotos/capa-video-01.jpg",                // imagem de capa do vídeo, dentro da pasta /fotos
+    //   gradiente: "linear-gradient(150deg, #df7900, #0049a4)" // usado enquanto não houver capa
+    // }
+    videos: []
+  };
+
+  /* ============================================================================================
+     RENDERIZAÇÃO
+     ============================================================================================ */
+  const ICONE_PLAY = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 7l9 5-9 5V7z" fill="currentColor"/></svg>';
+
+  function montarCabecalho(){
+    document.getElementById('logo-cabecalho').innerHTML = `${CONFIG.primeiroNome} <em>Ribeiro</em>`;
+    document.getElementById('rodape-logo').innerHTML = `${CONFIG.primeiroNome} <em>Ribeiro</em>`;
+
+    const montarLink = item => {
+      const ativo = item.href === 'videos.html' ? ' class="ativo"' : '';
+      return `<a href="${item.href}"${ativo}>${item.texto}</a>`;
+    };
+
+    document.getElementById('nav-desktop').innerHTML = CONFIG.navegacao.map(montarLink).join('');
+    document.getElementById('nav-mobile').innerHTML = CONFIG.navegacao.map(montarLink).join('')
+      + `<div class="nav-cta"><a class="botao botao-primario" href="index.html#contato">Fale comigo</a></div>`;
+  }
+
+  function montarFiltros(){
+    const container = document.getElementById('filtros');
+    container.innerHTML = CONFIG.categorias.map((cat, indice) => {
+      const chave = cat.toLowerCase();
+      const ativo = indice === 0 ? ' ativo' : '';
+      return `<button type="button" class="filtro-botao${ativo}" data-categoria="${chave}" aria-pressed="${indice === 0}">${cat}</button>`;
+    }).join('');
+
+    container.addEventListener('click', (evento) => {
+      const botao = evento.target.closest('.filtro-botao');
+      if(!botao) return;
+      container.querySelectorAll('.filtro-botao').forEach(b => {
+        b.classList.remove('ativo');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      botao.classList.add('ativo');
+      botao.setAttribute('aria-pressed', 'true');
+      filtrarVideos(botao.dataset.categoria);
+    });
+  }
+
+  function montarVideos(){
+    const grade = document.getElementById('grade-videos');
+
+    // Enquanto CONFIG.videos estiver vazio, mostra um aviso elegante no lugar da grade.
+    if(CONFIG.videos.length === 0){
+      grade.innerHTML = `
+        <div class="videos-vazio revelar" style="grid-column: 1 / -1;">
+          <div class="videos-vazio-icone">${ICONE_PLAY}</div>
+          <h3>Vídeos chegando em breve</h3>
+          <p>Estou organizando os vídeos UGC completos para esta página. Enquanto isso, confira as fotos dos trabalhos já entregues ou fale comigo para receber exemplos direto no WhatsApp.</p>
+        </div>
+      `;
+      document.getElementById('filtros').style.display = 'none';
+      return;
+    }
+
+    grade.innerHTML = CONFIG.videos.map(video => `
+      <a class="video-item revelar" data-categoria="${video.categoria}" href="${video.url}" target="_blank" rel="noopener noreferrer" aria-label="Assistir: ${video.titulo}" style="background:${video.gradiente};">
+        ${video.capa ? `<img class="video-foto" src="${video.capa}" alt="${video.titulo}" onerror="this.style.display='none'">` : ''}
+        <span class="video-tag">${video.categoria}</span>
+        <span class="video-play">${ICONE_PLAY}</span>
+        <span class="video-item-titulo">${video.titulo}</span>
+      </a>
+    `).join('');
+  }
+
+  function filtrarVideos(categoria){
+    document.querySelectorAll('.video-item').forEach(item => {
+      const mostrar = categoria === 'todos' || item.dataset.categoria === categoria;
+      item.classList.toggle('escondido', !mostrar);
+    });
+  }
+
+  function montarRodape(){
+    const redes = [
+      { label: 'Instagram', href: CONFIG.contato.instagramUrl, icone: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>' },
+      { label: 'WhatsApp', href: `https://wa.me/${CONFIG.contato.whatsappNumero}`, icone: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 12a8 8 0 1 1-3.6-6.7"/><path d="M20 12l1.2-4.4L17 9"/></svg>' },
+      { label: 'E-mail', href: `mailto:${CONFIG.contato.email}`, icone: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>' }
+    ];
+    document.getElementById('rodape-social').innerHTML = redes.map(r => `
+      <a href="${r.href}" target="_blank" rel="noopener noreferrer" aria-label="${r.label}">${r.icone}</a>
+    `).join('');
+
+    document.getElementById('rodape-nome-direitos').textContent = `${CONFIG.nome}, ${CONFIG.profissao}`;
+    document.getElementById('rodape-copyright').textContent = `Todos os direitos reservados, 2026.`;
+  }
+
+  /* ============================================================================================
+     INTERAÇÕES: menu mobile e animação de entrada
+     ============================================================================================ */
+  function configurarMenuMobile(){
+    const botao = document.getElementById('botao-menu');
+    const menu = document.getElementById('nav-mobile');
+
+    function fecharMenu(){
+      botao.classList.remove('aberto');
+      menu.classList.remove('aberto');
+      botao.setAttribute('aria-expanded', 'false');
+      botao.setAttribute('aria-label', 'Abrir menu');
+    }
+
+    botao.addEventListener('click', () => {
+      const aberto = menu.classList.toggle('aberto');
+      botao.classList.toggle('aberto', aberto);
+      botao.setAttribute('aria-expanded', String(aberto));
+      botao.setAttribute('aria-label', aberto ? 'Fechar menu' : 'Abrir menu');
+    });
+
+    menu.addEventListener('click', (evento) => {
+      if(evento.target.tagName === 'A') fecharMenu();
+    });
+
+    document.addEventListener('keydown', (evento) => {
+      if(evento.key === 'Escape') fecharMenu();
+    });
+  }
+
+  function configurarAnimacaoEntrada(){
+    const observador = new IntersectionObserver((entradas) => {
+      entradas.forEach(entrada => {
+        if(entrada.isIntersecting){
+          entrada.target.classList.add('visivel');
+          observador.unobserve(entrada.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.revelar').forEach(el => observador.observe(el));
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    montarCabecalho();
+    montarFiltros();
+    montarVideos();
+    montarRodape();
+    configurarMenuMobile();
+    configurarAnimacaoEntrada();
+  });
+</script>
+</body>
+</html>
