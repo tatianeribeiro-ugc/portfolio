@@ -139,24 +139,13 @@
     height: 78px;
   }
   .logo{
-    display:flex;
-    align-items:center;
+    font-family: var(--fonte-titulo);
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
   }
-  .logo em{ color: var(--azul); font-style: italic; }
-
-  /* Marca "Tati Ribeiro" com a borboleta. A asa balança sozinha, bem devagar
-     e suave (respiração/leveza), e bate uma vez, mais rápido, no hover. */
-  .logo-svg{ display:block; height: 46px; width:auto; }
-  .asa-logo{ transform-origin: 20px 40px; animation: bater-asa-suave 3.6s ease-in-out infinite; }
-  .logo:hover .asa-logo{ animation: bater-asa-hover 0.5s ease-in-out 1; }
-  @keyframes bater-asa-suave{
-    0%, 100%{ transform: rotate(0deg) scaleX(1); }
-    50%{ transform: rotate(-4deg) scaleX(0.96); }
-  }
-  @keyframes bater-asa-hover{
-    0%, 100%{ transform: rotate(0deg) scaleX(1); }
-    40%{ transform: rotate(-12deg) scaleX(0.88); }
-  }
+  .logo em{ color: var(--laranja); font-style: italic; }
 
   .nav-desktop{ display:flex; align-items:center; gap: 36px; }
   .nav-desktop a{
@@ -1250,34 +1239,12 @@
 
   const ICONE_PLAY = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 7l9 5-9 5V7z" fill="currentColor"/></svg>';
 
-  // Logo "Tati Ribeiro" desenhado à mão (traço contínuo), com a borboleta à
-  // esquerda. A asa de cima (.asa-logo) balança suavemente sozinha, e bate
-  // uma vez, mais rápido, quando o mouse passa por cima do logo.
-  const LOGO_MARCA = `
-    <svg viewBox="0 0 260 120" role="img" aria-label="Tati Ribeiro" class="logo-svg">
-      <g class="asa-logo" stroke="#0049a4" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M34 46 C 20 24, 2 26, 5 42 C 7 54, 22 55, 34 46 Z"/>
-      </g>
-      <g stroke="#0049a4" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M34 46 C 22 52, 12 56, 13 66 C 14 74, 24 72, 31 62 C 34 57, 35 51, 34 46"/>
-        <path d="M34 46 C 33 58, 32 72, 24 82 C 20 87, 22 92, 27 90"/>
-      </g>
-      <text x="66" y="52" font-family="Fraunces, serif" font-weight="600" font-size="40" fill="#0049a4">Tati</text>
-      <text x="52" y="98" font-family="Fraunces, serif" font-style="italic" font-weight="500" font-size="42" fill="#df7900">Ribeiro</text>
-      <g stroke="#0049a4" stroke-width="2.2" fill="none" stroke-linecap="round">
-        <path d="M226 22 L 232 10"/>
-        <path d="M236 27 L 250 22"/>
-        <path d="M230 34 L 222 44"/>
-      </g>
-    </svg>
-  `;
-
   /* ============================================================================================
      FUNÇÕES DE RENDERIZAÇÃO (montam o HTML das seções a partir do CONFIG)
      ============================================================================================ */
 
   function montarCabecalho(){
-    document.getElementById('logo-cabecalho').innerHTML = LOGO_MARCA;
+    document.getElementById('logo-cabecalho').innerHTML = `${CONFIG.primeiroNome} <em>Ribeiro</em>`;
     document.getElementById('rodape-logo').innerHTML = `${CONFIG.primeiroNome} <em>Ribeiro</em>`;
 
     const montarLink = item => `<a href="${item.href ? item.href : '#' + item.alvo}">${item.texto}</a>`;
