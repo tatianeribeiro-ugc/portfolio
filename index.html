@@ -710,11 +710,11 @@
         <p class="hero-selo">Conteúdo autêntico já usado por <strong id="hero-selo-numero"></strong> marcas em campanhas de performance.</p>
       </div>
       <!-- Bloco em gradiente com foto real por cima.
-           EDITE AQUI: para trocar a foto, coloque um arquivo chamado "hero.jpg"
-           dentro da pasta /fotos. Se o arquivo não existir, o gradiente continua
-           aparecendo sozinho (o onerror abaixo esconde a imagem quebrada). -->
+           EDITE AQUI: para trocar a foto, coloque um arquivo dentro da pasta /fotos
+           e ajuste o "src" abaixo com o nome do arquivo. Se o arquivo não existir,
+           o gradiente continua aparecendo sozinho (o onerror abaixo esconde a imagem quebrada). -->
       <div class="bloco-imagem hero-imagem revelar" role="img" aria-label="Foto de Tati Ribeiro gravando conteúdo" style="background: linear-gradient(155deg, #0049a4 0%, #df7900 100%);">
-        <img class="bloco-imagem-foto" src="fotos/hero.jpg" alt="Tati Ribeiro gravando conteúdo" onerror="this.style.display='none'">
+        <img class="bloco-imagem-foto" src="fotos/hero.png" alt="Tati Ribeiro gravando conteúdo" onerror="this.style.display='none'">
         <div class="bloco-imagem-texto">Tati Ribeiro em cena</div>
       </div>
     </div>
@@ -736,11 +736,11 @@
   <section id="sobre">
     <div class="container sobre-grid">
       <!-- Bloco em gradiente com foto real por cima.
-           EDITE AQUI: para trocar a foto, coloque um arquivo chamado "sobre.jpg"
-           dentro da pasta /fotos. Se o arquivo não existir, o gradiente continua
-           aparecendo sozinho. -->
+           EDITE AQUI: para trocar a foto, coloque um arquivo dentro da pasta /fotos
+           e ajuste o "src" abaixo com o nome do arquivo. Se o arquivo não existir,
+           o gradiente continua aparecendo sozinho. -->
       <div class="bloco-imagem sobre-imagem revelar" role="img" aria-label="Retrato de Tati Ribeiro" style="background: linear-gradient(160deg, #df7900 0%, #14110d 100%);">
-        <img class="bloco-imagem-foto" src="fotos/sobre.jpg" alt="Tati Ribeiro no dia a dia de gravação" onerror="this.style.display='none'">
+        <img class="bloco-imagem-foto" src="fotos/sobre.jpeg" alt="Tati Ribeiro no dia a dia de gravação" onerror="this.style.display='none'">
         <div class="bloco-imagem-texto">Bastidores</div>
       </div>
       <div class="sobre-texto revelar">
@@ -913,22 +913,21 @@
     },
 
     // EDITE AQUI: categorias do filtro de portfólio (a primeira deve ser sempre "Todos")
-    categorias: ["Todos", "Beleza", "Moda", "Comida", "Fitness", "Viagem"],
+    categorias: ["Todos", "Beleza", "Casa e Limpeza", "Pet"],
 
     // EDITE AQUI: trabalhos do portfólio. A "categoria" precisa bater com uma das opções da lista acima (em minúsculo).
     // O campo "foto" aponta para um arquivo dentro da pasta /fotos. Se o arquivo não existir
     // ainda, o card mostra só o gradiente (nada quebra).
     portfolio: [
-      { titulo: "Rotina de skincare", categoria: "beleza", foto: "fotos/portfolio-01-beleza.jpg", gradiente: "linear-gradient(150deg, #df7900, #0049a4)" },
-      { titulo: "Look de verão", categoria: "moda", foto: "fotos/portfolio-02-moda.jpg", gradiente: "linear-gradient(150deg, #0049a4, #14110d)" },
-      { titulo: "Receita prática do dia a dia", categoria: "comida", foto: "fotos/portfolio-03-comida.jpg", gradiente: "linear-gradient(150deg, #df7900, #14110d)" },
-      { titulo: "Treino em casa", categoria: "fitness", foto: "fotos/portfolio-04-fitness.jpg", gradiente: "linear-gradient(150deg, #0049a4, #df7900)" },
-      { titulo: "Dia de compras", categoria: "moda", foto: "fotos/portfolio-05-moda.jpg", gradiente: "linear-gradient(150deg, #14110d, #0049a4)" },
-      { titulo: "Mala pronta para viagem", categoria: "viagem", foto: "fotos/portfolio-06-viagem.jpg", gradiente: "linear-gradient(150deg, #df7900, #0049a4)" },
-      { titulo: "Unboxing de maquiagem", categoria: "beleza", foto: "fotos/portfolio-07-beleza.jpg", gradiente: "linear-gradient(150deg, #14110d, #df7900)" },
-      { titulo: "Café da manhã fitness", categoria: "fitness", foto: "fotos/portfolio-08-fitness.jpg", gradiente: "linear-gradient(150deg, #0049a4, #14110d)" },
-      { titulo: "Roteiro gastronômico", categoria: "comida", foto: "fotos/portfolio-09-comida.jpg", gradiente: "linear-gradient(150deg, #df7900, #14110d)" },
-      { titulo: "Check-in no hotel", categoria: "viagem", foto: "fotos/portfolio-10-viagem.jpg", gradiente: "linear-gradient(150deg, #0049a4, #df7900)" }
+      { titulo: "Rotina de skincare", categoria: "beleza", foto: "fotos/skincare-1.png", gradiente: "linear-gradient(150deg, #df7900, #0049a4)" },
+      { titulo: "Resultado e textura do produto", categoria: "beleza", foto: "fotos/skincare-2.jpg", gradiente: "linear-gradient(150deg, #0049a4, #14110d)" },
+      { titulo: "Cuidados com os cabelos", categoria: "beleza", foto: "fotos/haircare-1.png", gradiente: "linear-gradient(150deg, #df7900, #14110d)" },
+      { titulo: "Finalização e brilho", categoria: "beleza", foto: "fotos/haircare-2.png", gradiente: "linear-gradient(150deg, #0049a4, #df7900)" },
+      { titulo: "Rotina de limpeza prática", categoria: "casa e limpeza", foto: "fotos/casaelimpeza-1.jpg", gradiente: "linear-gradient(150deg, #14110d, #0049a4)" },
+      { titulo: "Produto em uso no dia a dia", categoria: "casa e limpeza", foto: "fotos/casaelimpeza-2.jpg", gradiente: "linear-gradient(150deg, #df7900, #0049a4)" },
+      { titulo: "Organização da casa", categoria: "casa e limpeza", foto: "fotos/casaelimpeza-3.jpg", gradiente: "linear-gradient(150deg, #14110d, #df7900)" },
+      { titulo: "Cuidados com o pet", categoria: "pet", foto: "fotos/pet-1.png", gradiente: "linear-gradient(150deg, #0049a4, #14110d)" },
+      { titulo: "Produto testado com o pet", categoria: "pet", foto: "fotos/pet-2.png", gradiente: "linear-gradient(150deg, #df7900, #14110d)" }
     ],
 
     // EDITE AQUI: serviços oferecidos (ícone é apenas decorativo, em SVG simples)

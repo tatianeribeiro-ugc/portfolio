@@ -1,35 +1,32 @@
-COMO ADICIONAR SUAS FOTOS AO SITE
+COMO ADICIONAR OU TROCAR SUAS FOTOS NO SITE
 
-Arraste suas fotos para dentro desta pasta ("fotos") e renomeie cada uma
-exatamente com o nome indicado abaixo (letras minúsculas, sem espaços).
-Formatos aceitos: .jpg (o mais recomendado), .jpeg ou .png (nesse caso,
-troque a extensão no nome do arquivo).
+Estes são os arquivos usados hoje pelo site (index.html). Para trocar uma
+foto, basta substituir o arquivo por outro com o MESMO NOME dentro desta
+pasta ("fotos"). Para adicionar um item novo, adicione o arquivo aqui e
+peça para incluir uma nova entrada no portfólio do CONFIG.
 
 FOTO DE ABERTURA (seção Hero, topo do site)
-  hero.jpg
+  hero.png
 
 FOTO DA SEÇÃO SOBRE MIM
-  sobre.jpg
+  sobre.jpeg
 
-FOTOS DO PORTFÓLIO (galeria de trabalhos)
-  portfolio-01-beleza.jpg   -> Rotina de skincare
-  portfolio-02-moda.jpg     -> Look de verão
-  portfolio-03-comida.jpg   -> Receita prática do dia a dia
-  portfolio-04-fitness.jpg  -> Treino em casa
-  portfolio-05-moda.jpg     -> Dia de compras
-  portfolio-06-viagem.jpg   -> Mala pronta para viagem
-  portfolio-07-beleza.jpg   -> Unboxing de maquiagem
-  portfolio-08-fitness.jpg  -> Café da manhã fitness
-  portfolio-09-comida.jpg   -> Roteiro gastronômico
-  portfolio-10-viagem.jpg   -> Check-in no hotel
+FOTOS DO PORTFÓLIO (galeria de trabalhos, com filtro por nicho)
+  Beleza
+    skincare-1.png   -> Rotina de skincare
+    skincare-2.jpg   -> Resultado e textura do produto
+    haircare-1.png   -> Cuidados com os cabelos
+    haircare-2.png   -> Finalização e brilho
+  Casa e Limpeza
+    casaelimpeza-1.jpg -> Rotina de limpeza prática
+    casaelimpeza-2.jpg -> Produto em uso no dia a dia
+    casaelimpeza-3.jpg -> Organização da casa
+  Pet
+    pet-1.png -> Cuidados com o pet
+    pet-2.png -> Produto testado com o pet
 
-Você não precisa adicionar todas de uma vez. O site funciona normalmente
-com gradientes nos espaços sem foto ainda, e cada gradiente vira foto
-automaticamente assim que o arquivo certo aparecer nesta pasta.
+Se algum arquivo for removido ou renomeado sem atualizar o código, o
+gradiente do card volta a aparecer sozinho no lugar da foto (nada quebra).
 
-Dica de tamanho: fotos entre 1000 e 2000 pixels de largura já ficam
-nítidas e carregam rápido. Formato vertical (retrato) funciona melhor
-nos cards do portfólio e na foto de abertura.
-
-Depois de colocar as fotos aqui, avise para eu enviar (commit e push)
-as novidades para o site no ar.
+Depois de mexer nesta pasta, avise para eu enviar (commit e push) as
+novidades para o site no ar.
