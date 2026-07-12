@@ -402,6 +402,7 @@
     height:100%;
     object-fit: cover;
     background: var(--tinta);
+    border: 0;
   }
   .video-tag{
     position:absolute;
@@ -991,12 +992,13 @@
     categorias: ["Todos", "Beleza", "Casa e Limpeza", "Pet"],
 
     // EDITE AQUI: vídeos em destaque no topo do Portfólio (aparecem antes das fotos).
-    // O campo "arquivo" aponta para um vídeo .mp4 dentro da pasta /videos.
-    // Coloque um vídeo por nicho aqui. A galeria completa fica em videos.html.
+    // O campo "youtubeId" é o código do vídeo no YouTube (a parte final do link,
+    // depois de "shorts/" ou "watch?v="). Coloque um vídeo por nicho aqui.
+    // A galeria completa fica em videos.html.
     videosDestaque: [
-      { titulo: "Rotina de skincare", categoria: "beleza", arquivo: "videos/video-01-beleza.mp4" },
-      { titulo: "Rotina de limpeza prática", categoria: "casa e limpeza", arquivo: "videos/video-02-casa-e-limpeza.mp4" },
-      { titulo: "Cuidados com o pet", categoria: "pet", arquivo: "videos/video-03-pet.mp4" }
+      { titulo: "Rotina de skincare", categoria: "beleza", youtubeId: "T6X4J4uYdYQ" },
+      { titulo: "Rotina de limpeza prática", categoria: "casa e limpeza", youtubeId: "1unCG49vObc" },
+      { titulo: "Cuidados com o pet", categoria: "pet", youtubeId: "0i2ZFRrx0Cg" }
     ],
 
     // EDITE AQUI: trabalhos do portfólio. A "categoria" precisa bater com uma das opções da lista acima (em minúsculo).
@@ -1119,14 +1121,12 @@
 
   function montarVideosDestaque(){
     const grade = document.getElementById('grade-videos-destaque');
-    // Cada vídeo usa a tag <video> com controles nativos do navegador.
-    // EDITE AQUI: para trocar um vídeo, troque o arquivo dentro de /videos
-    // mantendo o mesmo nome, ou ajuste o campo "arquivo" no CONFIG.videosDestaque acima.
+    // Cada vídeo é incorporado direto do YouTube (player oficial, leve e rápido).
+    // EDITE AQUI: para trocar um vídeo, troque o "youtubeId" no CONFIG.videosDestaque acima
+    // pelo código do novo vídeo (a parte final do link do YouTube).
     grade.innerHTML = CONFIG.videosDestaque.map(video => `
       <div class="video-item revelar">
-        <video class="video-foto" controls preload="metadata" playsinline aria-label="${video.titulo}">
-          <source src="${video.arquivo}" type="video/mp4">
-        </video>
+        <iframe class="video-foto" src="https://www.youtube.com/embed/${video.youtubeId}" title="${video.titulo}" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         <span class="video-tag">${video.categoria}</span>
       </div>
     `).join('');

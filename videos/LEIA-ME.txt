@@ -1,37 +1,23 @@
-COMO ADICIONAR SEUS VÍDEOS AO SITE
+COMO OS VÍDEOS ESTÃO FUNCIONANDO HOJE
 
-Arraste seus vídeos para dentro desta pasta ("videos") e renomeie cada um
-exatamente com o nome indicado abaixo. Formato: .mp4 (o mais compatível
-com todos os navegadores e celulares).
+Os 3 vídeos em destaque (Beleza, Casa e Limpeza, Pet) estão incorporados
+direto do YouTube, não como arquivo local. Isso deixa o site mais leve e
+rápido para carregar.
 
-Os 3 vídeos em destaque aparecem em dois lugares do site:
-1) Na página principal (index.html), logo no topo da seção Portfólio,
-   antes da galeria de fotos.
-2) Na página videos.html, na galeria completa de vídeos.
+Os códigos dos vídeos ficam no topo do <script> de index.html
+(CONFIG.videosDestaque) e de videos.html (CONFIG.videos), no campo
+"youtubeId".
 
-Um vídeo por nicho:
+COMO TROCAR UM VÍDEO NO FUTURO
+  1. Suba o novo vídeo no YouTube (pode ser "não listado")
+  2. Copie o código do vídeo, que é a parte final do link:
+     https://www.youtube.com/shorts/XXXXXXXXXXX  -> o código é XXXXXXXXXXX
+     https://www.youtube.com/watch?v=XXXXXXXXXXX -> o código é XXXXXXXXXXX
+  3. Me passe o link (ou o código) que eu atualizo o site
 
-  video-01-beleza.mp4          -> nicho Beleza
-  video-02-casa-e-limpeza.mp4  -> nicho Casa e Limpeza
-  video-03-pet.mp4             -> nicho Pet
-
-DICAS IMPORTANTES
-
-Formato e proporção
-  Grave ou exporte na vertical (formato Reels/Stories), proporção 9:16.
-  Isso é o que os cards do site esperam.
-
-Tamanho do arquivo
-  Tente manter cada vídeo entre 10 MB e 30 MB. Vídeos muito grandes
-  deixam o site lento para carregar, especialmente no celular.
-  Se o vídeo original estiver muito pesado, comprima antes de subir
-  (o próprio celular ou apps como o HandBrake fazem isso de graça).
-
-Duração
-  Vídeos curtos (15 a 60 segundos) funcionam melhor como prévia.
-
-Se quiser adicionar um vídeo em um nicho que ainda não existe, ou mais
-de um vídeo por nicho, é só falar que eu ajusto o código para receber.
-
-Depois de colocar os vídeos aqui, avise para eu enviar (commit e push)
-as novidades para o site no ar.
+Os 3 arquivos .mp4 que você colocou aqui nesta pasta continuam salvos,
+mas não estão sendo usados no site agora (não foram enviados para o
+GitHub, só ficam no seu computador). Se um dia você preferir hospedar
+os vídeos direto no site em vez de usar o YouTube, é só avisar que eu
+reconecto usando esses arquivos (e ajudo a comprimir, já que estão
+pesados: entre 47 MB e 61 MB cada).
