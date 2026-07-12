@@ -299,13 +299,6 @@
     object-position: center 20%;
     z-index:0;
   }
-  /* A foto de "Sobre mim" fica num quadro quadrado (1:1), então priorizamos
-     o topo da imagem para não cortar o rosto. EDITE AQUI: se trocar a foto
-     e ela cortar em outro lugar, ajuste a porcentagem vertical abaixo
-     (0% = topo da foto, 100% = base da foto). */
-  .sobre-imagem .bloco-imagem-foto{
-    object-position: center 5%;
-  }
   .bloco-imagem::after{
     content:'';
     position:absolute;
@@ -377,32 +370,105 @@
     gap: 56px;
     align-items:center;
   }
-  .sobre-imagem{ aspect-ratio: 1/1; }
-  .sobre-texto p{ font-size: 1.05rem; color: rgba(20,17,13,0.8); }
-  .sobre-lista{
-    list-style:none;
-    padding:0; margin: 24px 0 0 0;
-    display:grid;
-    gap: 12px;
-  }
-  .sobre-lista li{
-    display:flex;
-    align-items:flex-start;
-    gap: 12px;
+
+  /* Título grande da seção, com o mesmo peso visual do destaque do Hero. */
+  .sobre-titulo-grande{
+    font-size: clamp(2.2rem, 4.5vw, 3.4rem);
     font-weight: 600;
-    font-size: 0.95rem;
+    margin-bottom: 18px;
   }
-  .sobre-lista li::before{
-    content:'';
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--laranja);
-    margin-top: 8px;
-    flex-shrink:0;
+  .sobre-saudacao{
+    font-family: var(--fonte-titulo);
+    font-style: italic;
+    font-size: 1.2rem;
+    color: var(--azul);
+    margin-bottom: 18px;
   }
+  .sobre-texto p{ font-size: 1.03rem; color: rgba(20,17,13,0.8); }
+
+  /* Cores de destaque específicas desta seção (hex exatos pedidos para o texto Sobre). */
+  .destaque-azul-sobre{ color: #123A84; font-weight: 600; }
+  .destaque-laranja-sobre{ color: #F59A6A; font-weight: 600; }
+
+  .sobre-marcas-linha{ font-size: 1.03rem; }
+  .sobre-marcas{ font-weight: 700; color: var(--tinta); letter-spacing: 0.01em; }
+
+  /* Assinatura reaproveitada do Hero (mesma frase, mesmas cores), alinhada
+     à esquerda aqui porque fica dentro de um bloco de texto corrido. */
+  .sobre-assinatura{
+    text-align:left;
+    font-size: 1.1rem;
+    margin-top: 28px;
+  }
+
+  /* ---- Colagem estilo Polaroid (3 fotos, sobrepostas, com fita) ---- */
+  .sobre-colagem{
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    aspect-ratio: 1 / 1.1;
+    margin: 0 auto;
+  }
+  .polaroid{
+    position:absolute;
+    background: var(--branco);
+    padding: 10px 10px 34px 10px;
+    border-radius: 6px;
+    box-shadow: var(--sombra-forte);
+  }
+  .polaroid-foto{
+    width:100%;
+    height:100%;
+    border-radius: 2px;
+    overflow:hidden;
+    position:relative;
+  }
+  .polaroid-foto img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit: cover;
+  }
+  .polaroid-pet{
+    width: 56%;
+    aspect-ratio: 4/5;
+    top: 0; left: 2%;
+    transform: rotate(-9deg);
+    z-index: 1;
+  }
+  .polaroid-lifestyle{
+    width: 56%;
+    aspect-ratio: 4/5;
+    top: 2%; right: 0;
+    transform: rotate(8deg);
+    z-index: 1;
+  }
+  .polaroid-trabalho{
+    width: 60%;
+    aspect-ratio: 4/5;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) rotate(-3deg);
+    z-index: 2;
+  }
+  .fita{
+    position:absolute;
+    top: -12px; left: 50%;
+    transform: translateX(-50%) rotate(-6deg);
+    width: 54px; height: 22px;
+    background: rgba(223, 121, 0, 0.16);
+    border: 1px solid rgba(223, 121, 0, 0.22);
+    box-shadow: 0 2px 6px rgba(20,17,13,0.12);
+    z-index: 3;
+  }
+  .fita-pet{ transform: translateX(-50%) rotate(-14deg); }
+  .fita-lifestyle{ transform: translateX(-50%) rotate(10deg); }
+  .fita-trabalho{ transform: translateX(-50%) rotate(-4deg); }
 
   @media (max-width: 900px){
     .sobre-grid{ grid-template-columns: 1fr; }
+    .sobre-colagem{ max-width: 320px; margin-bottom: 24px; }
   }
 
   /* ============================================================
@@ -912,19 +978,35 @@
        ============================================================ -->
   <section id="sobre">
     <div class="container sobre-grid">
-      <!-- Bloco em gradiente com foto real por cima.
-           EDITE AQUI: para trocar a foto, coloque um arquivo dentro da pasta /fotos
-           e ajuste o "src" abaixo com o nome do arquivo. Se o arquivo não existir,
-           o gradiente continua aparecendo sozinho. -->
-      <div class="bloco-imagem sobre-imagem revelar" role="img" aria-label="Retrato de Tati Ribeiro" style="background: linear-gradient(160deg, #df7900 0%, #14110d 100%);">
-        <img class="bloco-imagem-foto" src="fotos/sobre.jpeg" alt="Tati Ribeiro no dia a dia de gravação" onerror="this.style.display='none'">
-        <div class="bloco-imagem-texto">Bastidores</div>
+      <!-- Colagem estilo Polaroid, com 3 fotos reais.
+           EDITE AQUI: troque os arquivos dentro da pasta /fotos (mantendo os
+           mesmos nomes) para trocar as fotos. Enquanto o arquivo não existir,
+           o gradiente de cada polaroid continua aparecendo sozinho. -->
+      <div class="sobre-colagem revelar">
+        <div class="polaroid polaroid-pet">
+          <span class="fita fita-pet" aria-hidden="true"></span>
+          <div class="polaroid-foto" style="background: linear-gradient(160deg, #df7900 0%, #14110d 100%);">
+            <img src="fotos/sobre-pet.jpg" alt="Tati Ribeiro com o pet, no dia a dia" onerror="this.style.display='none'">
+          </div>
+        </div>
+        <div class="polaroid polaroid-lifestyle">
+          <span class="fita fita-lifestyle" aria-hidden="true"></span>
+          <div class="polaroid-foto" style="background: linear-gradient(160deg, #0049a4 0%, #14110d 100%);">
+            <img src="fotos/sobre-lifestyle.jpg" alt="Tati Ribeiro em um momento lifestyle" onerror="this.style.display='none'">
+          </div>
+        </div>
+        <div class="polaroid polaroid-trabalho">
+          <span class="fita fita-trabalho" aria-hidden="true"></span>
+          <div class="polaroid-foto" style="background: linear-gradient(160deg, #df7900 0%, #0049a4 100%);">
+            <img src="fotos/sobre-trabalho.jpg" alt="Tati Ribeiro trabalhando com notebook e celular" onerror="this.style.display='none'">
+          </div>
+        </div>
       </div>
       <div class="sobre-texto revelar">
-        <span class="rotulo-secao">Sobre mim</span>
-        <h2 id="sobre-titulo"></h2>
+        <h2 class="sobre-titulo-grande" id="sobre-titulo"></h2>
+        <p class="sobre-saudacao" id="sobre-saudacao"></p>
         <div id="sobre-corpo"></div>
-        <ul class="sobre-lista" id="sobre-lista"></ul>
+        <p class="hero-assinatura sobre-assinatura"><span class="assinatura-azul">Entre a teoria e a prática,</span> <span class="assinatura-laranja">existe a vida real.</span></p>
       </div>
     </div>
   </section>
@@ -1110,16 +1192,21 @@
       "Seara", "Netshoes", "Shein Brasil", "Adcos", "Quero Suco"
     ],
 
-    // EDITE AQUI: texto da seção Sobre
+    // EDITE AQUI: texto da seção Sobre. As classes "destaque-azul-sobre" e
+    // "destaque-laranja-sobre" pintam a palavra na cor correspondente (definidas no CSS).
     sobre: {
-      titulo: "Criando conteúdo que conecta pessoas a produtos",
-      corpoHtml: "<p>Há mais de três anos eu ajudo marcas a se comunicarem de um jeito genuíno com o público, unindo estratégia de conteúdo com a linguagem espontânea que o consumidor confia.</p><p>Cada vídeo é pensado para performar: ganchos que prendem a atenção nos três primeiros segundos, roteiro persuasivo e entrega dentro do prazo combinado.</p>",
-      diferenciais: [
-        "Entrega ágil, dentro do prazo combinado",
-        "Roteiros com foco em conversão e retenção",
-        "Comunicação profissional do briefing à entrega",
-        "Direitos de uso claros para anúncios pagos"
-      ]
+      titulo: "Sobre Mim",
+      saudacao: "Oii, eu sou a Tati Ribeiro!",
+      corpoHtml: `
+        <p>Moro em Campinas, tenho 34 anos, sou cristã, mãe, esposa, nutricionista por formação e criadora de <span class="destaque-azul-sobre">conteúdo</span> por paixão.</p>
+        <p>Sempre fui aquela pessoa que observa tudo, cria <span class="destaque-laranja-sobre">histórias</span> na cabeça e enxerga possibilidades nas pequenas coisas do dia a dia. Talvez seja por isso que me apaixonei pelo UGC.</p>
+        <p>Depois da maternidade, redescobri meu estilo, minha criatividade e a forma como me comunico.</p>
+        <p>Hoje transformo experiências, rotinas e descobertas em conteúdos leves, estratégicos e <span class="destaque-azul-sobre">autênticos</span>.</p>
+        <p class="sobre-marcas-linha">Já tive a oportunidade de criar conteúdos para marcas como: <span class="sobre-marcas">Azulim • Astra Fit • CRF Pilates • Miss Plus Ateliê</span>.</p>
+        <p>Meu trabalho não é apenas mostrar <span class="destaque-laranja-sobre">produtos</span>. Meu trabalho é ajudar pessoas a se enxergarem dentro de uma <span class="destaque-azul-sobre">experiência</span>.</p>
+        <p>Porque, no fim, as pessoas não se conectam com anúncios.</p>
+        <p>Elas se conectam com histórias que poderiam viver também.</p>
+      `
     },
 
     // EDITE AQUI: categorias do filtro de portfólio (a primeira deve ser sempre "Todos")
@@ -1269,10 +1356,9 @@
   }
 
   function montarSobre(){
-    document.getElementById('sobre-titulo').innerHTML = CONFIG.sobre.titulo;
+    document.getElementById('sobre-titulo').textContent = CONFIG.sobre.titulo;
+    document.getElementById('sobre-saudacao').textContent = CONFIG.sobre.saudacao;
     document.getElementById('sobre-corpo').innerHTML = CONFIG.sobre.corpoHtml;
-    document.getElementById('sobre-lista').innerHTML =
-      CONFIG.sobre.diferenciais.map(item => `<li>${item}</li>`).join('');
   }
 
   function montarVideosDestaque(){

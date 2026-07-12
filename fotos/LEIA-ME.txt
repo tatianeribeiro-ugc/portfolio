@@ -8,8 +8,12 @@ peça para incluir uma nova entrada no portfólio do CONFIG.
 FOTO DE ABERTURA (seção Hero, topo do site)
   hero.png
 
-FOTO DA SEÇÃO SOBRE MIM
-  sobre.jpeg
+FOTOS DA SEÇÃO SOBRE MIM (colagem estilo Polaroid, 3 fotos)
+  sobre-pet.jpg        -> você no dia a dia com o pet
+  sobre-lifestyle.jpg  -> um momento lifestyle (o print que você mandou tinha uma foto num café/restaurante)
+  sobre-trabalho.jpg   -> você trabalhando, com notebook e celular
+
+  (o arquivo antigo "sobre.jpeg" não é mais usado, pode ficar ou apagar, como preferir)
 
 FOTOS DO PORTFÓLIO (galeria de trabalhos, com filtro por nicho)
   Beleza
