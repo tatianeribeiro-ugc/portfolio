@@ -418,8 +418,8 @@
         <h1>Vídeos <em>UGC</em> por nicho</h1>
         <p>Esta página vai reunir os vídeos UGC completos entregues para marcas parceiras, organizados por nicho. As fotos dos trabalhos continuam na página principal do portfólio.</p>
         <div class="intro-videos-acoes">
-          <a href="index.html#portfolio" class="botao botao-secundario">Ver portfólio de fotos</a>
-          <a href="index.html#contato" class="botao botao-primario">Fale comigo</a>
+          <a href="index.html#portfolio" class="botao botao-secundario" data-rastreio="videos_ver_portfolio_fotos">Ver portfólio de fotos</a>
+          <a href="index.html#contato" class="botao botao-primario" data-rastreio="videos_fale_comigo">Fale comigo</a>
         </div>
       </div>
     </div>
@@ -447,6 +447,11 @@
     </div>
   </div>
 </footer>
+
+<!-- Supabase carregado por CDN, usado só para gravar visitas/cliques/vídeos assistidos
+     (chave anon, com permissão apenas de INSERT, veja setup.sql) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/tracking.js"></script>
 
 <script>
   /* ============================================================================================
@@ -599,6 +604,15 @@
       iframe.allowFullscreen = true;
 
       botao.replaceWith(iframe);
+      if(window.Rastreio) Rastreio.videoView(id, titulo);
+    });
+  }
+
+  // Rastreia cliques em qualquer elemento marcado com data-rastreio="nome_do_evento".
+  function configurarRastreioCliques(){
+    document.body.addEventListener('click', (evento) => {
+      const alvo = evento.target.closest('[data-rastreio]');
+      if(alvo && window.Rastreio) Rastreio.buttonClick(alvo.dataset.rastreio);
     });
   }
 
@@ -694,6 +708,7 @@
     configurarAnimacaoEntrada();
     configurarPlayVideos();
     configurarSetasScroll();
+    configurarRastreioCliques();
   });
 </script>
 </body>

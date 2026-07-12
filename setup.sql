@@ -64,14 +64,30 @@ create policy "Leitura para usuarios autenticados"
   using (true);
 
 -- --------------------------------------------------------------------------------
--- IMPORTANTE: por que não existe policy de INSERT para o papel "anon" aqui
+-- ESCRITA PÚBLICA (papel "anon"): só para GRAVAR eventos novos
 --
--- De propósito, não liberamos gravação (INSERT) com a chave anon (pública).
--- Se qualquer visitante pudesse gravar direto com a chave anon, também
--- conseguiria forjar números falsos abrindo o console do navegador.
+-- O site do portfólio é 100% estático (GitHub Pages, sem servidor), então é o
+-- próprio navegador de quem visita o site que grava os eventos, usando a chave
+-- anon (pública). Por isso a policy abaixo libera só o INSERT, nunca SELECT,
+-- UPDATE ou DELETE: qualquer visitante consegue adicionar uma linha nova, mas
+-- ninguém de fora consegue ler, alterar ou apagar o que já foi gravado.
 --
--- A gravação de eventos e de mensagens deve vir do site do portfólio através
--- de uma rota de servidor (uma função serverless, por exemplo), usando a
--- chave "service_role" do Supabase. Essa chave nunca deve aparecer no
--- navegador, só em ambiente de servidor.
+-- Risco aceito conscientemente: alguém com conhecimento técnico poderia, em
+-- teoria, mandar eventos falsos pelo console do navegador. Isso poluiria os
+-- números, mas não expõe nem compromete nenhum dado real. Se um dia quiser
+-- fechar até essa brecha, a alternativa é gravar os eventos através de um
+-- servidor (ex: uma função na Vercel) usando a chave "service_role", que
+-- nunca fica exposta no navegador.
+-- --------------------------------------------------------------------------------
+create policy "Insercao publica de eventos"
+  on portfolio_events
+  for insert
+  to anon
+  with check (true);
+
+create policy "Insercao publica de leads"
+  on portfolio_leads
+  for insert
+  to anon
+  with check (true);
 -- ================================================================================

@@ -807,8 +807,8 @@
         <h1 id="hero-titulo"></h1>
         <p class="hero-sub" id="hero-subtitulo"></p>
         <div class="hero-acoes">
-          <a href="#contato" class="botao botao-primario">Fale comigo</a>
-          <a href="#portfolio" class="botao botao-secundario">Ver portfólio</a>
+          <a href="#contato" class="botao botao-primario" data-rastreio="hero_fale_comigo">Fale comigo</a>
+          <a href="#portfolio" class="botao botao-secundario" data-rastreio="hero_ver_portfolio">Ver portfólio</a>
         </div>
         <p class="hero-selo">Conteúdo autêntico já usado por <strong id="hero-selo-numero"></strong> marcas em campanhas de performance.</p>
       </div>
@@ -866,7 +866,7 @@
           <h2>Trabalhos por <em>nicho</em>, em vídeo e em foto</h2>
           <p style="color: rgba(20,17,13,0.7); font-size:0.98rem; max-width:520px;">Alguns vídeos em destaque logo abaixo, um de cada nicho. A galeria completa de fotos vem na sequência.</p>
         </div>
-        <a href="videos.html" class="botao botao-secundario revelar">Ver todos os vídeos</a>
+        <a href="videos.html" class="botao botao-secundario revelar" data-rastreio="link_ver_videos">Ver todos os vídeos</a>
       </div>
 
       <!-- VÍDEOS EM DESTAQUE (aparecem antes das fotos, um vídeo por nicho) -->
@@ -970,6 +970,11 @@
     </div>
   </div>
 </footer>
+
+<!-- Supabase carregado por CDN, usado só para gravar visitas/cliques/vídeos assistidos
+     (chave anon, com permissão apenas de INSERT, veja setup.sql) -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/tracking.js"></script>
 
 <script>
   /* ============================================================================================
@@ -1197,6 +1202,7 @@
       iframe.allowFullscreen = true;
 
       botao.replaceWith(iframe);
+      if(window.Rastreio) Rastreio.videoView(id, titulo);
     });
   }
 
@@ -1284,23 +1290,26 @@
     const whatsappUrl = `https://wa.me/${CONFIG.contato.whatsappNumero}?text=${encodeURIComponent('Olá, Tati! Vi seu portfólio e gostaria de conversar sobre uma parceria.')}`;
     const canais = [
       {
+        chave: 'whatsapp',
         label: `WhatsApp: ${CONFIG.contato.telefoneExibicao}`,
         href: whatsappUrl,
         icone: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 12a8 8 0 1 1-3.6-6.7"/><path d="M20 12l1.2-4.4L17 9"/></svg>'
       },
       {
+        chave: 'email',
         label: `E-mail: ${CONFIG.contato.email}`,
         href: `mailto:${CONFIG.contato.email}`,
         icone: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>'
       },
       {
+        chave: 'instagram',
         label: `Instagram: ${CONFIG.contato.instagramUsuario}`,
         href: CONFIG.contato.instagramUrl,
         icone: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>'
       }
     ];
     document.getElementById('canais-contato').innerHTML = canais.map(c => `
-      <a class="canal" href="${c.href}" target="_blank" rel="noopener noreferrer">
+      <a class="canal" href="${c.href}" target="_blank" rel="noopener noreferrer" data-rastreio="contact_${c.chave}">
         <span class="canal-icone">${c.icone}</span>
         <span>${c.label}</span>
       </a>
@@ -1309,12 +1318,12 @@
 
   function montarRodape(){
     const redes = [
-      { label: 'Instagram', href: CONFIG.contato.instagramUrl, icone: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>' },
-      { label: 'WhatsApp', href: `https://wa.me/${CONFIG.contato.whatsappNumero}`, icone: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 12a8 8 0 1 1-3.6-6.7"/><path d="M20 12l1.2-4.4L17 9"/></svg>' },
-      { label: 'E-mail', href: `mailto:${CONFIG.contato.email}`, icone: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>' }
+      { chave: 'instagram', label: 'Instagram', href: CONFIG.contato.instagramUrl, icone: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>' },
+      { chave: 'whatsapp', label: 'WhatsApp', href: `https://wa.me/${CONFIG.contato.whatsappNumero}`, icone: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20 12a8 8 0 1 1-3.6-6.7"/><path d="M20 12l1.2-4.4L17 9"/></svg>' },
+      { chave: 'email', label: 'E-mail', href: `mailto:${CONFIG.contato.email}`, icone: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>' }
     ];
     document.getElementById('rodape-social').innerHTML = redes.map(r => `
-      <a href="${r.href}" target="_blank" rel="noopener noreferrer" aria-label="${r.label}">${r.icone}</a>
+      <a href="${r.href}" target="_blank" rel="noopener noreferrer" aria-label="${r.label}" data-rastreio="contact_${r.chave}">${r.icone}</a>
     `).join('');
 
     document.getElementById('rodape-nome-direitos').textContent = `${CONFIG.nome}, ${CONFIG.profissao}`;
@@ -1417,8 +1426,21 @@
 
       window.location.href = `mailto:${CONFIG.contato.email}?subject=${assunto}&body=${corpo}`;
 
+      if(window.Rastreio){
+        Rastreio.buttonClick('contact_formulario');
+        Rastreio.lead({ name: nome, email: email, message: mensagem, source: 'contact' });
+      }
+
       confirmacao.classList.add('visivel');
       formulario.reset();
+    });
+  }
+
+  // Rastreia cliques em qualquer elemento marcado com data-rastreio="nome_do_evento".
+  function configurarRastreioCliques(){
+    document.body.addEventListener('click', (evento) => {
+      const alvo = evento.target.closest('[data-rastreio]');
+      if(alvo && window.Rastreio) Rastreio.buttonClick(alvo.dataset.rastreio);
     });
   }
 
@@ -1444,6 +1466,7 @@
     configurarContadores();
     configurarFormulario();
     configurarPlayVideos();
+    configurarRastreioCliques();
   });
 </script>
 </body>
