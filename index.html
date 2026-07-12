@@ -463,9 +463,10 @@
   .destaque-laranja-em{ color: var(--laranja); }
 
   /* ============================================================
-     GALERIA DE VÍDEOS, ORGANIZADA POR NICHO (dentro da seção Portfólio,
-     antes das fotos). Cada nicho é uma faixa horizontal com scroll
-     (arraste ou use as setas).
+     FILTROS DE NICHO + CARROSSEL DE VÍDEOS, ESTILO STREAMING
+     (dentro da seção Portfólio, antes das fotos). Clicar num nicho troca
+     o carrossel na hora, sem recarregar a página. O botão de filtro reaproveita
+     o estilo ".filtro-botao" já usado no filtro de fotos, mais abaixo.
      ============================================================ */
   .fotos-cabecalho h3{
     font-size: 1.3rem;
@@ -473,25 +474,25 @@
   }
   .fotos-cabecalho{ margin-top: 56px; }
 
-  .nicho-videos{ margin-bottom: 40px; }
-  .nicho-videos:last-child{ margin-bottom: 0; }
-  .nicho-titulo{ font-size: 1.1rem; margin-bottom: 16px; }
+  .video-nicho-ativo{ font-size: 1.3rem; margin-bottom: 20px; }
 
-  .video-scroll-wrap{ position:relative; }
-  .video-track{
+  .carrossel-videos-wrap{ position:relative; }
+  .carrossel-videos{
     display:flex;
-    gap: 16px;
+    gap: 20px;
     overflow-x: auto;
-    scroll-snap-type: x proximity;
+    scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
-    padding-bottom: 4px;
+    padding-bottom: 6px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
   }
-  .video-track::-webkit-scrollbar{ display:none; }
+  .carrossel-videos::-webkit-scrollbar{ display:none; }
 
+  /* Cada card mostra ~4 vídeos inteiros e metade do 5º, indicando que tem
+     mais conteúdo para o lado. */
   .video-item{
-    flex: 0 0 170px;
+    flex: 0 0 calc((100% - 3 * 20px) / 4.5);
     aspect-ratio: 9/16;
     border-radius: var(--raio);
     box-shadow: var(--sombra);
@@ -499,7 +500,10 @@
     overflow:hidden;
     background: var(--tinta);
     scroll-snap-align: start;
+    transition: box-shadow 0.3s ease;
   }
+  .video-item:hover{ box-shadow: var(--sombra-forte); z-index: 4; }
+
   .video-foto{
     position:absolute;
     inset:0;
@@ -522,7 +526,9 @@
     display:flex;
     align-items:center;
     justify-content:center;
+    transition: transform 0.3s ease;
   }
+  .video-item:hover .video-card{ transform: scale(1.06); }
   .video-card-thumb{
     position:absolute;
     inset:0;
@@ -534,51 +540,81 @@
     content:'';
     position:absolute;
     inset:0;
-    background: linear-gradient(to top, rgba(20,17,13,0.4) 0%, rgba(20,17,13,0.05) 55%);
+    background: linear-gradient(to top, rgba(20,17,13,0.45) 0%, rgba(20,17,13,0.05) 55%);
     pointer-events:none;
+  }
+  .video-badge{
+    position:absolute;
+    top:14px; left:14px;
+    z-index:2;
+    padding: 5px 12px;
+    border-radius: 100px;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(6px);
+    color: var(--tinta);
+    font-size: 0.64rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
   .video-card-play{
     position:relative;
     z-index:2;
-    width: 48px; height: 48px;
+    width: 52px; height: 52px;
     border-radius: 50%;
     background: rgba(255,255,255,0.92);
     color: var(--tinta);
     display:flex;
     align-items:center;
     justify-content:center;
-    transition: transform 0.25s ease, background 0.25s ease;
+    transition: background 0.25s ease;
   }
-  .video-card:hover .video-card-play,
-  .video-card:focus-visible .video-card-play{ transform: scale(1.08); background: var(--branco); }
+  .video-item:hover .video-card-play{ background: var(--branco); }
   .video-card:focus-visible{ outline: 3px solid var(--azul); outline-offset: 3px; }
+  .video-card-rotulo-hover{
+    position:absolute;
+    left:0; right:0; bottom:16px;
+    z-index:2;
+    text-align:center;
+    color: var(--branco);
+    font-weight: 700;
+    font-size: 0.85rem;
+    opacity:0;
+    transform: translateY(6px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  .video-item:hover .video-card-rotulo-hover{ opacity:1; transform:translateY(0); }
 
-  .scroll-seta{
+  .carrossel-seta{
     display:flex;
     align-items:center;
     justify-content:center;
     position:absolute;
     top:50%;
     transform: translateY(-50%);
-    width: 40px; height: 40px;
+    width: 44px; height: 44px;
     border-radius: 50%;
     background: var(--branco);
     border: 1px solid var(--borda);
     box-shadow: var(--sombra);
     color: var(--tinta);
     cursor:pointer;
-    z-index: 3;
+    z-index: 5;
     transition: background 0.25s ease, color 0.25s ease, opacity 0.2s ease;
   }
-  .scroll-seta:hover{ background: var(--tinta); color: var(--creme); }
-  .scroll-seta:focus-visible{ outline: 3px solid var(--azul); outline-offset: 2px; }
-  .scroll-seta-esq{ left: -8px; }
-  .scroll-seta-dir{ right: -8px; }
-  .scroll-seta[hidden]{ display:none; }
+  .carrossel-seta:hover{ background: var(--tinta); color: var(--creme); }
+  .carrossel-seta:focus-visible{ outline: 3px solid var(--azul); outline-offset: 2px; }
+  .carrossel-seta-esq{ left: -10px; }
+  .carrossel-seta-dir{ right: -10px; }
+  .carrossel-seta[hidden]{ display:none; }
 
-  @media (max-width: 700px){
-    .video-item{ flex-basis: 38vw; }
-    .scroll-seta{ display:none; }
+  @media (max-width: 900px){
+    .video-item{ flex-basis: calc((100% - 20px) / 1.6); }
+  }
+  @media (max-width: 560px){
+    .video-item{ flex-basis: 66vw; }
+    .carrossel-seta{ display:none; }
   }
 
   .filtros{
@@ -1040,8 +1076,20 @@
         </div>
       </div>
 
-      <!-- GALERIA DE VÍDEOS POR NICHO -->
-      <div id="nichos-videos-portfolio"></div>
+      <!-- FILTROS DE NICHO + CARROSSEL DE VÍDEOS -->
+      <div class="filtros revelar" id="filtros-videos" role="group" aria-label="Filtrar vídeos por nicho"></div>
+
+      <h3 class="video-nicho-ativo revelar" id="titulo-nicho-ativo"></h3>
+
+      <div class="carrossel-videos-wrap revelar" id="carrossel-videos-wrap">
+        <button type="button" class="carrossel-seta carrossel-seta-esq" id="seta-videos-esq" aria-label="Vídeos anteriores" hidden>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="carrossel-videos" id="carrossel-videos"></div>
+        <button type="button" class="carrossel-seta carrossel-seta-dir" id="seta-videos-dir" aria-label="Mais vídeos">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+      </div>
 
       <!-- GALERIA DE FOTOS COM FILTRO POR NICHO -->
       <div class="fotos-cabecalho revelar">
@@ -1219,51 +1267,58 @@
     categorias: ["Todos", "Beleza", "Casa e Limpeza", "Pet"],
 
     // EDITE AQUI: vídeos do Portfólio, organizados por nicho (mesma lista usada em
-    // videos.html). Cada "youtubeId" é o código do vídeo no YouTube, a parte final
-    // do link, depois de "shorts/" ou "watch?v=".
+    // videos.html). Cada nicho vira um botão de filtro ("rotulo" é o texto do botão).
+    // Cada vídeo precisa de um "youtubeId" (a parte final do link do YouTube, depois de
+    // "shorts/" ou "watch?v=") e de um "formato" (o selo pequeno que aparece no card,
+    // tipo Storytelling, Review, Vlog, Problema/Solução, Dica, ASMR).
     videosPorNicho: [
       {
-        nicho: "Pet",
+        nicho: "pet",
+        rotulo: "PETs",
         videos: [
-          { youtubeId: "0i2ZFRrx0Cg" },
-          { youtubeId: "Owc3PnPbOkY" },
-          { youtubeId: "q2CkbyxZGv8" },
-          { youtubeId: "-qoS9D5oUJs" }
+          { youtubeId: "0i2ZFRrx0Cg", formato: "Storytelling" },
+          { youtubeId: "Owc3PnPbOkY", formato: "Review" },
+          { youtubeId: "q2CkbyxZGv8", formato: "Vlog" },
+          { youtubeId: "-qoS9D5oUJs", formato: "Problema → Solução" }
         ]
       },
       {
-        nicho: "Casa e Limpeza",
+        nicho: "casa-e-limpeza",
+        rotulo: "Casa & Limpeza",
         videos: [
-          { youtubeId: "1unCG49vObc" },
-          { youtubeId: "rfsXdrQ3GWA" },
-          { youtubeId: "iZKODStY1mM" },
-          { youtubeId: "4YFLYX1zwLc" },
-          { youtubeId: "uBdbW68OeYo" }
+          { youtubeId: "1unCG49vObc", formato: "Dica" },
+          { youtubeId: "rfsXdrQ3GWA", formato: "ASMR" },
+          { youtubeId: "iZKODStY1mM", formato: "Storytelling" },
+          { youtubeId: "4YFLYX1zwLc", formato: "Review" },
+          { youtubeId: "uBdbW68OeYo", formato: "Vlog" }
         ]
       },
       {
-        nicho: "Haircare",
+        nicho: "haircare",
+        rotulo: "Haircare",
         videos: [
-          { youtubeId: "3gEzz8Rir-k" },
-          { youtubeId: "kHodjMdDAfQ" },
-          { youtubeId: "T759fFIfshY" },
-          { youtubeId: "DE13lRXO3Ng" }
+          { youtubeId: "3gEzz8Rir-k", formato: "Problema → Solução" },
+          { youtubeId: "kHodjMdDAfQ", formato: "Dica" },
+          { youtubeId: "T759fFIfshY", formato: "ASMR" },
+          { youtubeId: "DE13lRXO3Ng", formato: "Storytelling" }
         ]
       },
       {
-        nicho: "Skincare",
+        nicho: "skincare",
+        rotulo: "Skincare",
         videos: [
-          { youtubeId: "T6X4J4uYdYQ" },
-          { youtubeId: "AmtVkRfbOzw" },
-          { youtubeId: "Z8S-dDvCah0" },
-          { youtubeId: "R5KCgbtnYJc" }
+          { youtubeId: "T6X4J4uYdYQ", formato: "Review" },
+          { youtubeId: "AmtVkRfbOzw", formato: "Vlog" },
+          { youtubeId: "Z8S-dDvCah0", formato: "Problema → Solução" },
+          { youtubeId: "R5KCgbtnYJc", formato: "Dica" }
         ]
       },
       {
-        nicho: "Lifestyle",
+        nicho: "lifestyle",
+        rotulo: "Lifestyle",
         videos: [
-          { youtubeId: "ms8_RtA5N1c" },
-          { youtubeId: "tNqnPAUQdtU" }
+          { youtubeId: "ms8_RtA5N1c", formato: "ASMR" },
+          { youtubeId: "tNqnPAUQdtU", formato: "Storytelling" }
         ]
       }
     ],
@@ -1402,42 +1457,79 @@
     document.getElementById('sobre-corpo').innerHTML = CONFIG.sobre.corpoHtml;
   }
 
-  const ICONE_SETA_ESQ = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>';
-  const ICONE_SETA_DIR = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
+  // Qual nicho está selecionado agora (índice em CONFIG.videosPorNicho).
+  let nichoAtivoVideos = 0;
 
-  function montarGaleriaVideosPortfolio(){
-    const container = document.getElementById('nichos-videos-portfolio');
+  // Monta os botões de filtro (um por nicho) e liga o clique de cada um.
+  function montarFiltrosVideos(){
+    const container = document.getElementById('filtros-videos');
+    container.innerHTML = CONFIG.videosPorNicho.map((bloco, indice) => `
+      <button type="button" class="filtro-botao${indice === 0 ? ' ativo' : ''}" data-indice="${indice}" aria-pressed="${indice === 0}">${bloco.rotulo}</button>
+    `).join('');
 
-    // Cada vídeo começa como uma "fachada" (capa + botão de play simples, sem nada do
-    // YouTube visível). Só ao clicar é que o player de verdade é carregado, já tocando.
-    // EDITE AQUI: para trocar um vídeo, troque o "youtubeId" no CONFIG.videosPorNicho acima.
-    container.innerHTML = CONFIG.videosPorNicho.map((bloco, indiceBloco) => {
-      const idTrack = `nicho-track-portfolio-${indiceBloco}`;
-      const cards = bloco.videos.map((video, indiceVideo) => `
-        <div class="video-item revelar">
-          <button type="button" class="video-card" data-youtube="${video.youtubeId}" data-titulo="${bloco.nicho} ${indiceVideo + 1}" aria-label="Assistir vídeo ${indiceVideo + 1} de ${bloco.nicho}">
-            <img class="video-card-thumb" src="https://i.ytimg.com/vi/${video.youtubeId}/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${video.youtubeId}/sddefault.jpg'" alt="" loading="lazy">
-            <span class="video-card-play" aria-hidden="true">${ICONE_PLAY}</span>
-          </button>
-        </div>
-      `).join('');
-
-      return `
-        <div class="nicho-videos revelar">
-          <h3 class="nicho-titulo">${bloco.nicho}</h3>
-          <div class="video-scroll-wrap">
-            <button type="button" class="scroll-seta scroll-seta-esq" data-alvo="${idTrack}" data-direcao="-1" aria-label="Ver vídeos anteriores de ${bloco.nicho}" hidden>${ICONE_SETA_ESQ}</button>
-            <div class="video-track" id="${idTrack}">${cards}</div>
-            <button type="button" class="scroll-seta scroll-seta-dir" data-alvo="${idTrack}" data-direcao="1" aria-label="Ver mais vídeos de ${bloco.nicho}">${ICONE_SETA_DIR}</button>
-          </div>
-        </div>
-      `;
-    }).join('');
+    container.addEventListener('click', (evento) => {
+      const botao = evento.target.closest('.filtro-botao');
+      if(!botao) return;
+      container.querySelectorAll('.filtro-botao').forEach(b => {
+        b.classList.remove('ativo');
+        b.setAttribute('aria-pressed', 'false');
+      });
+      botao.classList.add('ativo');
+      botao.setAttribute('aria-pressed', 'true');
+      nichoAtivoVideos = Number(botao.dataset.indice);
+      renderizarCarrosselVideos();
+    });
   }
 
-  // Troca o card-fachada pelo player real do YouTube ao clicar (delegação de evento).
-  function configurarPlayVideosPortfolio(){
-    document.getElementById('nichos-videos-portfolio').addEventListener('click', (evento) => {
+  // Desenha o carrossel com os vídeos do nicho ativo. Cada vídeo começa como
+  // uma "fachada" (capa + selo de formato + botão de play simples, sem nada
+  // do YouTube visível). Só ao clicar é que o player real carrega, já tocando.
+  // EDITE AQUI: para trocar um vídeo, troque o "youtubeId" no CONFIG.videosPorNicho acima.
+  function renderizarCarrosselVideos(){
+    const bloco = CONFIG.videosPorNicho[nichoAtivoVideos];
+    document.getElementById('titulo-nicho-ativo').textContent = bloco.rotulo;
+
+    const track = document.getElementById('carrossel-videos');
+    track.innerHTML = bloco.videos.map((video, indice) => `
+      <div class="video-item">
+        <button type="button" class="video-card" data-youtube="${video.youtubeId}" data-titulo="${bloco.rotulo} ${indice + 1}" aria-label="Assistir vídeo ${indice + 1} de ${bloco.rotulo}">
+          <img class="video-card-thumb" src="https://i.ytimg.com/vi/${video.youtubeId}/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${video.youtubeId}/sddefault.jpg'" alt="" loading="lazy">
+          <span class="video-badge">${video.formato}</span>
+          <span class="video-card-play" aria-hidden="true">${ICONE_PLAY}</span>
+          <span class="video-card-rotulo-hover">▶ Assistir vídeo</span>
+        </button>
+      </div>
+    `).join('');
+
+    track.scrollTo({ left: 0 });
+    atualizarSetasCarrossel();
+  }
+
+  // Mostra/esconde as setas dependendo de quanto ainda dá para rolar.
+  function atualizarSetasCarrossel(){
+    const track = document.getElementById('carrossel-videos');
+    const setaEsq = document.getElementById('seta-videos-esq');
+    const setaDir = document.getElementById('seta-videos-dir');
+    if(!track) return;
+    const maximo = track.scrollWidth - track.clientWidth - 2;
+    setaEsq.hidden = track.scrollLeft <= 4;
+    setaDir.hidden = maximo <= 4 || track.scrollLeft >= maximo;
+  }
+
+  // Liga as setas e o clique de play (delegado, porque os cards trocam a cada filtro).
+  function configurarCarrosselVideos(){
+    const track = document.getElementById('carrossel-videos');
+
+    document.getElementById('seta-videos-esq').addEventListener('click', () => {
+      track.scrollBy({ left: -track.clientWidth * 0.9, behavior: 'smooth' });
+    });
+    document.getElementById('seta-videos-dir').addEventListener('click', () => {
+      track.scrollBy({ left: track.clientWidth * 0.9, behavior: 'smooth' });
+    });
+    track.addEventListener('scroll', atualizarSetasCarrossel);
+    window.addEventListener('resize', atualizarSetasCarrossel);
+
+    document.getElementById('carrossel-videos-wrap').addEventListener('click', (evento) => {
       const botao = evento.target.closest('.video-card');
       if(!botao) return;
       const id = botao.dataset.youtube;
@@ -1453,33 +1545,6 @@
 
       botao.replaceWith(iframe);
       if(window.Rastreio) Rastreio.videoView(id, titulo);
-    });
-  }
-
-  // Setas de cada nicho: rolam a faixa de vídeos sem mudar de página, e somem
-  // sozinhas quando não há mais o que rolar naquela direção.
-  function configurarSetasScrollPortfolio(){
-    document.querySelectorAll('#nichos-videos-portfolio .video-scroll-wrap').forEach(wrap => {
-      const track = wrap.querySelector('.video-track');
-      const setaEsq = wrap.querySelector('.scroll-seta-esq');
-      const setaDir = wrap.querySelector('.scroll-seta-dir');
-
-      function atualizarSetas(){
-        const maximo = track.scrollWidth - track.clientWidth - 2;
-        setaEsq.hidden = track.scrollLeft <= 4;
-        setaDir.hidden = maximo <= 4 || track.scrollLeft >= maximo;
-      }
-
-      [setaEsq, setaDir].forEach(seta => {
-        seta.addEventListener('click', () => {
-          const direcao = Number(seta.dataset.direcao);
-          track.scrollBy({ left: direcao * track.clientWidth * 0.85, behavior: 'smooth' });
-        });
-      });
-
-      track.addEventListener('scroll', atualizarSetas);
-      window.addEventListener('resize', atualizarSetas);
-      atualizarSetas();
     });
   }
 
@@ -1742,7 +1807,8 @@
     montarCabecalho();
     montarHero();
     montarSobre();
-    montarGaleriaVideosPortfolio();
+    montarFiltrosVideos();
+    renderizarCarrosselVideos();
     montarFiltros();
     montarPortfolio();
     montarServicos();
@@ -1756,8 +1822,7 @@
     configurarAnimacaoEntrada();
     configurarContadores();
     configurarFormulario();
-    configurarPlayVideosPortfolio();
-    configurarSetasScrollPortfolio();
+    configurarCarrosselVideos();
     configurarRastreioCliques();
   });
 </script>
