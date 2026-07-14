@@ -630,8 +630,8 @@
      de baixo (o mesmo espírito das Polaroids da seção Sobre Mim). */
   .portfolio-grade{
     display:grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 30px 26px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px 20px;
   }
   .portfolio-item{
     --rotacao: 0deg;
@@ -709,10 +709,13 @@
   }
   .portfolio-item.escondido{ display:none; }
 
-  @media (max-width: 900px){
+  @media (max-width: 1000px){
+    .portfolio-grade{ grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 700px){
     .portfolio-grade{ grid-template-columns: repeat(2, 1fr); }
   }
-  @media (max-width: 560px){
+  @media (max-width: 420px){
     .portfolio-grade{ grid-template-columns: 1fr; }
   }
 
@@ -1315,7 +1318,7 @@
       { titulo: "Rotina de skincare", categoria: "beleza", foto: "fotos/skincare-1.png", gradiente: "linear-gradient(150deg, #df7900, #0049a4)" },
       { titulo: "Resultado e textura do produto", categoria: "beleza", foto: "fotos/skincare-2.jpg", gradiente: "linear-gradient(150deg, #0049a4, #14110d)" },
       { titulo: "Cuidados com os cabelos", categoria: "beleza", foto: "fotos/haircare-1.png", gradiente: "linear-gradient(150deg, #df7900, #14110d)" },
-      { titulo: "Finalização e brilho", categoria: "beleza", foto: "fotos/haircare-2.png", gradiente: "linear-gradient(150deg, #0049a4, #df7900)" },
+      { titulo: "Rotina antiqueda capilar", categoria: "beleza", foto: "fotos/haircare-2.png", gradiente: "linear-gradient(150deg, #0049a4, #df7900)" },
       { titulo: "Rotina de limpeza prática", categoria: "casa e limpeza", foto: "fotos/casaelimpeza-1.jpg", gradiente: "linear-gradient(150deg, #14110d, #0049a4)" },
       { titulo: "Produto em uso no dia a dia", categoria: "casa e limpeza", foto: "fotos/casaelimpeza-2.jpg", gradiente: "linear-gradient(150deg, #df7900, #0049a4)" },
       { titulo: "Organização da casa", categoria: "casa e limpeza", foto: "fotos/casaelimpeza-3.jpg", gradiente: "linear-gradient(150deg, #14110d, #df7900)" },
