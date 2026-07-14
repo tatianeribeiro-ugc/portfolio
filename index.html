@@ -857,12 +857,12 @@
     font-size: 1.5rem;
     color: var(--laranja);
   }
-  /* O pacote mais completo ganha destaque escuro, igual ao restante do site. */
-  .pacote-destaque{ background: var(--tinta); border-color: var(--tinta); }
-  .pacote-destaque .pacote-nome{ color: var(--creme); }
-  .pacote-destaque .pacote-itens{ color: rgba(243,238,233,0.75); }
-  .pacote-destaque .pacote-linha{ background: rgba(243,238,233,0.2); }
-  .pacote-destaque .pacote-preco{ color: var(--creme); }
+  /* O pacote mais completo ganha destaque laranja. */
+  .pacote-destaque{ background: var(--laranja); border-color: var(--laranja); }
+  .pacote-destaque .pacote-nome{ color: var(--branco); }
+  .pacote-destaque .pacote-itens{ color: rgba(255,255,255,0.85); }
+  .pacote-destaque .pacote-linha{ background: rgba(255,255,255,0.3); }
+  .pacote-destaque .pacote-preco{ color: var(--branco); }
 
   .investimento-detalhes{
     display:grid;
@@ -1226,7 +1226,7 @@
     <div class="container contato-grid">
       <div class="contato-info revelar">
         <span class="rotulo-secao">Contato</span>
-        <h2>Vamos criar o próximo <em>case</em> de sucesso?</h2>
+        <h2>Bora contar essa <em class="hero-destaque-laranja">história</em>?</h2>
         <p style="color: rgba(20,17,13,0.75); font-size:1.02rem;">Me conta sobre o seu produto e a sua campanha. Respondo rapidinho e já envio uma proposta sob medida.</p>
         <div class="contato-canais" id="canais-contato"></div>
       </div>
