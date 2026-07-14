@@ -823,72 +823,100 @@
   }
 
   /* ============================================================
-     NÚMEROS / RESULTADOS
+     INVESTIMENTO (tabela de pacotes e valores)
      ============================================================ */
-  .numeros{
-    background: var(--tinta);
-    color: var(--creme);
-    border-radius: var(--raio);
-    margin: 0 24px;
-    padding: 64px 40px;
-  }
-  .numeros .container{ padding: 0; max-width: 100%; }
-  .numeros-grade{
+  .investimento-cabecalho{ max-width: 640px; margin-bottom: 40px; }
+
+  .pacotes-grade{
     display:grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 32px;
+    gap: 20px;
+    margin-bottom: 32px;
+  }
+  .pacote-card{
+    background: var(--branco);
+    border: 1px solid var(--borda);
+    border-radius: var(--raio);
+    box-shadow: var(--sombra);
+    padding: 28px 20px;
     text-align:center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
-  .numero-valor{
+  .pacote-card:hover{ transform: translateY(-6px); box-shadow: var(--sombra-forte); }
+  .pacote-nome{
     font-family: var(--fonte-titulo);
-    font-size: clamp(2.2rem, 4vw, 3rem);
-    color: var(--branco);
+    font-weight: 600;
+    font-size: 1.05rem;
+  }
+  .pacote-linha{ height:1px; background: var(--borda); margin: 16px 0; }
+  .pacote-itens{ font-size: 0.88rem; color: rgba(20,17,13,0.7); }
+  .pacote-preco{
+    font-family: var(--fonte-titulo);
     font-style: italic;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: var(--laranja);
   }
-  .numero-rotulo{
-    margin-top: 8px;
-    font-size: 0.85rem;
-    letter-spacing: 0.04em;
-    color: rgba(243,238,233,0.7);
-  }
-  @media (max-width: 900px){ .numeros{ margin: 0; border-radius: 0; padding: 48px 24px; } .numeros-grade{ grid-template-columns: repeat(2, 1fr); gap: 40px 24px; } }
+  /* O pacote mais completo ganha destaque escuro, igual ao restante do site. */
+  .pacote-destaque{ background: var(--tinta); border-color: var(--tinta); }
+  .pacote-destaque .pacote-nome{ color: var(--creme); }
+  .pacote-destaque .pacote-itens{ color: rgba(243,238,233,0.75); }
+  .pacote-destaque .pacote-linha{ background: rgba(243,238,233,0.2); }
+  .pacote-destaque .pacote-preco{ color: var(--creme); }
 
-  /* ============================================================
-     DEPOIMENTOS
-     ============================================================ */
-  .depoimentos-grade{
+  .investimento-detalhes{
     display:grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr 1fr;
     gap: 22px;
   }
-  .depoimento-card{
+  .detalhes-cartao{
     background: var(--branco);
-    border-radius: var(--raio);
-    padding: 30px;
     border: 1px solid var(--borda);
+    border-radius: var(--raio);
     box-shadow: var(--sombra);
-    display:flex;
-    flex-direction:column;
-    gap: 18px;
+    padding: 28px;
   }
-  .depoimento-aspas{
-    font-family: var(--fonte-titulo);
-    font-size: 2.6rem;
-    color: var(--laranja);
-    line-height: 1;
-    font-style: italic;
-  }
-  .depoimento-texto{ font-size: 0.98rem; color: rgba(20,17,13,0.82); flex-grow:1; }
-  .depoimento-autor{ display:flex; align-items:center; gap: 12px; }
-  .depoimento-avatar{
-    width: 44px; height: 44px;
+  .detalhes-cartao h3{ font-size: 1.05rem; margin-bottom: 16px; }
+  .inclusos-lista{ list-style:none; padding:0; margin:0; display:grid; gap: 10px; }
+  .inclusos-lista li{ display:flex; align-items:flex-start; gap: 10px; font-size: 0.92rem; }
+  .inclusos-lista li::before{
+    content:'';
+    width: 7px; height: 7px;
     border-radius: 50%;
+    background: var(--azul);
+    margin-top: 7px;
     flex-shrink:0;
   }
-  .depoimento-nome{ font-weight: 700; font-size: 0.92rem; }
-  .depoimento-empresa{ font-size: 0.82rem; color: rgba(20,17,13,0.6); }
+  .adicionais-lista{ list-style:none; padding:0; margin:0; display:grid; gap: 12px; }
+  .adicionais-lista li{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap: 12px;
+    font-size: 0.92rem;
+    border-bottom: 1px dashed var(--borda);
+    padding-bottom: 8px;
+  }
+  .adicionais-preco{ font-weight: 700; color: var(--laranja); flex-shrink:0; white-space:nowrap; }
 
-  @media (max-width: 900px){ .depoimentos-grade{ grid-template-columns: 1fr; } }
+  .investimento-nota{
+    text-align:center;
+    margin: 28px 0 0 0;
+    font-family: var(--fonte-titulo);
+    font-style: italic;
+    font-size: 0.88rem;
+    color: rgba(20,17,13,0.6);
+  }
+
+  @media (max-width: 900px){
+    .pacotes-grade{ grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 700px){
+    .investimento-detalhes{ grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px){
+    .pacotes-grade{ grid-template-columns: 1fr; }
+  }
 
   /* ============================================================
      CONTATO
@@ -1165,26 +1193,29 @@
   </section>
 
   <!-- ============================================================
-       7. RESULTADOS / NÚMEROS
+       INVESTIMENTO
        ============================================================ -->
-  <section id="resultados">
+  <section id="investimento">
     <div class="container">
-      <div class="numeros revelar">
-        <div class="numeros-grade" id="grade-numeros"></div>
+      <div class="investimento-cabecalho revelar">
+        <span class="rotulo-secao">Investimento</span>
+        <h2 id="investimento-titulo"></h2>
       </div>
-    </div>
-  </section>
 
-  <!-- ============================================================
-       8. DEPOIMENTOS
-       ============================================================ -->
-  <section id="depoimentos">
-    <div class="container">
-      <div class="revelar" style="max-width:560px; margin-bottom:48px;">
-        <span class="rotulo-secao">Depoimentos</span>
-        <h2>O que as marcas <em>dizem</em></h2>
+      <div class="pacotes-grade" id="grade-pacotes"></div>
+
+      <div class="investimento-detalhes">
+        <div class="detalhes-cartao revelar">
+          <h3>Todos os pacotes incluem</h3>
+          <ul class="inclusos-lista" id="lista-inclusos"></ul>
+        </div>
+        <div class="detalhes-cartao revelar">
+          <h3>Adicionais</h3>
+          <ul class="adicionais-lista" id="lista-adicionais"></ul>
+        </div>
       </div>
-      <div class="depoimentos-grade" id="grade-depoimentos"></div>
+
+      <p class="investimento-nota revelar" id="investimento-nota"></p>
     </div>
   </section>
 
@@ -1417,35 +1448,34 @@
       }
     ],
 
-    // EDITE AQUI: números de destaque. "decimais" define quantas casas decimais aparecem na contagem
-    numeros: [
-      { valor: 120, prefixo: "", sufixo: "+", decimais: 0, rotulo: "Marcas atendidas" },
-      { valor: 3.2, prefixo: "", sufixo: "M", decimais: 1, rotulo: "Visualizações geradas" },
-      { valor: 45, prefixo: "", sufixo: "mil", decimais: 0, rotulo: "Seguidores engajados" },
-      { valor: 98, prefixo: "", sufixo: "%", decimais: 0, rotulo: "Taxa de aprovação de conteúdo" }
-    ],
-
-    // EDITE AQUI: depoimentos de clientes e marcas
-    depoimentos: [
-      {
-        texto: "A Tati entregou um conteúdo com uma taxa de conversão muito acima da nossa média. Profissional, pontual e com um olhar estratégico raro.",
-        nome: "Camila Duarte",
-        empresa: "Gerente de Marketing, Época Cosméticos",
-        gradiente: "linear-gradient(150deg, #0049a4, #df7900)"
-      },
-      {
-        texto: "Trabalhamos com vários criadores e a entrega da Tati foi de longe a mais próxima do que pedimos no briefing. Já virou parceira fixa.",
-        nome: "Rafael Nogueira",
-        empresa: "Social Media, Seara",
-        gradiente: "linear-gradient(150deg, #df7900, #14110d)"
-      },
-      {
-        texto: "Conteúdo autêntico, comunicação clara do início ao fim e resultado acima do esperado nos anúncios. Recomendo de olhos fechados.",
-        nome: "Bianca Ferraz",
-        empresa: "Fundadora, Adcos",
-        gradiente: "linear-gradient(150deg, #14110d, #0049a4)"
-      }
-    ],
+    // EDITE AQUI: seção Investimento (tabela de pacotes e valores).
+    // Em "pacotes", marque "destaque: true" no pacote que quer realçar em escuro.
+    investimento: {
+      titulo: "Quanto vale transformar o seu produto em uma <em>necessidade de compra</em>?",
+      pacotes: [
+        { nome: "Pacote Básico", itens: "1 vídeo + 2 fotos", preco: "R$ 280,00" },
+        { nome: "Pacote Plus", itens: "2 vídeos + 4 fotos", preco: "R$ 540,00" },
+        { nome: "Pacote Pro", itens: "3 vídeos + 6 fotos", preco: "R$ 810,00" },
+        { nome: "Pacote Completo", itens: "4 vídeos + 8 fotos", preco: "R$ 1.000,00", destaque: true }
+      ],
+      inclusos: [
+        "Roteiro individualizado",
+        "Gravação",
+        "Edição",
+        "Aprovação prévia",
+        "Entrega via Google Drive",
+        "Licença para ADS por 90 dias"
+      ],
+      adicionais: [
+        { nome: "Vídeo extra", preco: "R$ 120,00" },
+        { nome: "Foto extra", preco: "R$ 25,00" },
+        { nome: "Post Collab", preco: "R$ 100,00" },
+        { nome: "Gancho extra", preco: "R$ 40,00" },
+        { nome: "CTA extra", preco: "R$ 40,00" },
+        { nome: "Licença para ADS (90 dias)", preco: "R$ 100,00" }
+      ],
+      nota: "Os valores apresentados, a forma e a data de pagamento são formalizados em contrato."
+    },
 
     anoFundacao: 2026
   };
@@ -1650,31 +1680,27 @@
     `).join('');
   }
 
-  function montarNumeros(){
-    document.getElementById('grade-numeros').innerHTML = CONFIG.numeros.map((n, indice) => `
-      <div>
-        <div class="numero-valor" data-valor="${n.valor}" data-decimais="${n.decimais}" data-sufixo="${n.sufixo}" data-prefixo="${n.prefixo}" id="numero-${indice}">
-          ${n.prefixo}0${n.sufixo}
-        </div>
-        <div class="numero-rotulo">${n.rotulo}</div>
-      </div>
-    `).join('');
-  }
+  function montarInvestimento(){
+    document.getElementById('investimento-titulo').innerHTML = CONFIG.investimento.titulo;
 
-  function montarDepoimentos(){
-    document.getElementById('grade-depoimentos').innerHTML = CONFIG.depoimentos.map(dep => `
-      <div class="depoimento-card revelar">
-        <span class="depoimento-aspas" aria-hidden="true">&ldquo;</span>
-        <p class="depoimento-texto">${dep.texto}</p>
-        <div class="depoimento-autor">
-          <div class="depoimento-avatar" role="img" aria-label="Foto de ${dep.nome}" style="background:${dep.gradiente};"></div>
-          <div>
-            <div class="depoimento-nome">${dep.nome}</div>
-            <div class="depoimento-empresa">${dep.empresa}</div>
-          </div>
-        </div>
+    document.getElementById('grade-pacotes').innerHTML = CONFIG.investimento.pacotes.map(pacote => `
+      <div class="pacote-card${pacote.destaque ? ' pacote-destaque' : ''} revelar">
+        <div class="pacote-nome">${pacote.nome}</div>
+        <div class="pacote-linha"></div>
+        <div class="pacote-itens">${pacote.itens}</div>
+        <div class="pacote-linha"></div>
+        <div class="pacote-preco">${pacote.preco}</div>
       </div>
     `).join('');
+
+    document.getElementById('lista-inclusos').innerHTML = CONFIG.investimento.inclusos
+      .map(item => `<li>${item}</li>`).join('');
+
+    document.getElementById('lista-adicionais').innerHTML = CONFIG.investimento.adicionais.map(item => `
+      <li><span>${item.nome}</span><span class="adicionais-preco">${item.preco}</span></li>
+    `).join('');
+
+    document.getElementById('investimento-nota').textContent = CONFIG.investimento.nota;
   }
 
   function montarContato(){
@@ -1768,39 +1794,6 @@
     elementos.forEach(el => observador.observe(el));
   }
 
-  function configurarContadores(){
-    const numeros = document.querySelectorAll('.numero-valor');
-    const duracaoMs = 1800;
-
-    function animarNumero(elemento){
-      const valorFinal = parseFloat(elemento.dataset.valor);
-      const decimais = parseInt(elemento.dataset.decimais, 10);
-      const sufixo = elemento.dataset.sufixo;
-      const prefixo = elemento.dataset.prefixo;
-      const inicio = performance.now();
-
-      function passo(agora){
-        const progresso = Math.min((agora - inicio) / duracaoMs, 1);
-        const facilitado = 1 - Math.pow(1 - progresso, 3);
-        const valorAtual = (valorFinal * facilitado).toFixed(decimais);
-        elemento.textContent = `${prefixo}${valorAtual}${sufixo}`;
-        if(progresso < 1) requestAnimationFrame(passo);
-      }
-      requestAnimationFrame(passo);
-    }
-
-    const observador = new IntersectionObserver((entradas) => {
-      entradas.forEach(entrada => {
-        if(entrada.isIntersecting){
-          animarNumero(entrada.target);
-          observador.unobserve(entrada.target);
-        }
-      });
-    }, { threshold: 0.5 });
-
-    numeros.forEach(el => observador.observe(el));
-  }
-
   function configurarFormulario(){
     const formulario = document.getElementById('formulario-contato');
     const confirmacao = document.getElementById('mensagem-confirmacao');
@@ -1848,14 +1841,12 @@
     montarPortfolio();
     montarServicos();
     montarProcesso();
-    montarNumeros();
-    montarDepoimentos();
+    montarInvestimento();
     montarContato();
     montarRodape();
 
     configurarMenuMobile();
     configurarAnimacaoEntrada();
-    configurarContadores();
     configurarFormulario();
     configurarCarrosselVideos();
     configurarRastreioCliques();
