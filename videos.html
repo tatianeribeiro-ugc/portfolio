@@ -340,20 +340,6 @@
     background: linear-gradient(to top, rgba(20,17,13,0.45) 0%, rgba(20,17,13,0.05) 55%);
     pointer-events:none;
   }
-  .video-badge{
-    position:absolute;
-    top:14px; left:14px;
-    z-index:2;
-    padding: 5px 12px;
-    border-radius: 100px;
-    background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(6px);
-    color: var(--tinta);
-    font-size: 0.64rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
   .video-card-play{
     position:relative;
     z-index:2;
@@ -566,57 +552,55 @@
     // EDITE AQUI: vídeos UGC, organizados por nicho. Cada nicho vira um botão de filtro
     // ("rotulo" é o texto do botão). Ao clicar, o carrossel abaixo troca na hora.
     // Cada vídeo precisa de um "youtubeId" (a parte final do link do YouTube, depois de
-    // "shorts/" ou "watch?v=") e de um "formato" (o selo pequeno que aparece no card,
-    // tipo Storytelling, Review, Vlog, Problema/Solução, Dica, ASMR). Ajuste o "formato"
-    // de cada vídeo para o que ele realmente é.
+    // "shorts/" ou "watch?v=").
     videosPorNicho: [
       {
         nicho: "pet",
         rotulo: "PETs",
         videos: [
-          { youtubeId: "0i2ZFRrx0Cg", formato: "Storytelling" },
-          { youtubeId: "Owc3PnPbOkY", formato: "Review" },
-          { youtubeId: "q2CkbyxZGv8", formato: "Vlog" },
-          { youtubeId: "-qoS9D5oUJs", formato: "Problema → Solução" }
+          { youtubeId: "0i2ZFRrx0Cg" },
+          { youtubeId: "Owc3PnPbOkY" },
+          { youtubeId: "q2CkbyxZGv8" },
+          { youtubeId: "-qoS9D5oUJs" }
         ]
       },
       {
         nicho: "casa-e-limpeza",
         rotulo: "Casa & Limpeza",
         videos: [
-          { youtubeId: "1unCG49vObc", formato: "Dica" },
-          { youtubeId: "rfsXdrQ3GWA", formato: "ASMR" },
-          { youtubeId: "iZKODStY1mM", formato: "Storytelling" },
-          { youtubeId: "4YFLYX1zwLc", formato: "Review" },
-          { youtubeId: "uBdbW68OeYo", formato: "Vlog" }
+          { youtubeId: "1unCG49vObc" },
+          { youtubeId: "rfsXdrQ3GWA" },
+          { youtubeId: "iZKODStY1mM" },
+          { youtubeId: "4YFLYX1zwLc" },
+          { youtubeId: "uBdbW68OeYo" }
         ]
       },
       {
         nicho: "haircare",
         rotulo: "Haircare",
         videos: [
-          { youtubeId: "3gEzz8Rir-k", formato: "Problema → Solução" },
-          { youtubeId: "kHodjMdDAfQ", formato: "Dica" },
-          { youtubeId: "T759fFIfshY", formato: "ASMR" },
-          { youtubeId: "DE13lRXO3Ng", formato: "Storytelling" }
+          { youtubeId: "3gEzz8Rir-k" },
+          { youtubeId: "kHodjMdDAfQ" },
+          { youtubeId: "T759fFIfshY" },
+          { youtubeId: "DE13lRXO3Ng" }
         ]
       },
       {
         nicho: "skincare",
         rotulo: "Skincare",
         videos: [
-          { youtubeId: "T6X4J4uYdYQ", formato: "Review" },
-          { youtubeId: "AmtVkRfbOzw", formato: "Vlog" },
-          { youtubeId: "Z8S-dDvCah0", formato: "Problema → Solução" },
-          { youtubeId: "R5KCgbtnYJc", formato: "Dica" }
+          { youtubeId: "T6X4J4uYdYQ" },
+          { youtubeId: "AmtVkRfbOzw" },
+          { youtubeId: "Z8S-dDvCah0" },
+          { youtubeId: "R5KCgbtnYJc" }
         ]
       },
       {
         nicho: "lifestyle",
         rotulo: "Lifestyle",
         videos: [
-          { youtubeId: "ms8_RtA5N1c", formato: "ASMR" },
-          { youtubeId: "tNqnPAUQdtU", formato: "Storytelling" }
+          { youtubeId: "ms8_RtA5N1c" },
+          { youtubeId: "tNqnPAUQdtU" }
         ]
       }
     ]
@@ -666,8 +650,8 @@
   }
 
   // Desenha o carrossel com os vídeos do nicho ativo. Cada vídeo começa como
-  // uma "fachada" (capa + selo de formato + botão de play simples, sem nada
-  // do YouTube visível). Só ao clicar é que o player real carrega, já tocando.
+  // uma "fachada" (capa + botão de play simples, sem nada do YouTube visível).
+  // Só ao clicar é que o player real carrega, já tocando.
   function renderizarCarrosselVideos(){
     const bloco = CONFIG.videosPorNicho[nichoAtivoVideos];
     document.getElementById('titulo-nicho-ativo').textContent = bloco.rotulo;
@@ -677,7 +661,6 @@
       <div class="video-item">
         <button type="button" class="video-card" data-youtube="${video.youtubeId}" data-titulo="${bloco.rotulo} ${indice + 1}" aria-label="Assistir vídeo ${indice + 1} de ${bloco.rotulo}">
           <img class="video-card-thumb" src="https://i.ytimg.com/vi/${video.youtubeId}/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${video.youtubeId}/sddefault.jpg'" alt="" loading="lazy">
-          <span class="video-badge">${video.formato}</span>
           <span class="video-card-play" aria-hidden="true">${ICONE_PLAY}</span>
           <span class="video-card-rotulo-hover">▶ Assistir vídeo</span>
         </button>
