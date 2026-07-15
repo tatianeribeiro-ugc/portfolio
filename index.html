@@ -34,7 +34,7 @@
   }
 
   *{ box-sizing: border-box; }
-  html{ scroll-behavior: smooth; }
+  html{ scroll-behavior: smooth; overflow-x: hidden; }
   @media (prefers-reduced-motion: reduce){
     html{ scroll-behavior: auto; }
     *{ animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
@@ -48,6 +48,7 @@
     font-size: 16px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
 
   img, svg{ max-width: 100%; display:block; }
@@ -442,7 +443,14 @@
 
   @media (max-width: 900px){
     .sobre-grid{ grid-template-columns: 1fr; }
-    .sobre-colagem{ max-width: 320px; margin-bottom: 24px; }
+    .sobre-colagem{ max-width: 320px; margin: 0 auto 32px auto; }
+  }
+  /* Em telas bem estreitas, encolhe um pouco o desalinhamento das fotos
+     (elas ficavam quase saindo da borda da tela). */
+  @media (max-width: 480px){
+    .sobre-colagem{ max-width: 260px; }
+    .polaroid-pet{ left: -2%; }
+    .polaroid-lifestyle{ right: -2%; }
   }
   @media (max-width: 420px){
     .sobre-texto p.sobre-saudacao{ font-size: 1.1rem; }
@@ -712,11 +720,11 @@
   @media (max-width: 1000px){
     .portfolio-grade{ grid-template-columns: repeat(3, 1fr); }
   }
-  @media (max-width: 700px){
-    .portfolio-grade{ grid-template-columns: repeat(2, 1fr); }
-  }
-  @media (max-width: 420px){
-    .portfolio-grade{ grid-template-columns: 1fr; }
+  /* No celular, uma coluna só e sem inclinação: a colagem torta fica bonita
+     numa grade larga, mas em coluna estreita só deixa a legenda espremida. */
+  @media (max-width: 640px){
+    .portfolio-grade{ grid-template-columns: 1fr; gap: 20px; }
+    .portfolio-item{ --rotacao: 0deg; max-width: 340px; margin: 0 auto; }
   }
 
   /* ============================================================
