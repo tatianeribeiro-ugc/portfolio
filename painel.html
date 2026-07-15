@@ -629,6 +629,85 @@
   .crm-mini-form input[type=text]{ flex-grow:1; min-width:140px; }
 
   /* ============================================================
+     ABA PROJETOS (KANBAN)
+     Reaproveita bastante estilo já existente (cartao, cards-grade,
+     crm-modal-*, crm-perfil-*, crm-tabela, crm-filtros, crm-etiqueta-status,
+     cal-botao-*, barra-fundo/barra-preenchimento) para ficar visualmente
+     idêntico ao resto do painel.
+     ============================================================ */
+  .kan-toolbar{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px; }
+  .kan-toolbar[hidden]{ display:none; }
+  #kan-busca{
+    padding:10px 16px; border-radius:100px; border:1px solid var(--borda); background: var(--branco);
+    font-family: var(--fonte-corpo); font-size:0.85rem; min-width:220px;
+  }
+  #kan-busca:focus-visible{ outline:3px solid var(--coral); outline-offset:1px; }
+
+  .kan-producao-hoje{
+    background: var(--branco); border:1px solid var(--borda); border-left:5px solid var(--coral);
+    border-radius: var(--raio); padding:20px 24px; margin-bottom:22px; box-shadow: var(--sombra);
+    display:flex; gap:24px; flex-wrap:wrap;
+  }
+  .kan-producao-item{ display:flex; align-items:center; gap:10px; }
+  .kan-producao-numero{ font-family: var(--fonte-titulo); font-size:1.6rem; font-weight:500; color: var(--coral); }
+  .kan-producao-rotulo{ font-size:0.82rem; color: var(--texto-suave); }
+
+  .kan-vista[hidden]{ display:none; }
+
+  .kan-board{ display:flex; gap:14px; overflow-x:auto; padding-bottom:10px; align-items:flex-start; }
+  .kan-coluna{
+    flex:0 0 270px; background: var(--creme); border-radius: var(--raio); padding:14px;
+    display:flex; flex-direction:column; gap:10px; max-height:calc(100vh - 320px); min-height:200px;
+  }
+  .kan-coluna-cabecalho{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:0 4px; }
+  .kan-coluna-titulo{ font-size:0.86rem; font-weight:700; }
+  .kan-coluna-contagem{ font-size:0.72rem; font-weight:700; color: var(--texto-suave); background: var(--branco); border-radius:100px; padding:2px 9px; }
+  .kan-coluna-corpo{ display:flex; flex-direction:column; gap:10px; overflow-y:auto; flex-grow:1; border-radius:12px; transition: background 0.15s ease; padding:2px; }
+  .kan-coluna-corpo.kan-alvo-arrasto{ background:#EFE3D6; }
+
+  .kan-card{
+    background: var(--branco); border-radius: var(--raio-pequeno); padding:14px; box-shadow: var(--sombra);
+    border-left:4px solid var(--coral); cursor:grab; transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .kan-card:hover{ transform:translateY(-1px); box-shadow:0 8px 20px rgba(26,24,22,0.1); }
+  .kan-card:active{ cursor:grabbing; }
+  .kan-card.kan-arrastando{ opacity:0.4; }
+  .kan-card-cliente{ font-size:0.72rem; color: var(--texto-suave); font-weight:600; text-transform:uppercase; letter-spacing:0.03em; }
+  .kan-card-titulo{ font-weight:700; font-size:0.9rem; margin:2px 0 8px 0; }
+  .kan-card-meta{ display:flex; justify-content:space-between; font-size:0.78rem; color: var(--texto-suave); margin-bottom:8px; gap:8px; }
+  .kan-card-meta strong{ color: var(--grafite); }
+  .kan-card-checklist{ margin-bottom:8px; }
+  .kan-card-checklist-item{ font-size:0.76rem; color: var(--texto-suave); display:flex; align-items:center; gap:6px; padding:1px 0; }
+  .kan-card-checklist-item.kan-feito{ text-decoration:line-through; opacity:0.6; }
+  .kan-card-rodape{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+
+  .kan-checklist-editor{ display:flex; flex-direction:column; gap:8px; }
+  .kan-checklist-editor-linha{ display:flex; gap:8px; align-items:center; }
+  .kan-checklist-editor-linha input[type=text]{ flex-grow:1; }
+  .kan-checklist-editor-linha button{
+    width:30px; height:30px; flex-shrink:0; border-radius:8px; border:1px solid var(--borda); background: var(--branco);
+    color: var(--erro); cursor:pointer; font-size:1rem; line-height:1;
+  }
+  .kan-checklist-editor-linha button:hover{ background:#FBEAE8; }
+
+  .kan-checklist-item{ display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--borda); }
+  .kan-checklist-item:last-child{ border-bottom:none; padding-bottom:0; }
+  .kan-checklist-item:first-child{ padding-top:0; }
+  .kan-checklist-item input[type=checkbox]{ width:17px; height:17px; accent-color: var(--coral); cursor:pointer; flex-shrink:0; }
+  .kan-checklist-item span{ flex-grow:1; font-size:0.88rem; }
+  .kan-checklist-item.kan-feito span{ text-decoration:line-through; color: var(--texto-suave); }
+  .kan-checklist-item button{ background:none; border:none; color: var(--texto-suave); cursor:pointer; font-size:0.95rem; flex-shrink:0; }
+  .kan-checklist-item button:hover{ color: var(--erro); }
+
+  .kan-calendario-lista{ margin-top:16px; }
+
+  .kan-comentario-item{ padding:12px 0; border-bottom:1px solid var(--borda); }
+  .kan-comentario-item:last-child{ border-bottom:none; padding-bottom:0; }
+  .kan-comentario-item:first-child{ padding-top:0; }
+  .kan-comentario-data{ font-size:0.74rem; color: var(--texto-suave); font-weight:600; margin-bottom:2px; }
+  .kan-comentario-texto{ font-size:0.88rem; }
+
+  /* ============================================================
      RESPONSIVO
      ============================================================ */
   @media (max-width: 1180px){
@@ -666,6 +745,10 @@
     .crm-perfil{ width:100%; }
     .crm-perfil-cabecalho, .crm-perfil-conteudo{ padding-left:20px; padding-right:20px; }
     .crm-tabela{ display:block; overflow-x:auto; white-space:nowrap; }
+    .kan-toolbar{ flex-direction:column; align-items:stretch; }
+    #kan-busca{ min-width:0; width:100%; }
+    .kan-producao-hoje{ flex-direction:column; gap:12px; }
+    .kan-coluna{ flex-basis:240px; max-height:none; }
   }
   @media (max-width: 560px){
     .cards-grade{ grid-template-columns:1fr 1fr; }
@@ -709,6 +792,10 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 5 18.5V20"/><circle cx="9.5" cy="8" r="3.2"/><path d="M19 20v-1.5a3.3 3.3 0 0 0-2.2-3.1"/><path d="M14.8 4.3a3.2 3.2 0 0 1 0 6.1"/></svg>
         Clientes
       </button>
+      <button type="button" class="nav-item" data-tab="projetos">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="5.5" height="16" rx="1.5"/><rect x="9.7" y="4" width="5.5" height="10" rx="1.5"/><rect x="16.4" y="4" width="5.5" height="13" rx="1.5"/></svg>
+        Projetos
+      </button>
     </nav>
 
     <div class="sidebar-rodape">
@@ -746,6 +833,18 @@
       <div class="crm-toolbar-esquerda">
         <button type="button" class="cal-botao-primario" id="crm-novo-cliente">+ Novo Cliente</button>
         <input type="search" id="crm-busca" placeholder="Buscar cliente...">
+      </div>
+    </div>
+
+    <div class="kan-toolbar" id="kan-toolbar" hidden>
+      <div class="crm-toolbar-esquerda">
+        <button type="button" class="cal-botao-primario" id="kan-novo-projeto">+ Novo Trabalho</button>
+        <input type="search" id="kan-busca" placeholder="Buscar trabalho...">
+      </div>
+      <div class="crm-filtros" id="kan-vista-toggle" role="group" aria-label="Alternar visualização">
+        <button type="button" class="ativo" data-vista="kanban">Kanban</button>
+        <button type="button" data-vista="lista">Lista</button>
+        <button type="button" data-vista="calendario">Calendário</button>
       </div>
     </div>
 
@@ -872,6 +971,70 @@
           <div class="cartao crm-widget">
             <h3>Próximos pagamentos</h3>
             <div id="crm-widget-pagamentos"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA 5: PROJETOS (KANBAN) -->
+    <section class="painel-aba" id="painel-projetos" hidden>
+      <div class="cards-grade" id="kan-cards-resumo"></div>
+
+      <div class="kan-producao-hoje" id="kan-producao-hoje"></div>
+
+      <div class="crm-grid-principal">
+        <div>
+          <!-- Vista Kanban -->
+          <div class="kan-vista" id="kan-vista-kanban">
+            <div class="kan-board" id="kan-board"></div>
+          </div>
+
+          <!-- Vista Lista -->
+          <div class="kan-vista" id="kan-vista-lista" hidden>
+            <div class="cartao">
+              <div style="overflow-x:auto;">
+                <table class="crm-tabela">
+                  <thead><tr><th>Cliente</th><th>Projeto</th><th>Prazo</th><th>Valor</th><th>Prioridade</th><th>Status</th><th>Pagamento</th></tr></thead>
+                  <tbody id="kan-tabela-lista"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vista Calendário -->
+          <div class="kan-vista" id="kan-vista-calendario" hidden>
+            <div class="cartao">
+              <div class="cal-mes-cabecalho">
+                <button type="button" id="kan-mes-anterior" aria-label="Mês anterior">‹</button>
+                <h3 id="kan-mes-titulo"></h3>
+                <button type="button" id="kan-mes-proximo" aria-label="Próximo mês">›</button>
+                <button type="button" id="kan-mes-hoje" class="cal-botao-hoje">Hoje</button>
+              </div>
+              <div class="cal-mes-dias-semana">
+                <span>Dom</span><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span>
+              </div>
+              <div class="cal-mes-grade" id="kan-mes-grade"></div>
+              <div class="kan-calendario-lista" id="kan-calendario-lista"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="crm-coluna-widgets">
+          <div class="cartao crm-widget">
+            <h3>🔥 Projetos atrasados</h3>
+            <div id="kan-widget-atrasados"></div>
+          </div>
+          <div class="cartao crm-widget">
+            <h3>⏰ Entregas de hoje</h3>
+            <div id="kan-widget-entregas-hoje"></div>
+          </div>
+          <div class="cartao crm-widget">
+            <h3>💰 Pagamentos desta semana</h3>
+            <div id="kan-widget-pagamentos-semana"></div>
+          </div>
+          <div class="cartao crm-widget">
+            <h3>🎥 Gravar hoje</h3>
+            <div id="kan-widget-gravar-hoje"></div>
           </div>
         </div>
       </div>
@@ -1164,6 +1327,209 @@
   </div>
 </div>
 
+<!-- Modal de criação/edição de trabalho (Projetos / Kanban) -->
+<div class="crm-modal-fundo" id="kan-modal-fundo" hidden>
+  <div class="crm-modal" role="dialog" aria-modal="true" aria-labelledby="kan-modal-titulo">
+    <div class="crm-modal-cabecalho">
+      <h3 id="kan-modal-titulo">Novo trabalho</h3>
+      <button type="button" class="crm-modal-fechar" id="kan-modal-fechar" aria-label="Fechar">&times;</button>
+    </div>
+    <form class="crm-form" id="kan-form-projeto">
+      <span class="crm-form-secao">Informações básicas</span>
+
+      <label>Cliente
+        <select id="kan-campo-cliente" required></select>
+      </label>
+      <label>Nome do projeto
+        <input type="text" id="kan-campo-titulo" required>
+      </label>
+      <label>Descrição
+        <textarea id="kan-campo-descricao" rows="2"></textarea>
+      </label>
+
+      <div class="crm-form-linha">
+        <label>Tipo de conteúdo
+          <input type="text" id="kan-campo-tipo" placeholder="Reels, TikTok, YouTube...">
+        </label>
+        <label>Quantidade de conteúdos
+          <input type="number" id="kan-campo-quantidade" min="1" step="1">
+        </label>
+      </div>
+
+      <div class="crm-form-linha">
+        <label>Prazo (entrega)
+          <input type="date" id="kan-campo-prazo">
+        </label>
+        <label>Valor (R$)
+          <input type="number" id="kan-campo-valor" min="0" step="0.01">
+        </label>
+      </div>
+
+      <div class="crm-form-linha">
+        <label>Prioridade
+          <select id="kan-campo-prioridade"></select>
+        </label>
+        <label>Status
+          <select id="kan-campo-status"></select>
+        </label>
+      </div>
+
+      <span class="crm-form-secao">Produção</span>
+
+      <div class="crm-form-linha">
+        <label>Data de gravação
+          <input type="date" id="kan-campo-gravacao">
+        </label>
+        <label>Roteiro
+          <input type="text" id="kan-campo-roteiro" placeholder="Link do roteiro ou resumo">
+        </label>
+      </div>
+      <label>Briefing
+        <textarea id="kan-campo-briefing" rows="2"></textarea>
+      </label>
+
+      <span class="crm-form-secao">Financeiro</span>
+
+      <div class="crm-form-linha-3">
+        <label>Forma de pagamento
+          <input type="text" id="kan-campo-forma-pagamento" placeholder="Pix, boleto...">
+        </label>
+        <label>Data prevista
+          <input type="date" id="kan-campo-data-pagamento">
+        </label>
+        <label>Status do pagamento
+          <select id="kan-campo-status-pagamento"></select>
+        </label>
+      </div>
+
+      <span class="crm-form-secao">Banco de ideias</span>
+      <label>Hooks, referências, links, ideias de cenas, observações do cliente
+        <textarea id="kan-campo-ideias" rows="2"></textarea>
+      </label>
+
+      <span class="crm-form-secao">Checklist</span>
+      <div class="kan-checklist-editor" id="kan-checklist-editor"></div>
+      <button type="button" class="cal-botao-secundario" id="kan-checklist-adicionar-linha" style="align-self:flex-start;">+ Adicionar tarefa</button>
+
+      <div class="crm-modal-rodape">
+        <button type="button" class="cal-botao-perigo" id="kan-botao-excluir" hidden>Excluir</button>
+        <div class="crm-modal-rodape-direita">
+          <button type="button" id="kan-cancelar">Cancelar</button>
+          <button type="submit" class="cal-botao-primario">Salvar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Perfil individual do trabalho (Projetos / Kanban) -->
+<div class="crm-perfil-fundo" id="kan-perfil-fundo" hidden>
+  <div class="crm-perfil" role="dialog" aria-modal="true" aria-labelledby="kan-perfil-titulo">
+    <div class="crm-perfil-cabecalho">
+      <button type="button" class="crm-perfil-fechar" id="kan-perfil-fechar" aria-label="Fechar perfil">&times;</button>
+      <div class="crm-perfil-topo">
+        <div class="crm-perfil-avatar" id="kan-perfil-avatar"></div>
+        <div>
+          <h2 class="crm-perfil-nome" id="kan-perfil-titulo"></h2>
+          <div class="crm-perfil-sub" id="kan-perfil-sub"></div>
+        </div>
+      </div>
+      <div class="crm-perfil-acoes">
+        <button type="button" id="kan-perfil-editar">✏️ Editar</button>
+        <button type="button" id="kan-perfil-cliente-abrir">👤 Ver cliente no CRM</button>
+      </div>
+      <div class="crm-perfil-abas" id="kan-perfil-abas">
+        <button type="button" class="crm-perfil-aba-botao ativo" data-aba="informacoes">Informações</button>
+        <button type="button" class="crm-perfil-aba-botao" data-aba="checklist">Checklist</button>
+        <button type="button" class="crm-perfil-aba-botao" data-aba="arquivos">Arquivos</button>
+        <button type="button" class="crm-perfil-aba-botao" data-aba="financeiro">Financeiro</button>
+        <button type="button" class="crm-perfil-aba-botao" data-aba="comentarios">Comentários</button>
+        <button type="button" class="crm-perfil-aba-botao" data-aba="historico">Histórico</button>
+      </div>
+    </div>
+
+    <div class="crm-perfil-conteudo">
+      <!-- Informações -->
+      <div class="crm-perfil-painel" id="kan-painel-informacoes">
+        <div class="cards-grade" id="kan-informacoes-cards"></div>
+        <div class="cartao">
+          <h3>Briefing</h3>
+          <p id="kan-info-briefing" class="texto-vazio"></p>
+        </div>
+        <div class="cartao">
+          <h3>Roteiro</h3>
+          <p id="kan-info-roteiro" class="texto-vazio"></p>
+        </div>
+        <div class="cartao">
+          <h3>Banco de ideias</h3>
+          <textarea id="kan-info-ideias" placeholder="Hooks, referências, links, ideias de cenas, observações do cliente..." style="width:100%; min-height:140px; border-radius:var(--raio-pequeno); border:1px solid var(--borda); background:var(--branco); padding:16px; font-family:var(--fonte-corpo); font-size:0.9rem; line-height:1.6; resize:vertical;"></textarea>
+          <div class="crm-modal-rodape" style="border-top:none; margin-top:12px; padding-top:0; justify-content:flex-end;">
+            <button type="button" class="cal-botao-primario" id="kan-ideias-salvar">Salvar banco de ideias</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Checklist -->
+      <div class="crm-perfil-painel" id="kan-painel-checklist" hidden>
+        <div class="cartao">
+          <h3>Checklist</h3>
+          <div id="kan-lista-checklist"></div>
+          <div class="crm-mini-form">
+            <input type="text" id="kan-checklist-nova-tarefa" placeholder="Nova tarefa">
+            <button type="button" class="cal-botao-secundario" id="kan-checklist-adicionar">+ Adicionar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Arquivos -->
+      <div class="crm-perfil-painel" id="kan-painel-arquivos" hidden>
+        <div class="cartao">
+          <h3>Arquivos</h3>
+          <div id="kan-lista-arquivos"></div>
+          <div class="crm-mini-form">
+            <input type="text" id="kan-arquivo-nome" placeholder="Nome do arquivo">
+            <input type="text" id="kan-arquivo-url" placeholder="Link (Google Drive, etc.)">
+            <select id="kan-arquivo-tipo"></select>
+            <button type="button" class="cal-botao-secundario" id="kan-arquivo-adicionar">+ Adicionar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Financeiro -->
+      <div class="crm-perfil-painel" id="kan-painel-financeiro" hidden>
+        <div class="cards-grade" id="kan-financeiro-cards"></div>
+        <div class="cartao">
+          <h3>Pagamento</h3>
+          <p id="kan-financeiro-detalhe" class="texto-vazio"></p>
+          <div class="crm-modal-rodape" style="border-top:none; margin-top:12px; padding-top:0; justify-content:flex-end;">
+            <button type="button" class="cal-botao-primario" id="kan-marcar-pago">Marcar como pago</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comentários -->
+      <div class="crm-perfil-painel" id="kan-painel-comentarios" hidden>
+        <div class="cartao">
+          <h3>Comentários</h3>
+          <div id="kan-lista-comentarios"></div>
+          <div class="crm-mini-form">
+            <input type="text" id="kan-comentario-texto" placeholder="Escrever um comentário...">
+            <button type="button" class="cal-botao-secundario" id="kan-comentario-adicionar">+ Comentar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Histórico -->
+      <div class="crm-perfil-painel" id="kan-painel-historico" hidden>
+        <div class="cartao">
+          <h3>Linha do tempo do projeto</h3>
+          <div class="crm-timeline" id="kan-timeline"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Supabase carregado por CDN, depois a lógica de autenticação compartilhada -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/auth.js"></script>
@@ -1269,6 +1635,11 @@
      ============================================================================================ */
   function formatarData(dataStr){
     return new Date(dataStr).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
+  function formatarDataLocal(dataStr){
+    if(!dataStr) return '';
+    const comHora = /^\d{4}-\d{2}-\d{2}$/.test(dataStr) ? dataStr + 'T00:00:00' : dataStr;
+    return new Date(comHora).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
   }
   function formatarDataCurta(data){
     return data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
@@ -1944,6 +2315,12 @@
         crmClientes.push(data);
         crmRenderizarTudo();
       }
+      if(kanCarregado){
+        kanClientes.push(data);
+        kanClientes.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+        kanPopularSelects();
+        kanRenderizarTudo();
+      }
     } catch(erro){
       console.error(erro);
       mostrarErroGlobal('Não foi possível adicionar o cliente. Tente novamente.');
@@ -2058,8 +2435,9 @@
     encerrado:  { rotulo: 'Projeto Encerrado',    emoji: '⚫', cor: '#4A4642' },
     perdido:    { rotulo: 'Lead Perdido',         emoji: '🔴', cor: '#C4453C' }
   };
-  const CRM_ETAPAS = { briefing: 'Briefing', gravacao: 'Gravação', edicao: 'Edição', aprovacao: 'Aprovação', entrega: 'Entrega', concluido: 'Concluído', cancelado: 'Cancelado' };
-  const CRM_ETAPAS_ORDEM = ['briefing', 'gravacao', 'edicao', 'aprovacao', 'entrega', 'concluido'];
+  // As etapas de trabalho (KAN_STATUS/KAN_STATUS_ORDEM) ficam definidas mais abaixo,
+  // no módulo de Projetos, e são reaproveitadas aqui porque é o mesmo vocabulário
+  // de status usado pela tabela client_projects.
   const CRM_PAGAMENTO = { pago: 'Pago', pendente: 'Pendente', atrasado: 'Atrasado' };
   const CRM_INTERACAO = { contato: 'Contato', orcamento: 'Orçamento', fechamento: 'Fechamento', entrega: 'Entrega', pagamento: 'Pagamento', nota: 'Nota', outro: 'Outro' };
   const CRM_ARQUIVO_TIPOS = { briefing: 'Briefing', contrato: 'Contrato', nota_fiscal: 'Nota Fiscal', video: 'Vídeo', outro: 'Outro' };
@@ -2148,8 +2526,8 @@
   function crmPopularSelects(){
     document.getElementById('crm-campo-status').innerHTML = Object.entries(CRM_STATUS)
       .map(([chave, s]) => `<option value="${chave}">${s.emoji} ${s.rotulo}</option>`).join('');
-    document.getElementById('crm-projeto-status').innerHTML = Object.entries(CRM_ETAPAS)
-      .map(([chave, rotulo]) => `<option value="${chave}">${rotulo}</option>`).join('');
+    document.getElementById('crm-projeto-status').innerHTML = KAN_STATUS_ORDEM
+      .map(chave => `<option value="${chave}">${KAN_STATUS[chave].rotulo}</option>`).join('');
     document.getElementById('crm-projeto-pagamento').innerHTML = Object.entries(CRM_PAGAMENTO)
       .map(([chave, rotulo]) => `<option value="${chave}">${rotulo}</option>`).join('');
     document.getElementById('crm-arquivo-tipo').innerHTML = Object.entries(CRM_ARQUIVO_TIPOS)
@@ -2337,7 +2715,7 @@
           `;
         }).join('');
 
-    document.querySelectorAll('.crm-linha-titulo-link').forEach(el => {
+    document.querySelectorAll('#painel-clientes .crm-linha-titulo-link').forEach(el => {
       el.addEventListener('click', () => crmAbrirPerfil(el.dataset.id));
     });
   }
@@ -2426,6 +2804,8 @@
       }
       crmFecharModal();
       await crmCarregarDados();
+      if(calCarregado) await calCarregarDados();
+      if(kanCarregado) await kanCarregarDados();
     } catch(erro){
       console.error(erro);
       mostrarErroGlobal('Não foi possível salvar o cliente. Tente novamente.');
@@ -2442,6 +2822,8 @@
       crmFecharModal();
       crmFecharPerfil();
       await crmCarregarDados();
+      if(calCarregado) await calCarregarDados();
+      if(kanCarregado) await kanCarregarDados();
     } catch(erro){
       console.error(erro);
       mostrarErroGlobal('Não foi possível excluir o cliente. Tente novamente.');
@@ -2486,8 +2868,8 @@
 
   function crmMudarAbaPerfil(aba){
     crmAbaPerfilAtual = aba;
-    document.querySelectorAll('.crm-perfil-aba-botao').forEach(b => b.classList.toggle('ativo', b.dataset.aba === aba));
-    document.querySelectorAll('.crm-perfil-painel').forEach(p => { p.hidden = true; });
+    document.querySelectorAll('#crm-perfil-abas .crm-perfil-aba-botao').forEach(b => b.classList.toggle('ativo', b.dataset.aba === aba));
+    document.querySelectorAll('#crm-perfil-fundo .crm-perfil-painel').forEach(p => { p.hidden = true; });
     document.getElementById('crm-painel-' + aba).hidden = false;
 
     const c = crmClientes.find(x => x.id === crmClienteAtual);
@@ -2513,7 +2895,7 @@
       { rotulo: 'Valor total faturado', valor: crmFormatarMoeda(totalFaturado) },
       { rotulo: 'Quantidade de trabalhos', valor: String(projetos.length) },
       { rotulo: 'Ticket médio', valor: crmFormatarMoeda(ticketMedio) },
-      { rotulo: 'Última contratação', valor: ultimo ? formatarData(ultimo.start_date) : 'Nenhuma ainda' }
+      { rotulo: 'Última contratação', valor: ultimo ? formatarDataLocal(ultimo.start_date) : 'Nenhuma ainda' }
     ];
 
     document.getElementById('crm-visao-cards').innerHTML = cards.map(item => `
@@ -2568,10 +2950,10 @@
       ? '<tr><td colspan="5" class="texto-vazio">Nenhum trabalho registrado ainda.</td></tr>'
       : projetos.map(p => `
           <tr>
-            <td>${p.start_date ? formatarData(p.start_date) : '-'}</td>
+            <td>${p.start_date ? formatarDataLocal(p.start_date) : '-'}</td>
             <td>${calEscapar(p.title)}</td>
             <td>${crmFormatarMoeda(p.value)}</td>
-            <td>${CRM_ETAPAS[p.status] || p.status}</td>
+            <td>${(KAN_STATUS[p.status] && KAN_STATUS[p.status].rotulo) || p.status}</td>
             <td>${CRM_PAGAMENTO[p.payment_status] || p.payment_status}</td>
           </tr>
         `).join('');
@@ -2599,6 +2981,7 @@
       document.getElementById('crm-projeto-valor').value = '';
       document.getElementById('crm-projeto-data').value = '';
       await crmCarregarDados();
+      if(kanCarregado) await kanCarregarDados();
       crmMudarAbaPerfil('historico');
     } catch(erro){
       console.error(erro);
@@ -2607,17 +2990,17 @@
   }
 
   function crmEtapaHtml(p){
-    const indiceAtual = CRM_ETAPAS_ORDEM.indexOf(p.status);
-    return CRM_ETAPAS_ORDEM.map((etapa, i) => {
+    const indiceAtual = KAN_STATUS_ORDEM.indexOf(p.status);
+    return KAN_STATUS_ORDEM.map((etapa, i) => {
       let classe = '';
       if(i < indiceAtual) classe = 'crm-etapa-feita';
       else if(i === indiceAtual) classe = 'crm-etapa-atual';
-      return `<span class="crm-etapa ${classe}">${CRM_ETAPAS[etapa]}</span>`;
+      return `<span class="crm-etapa ${classe}">${KAN_STATUS[etapa].rotulo}</span>`;
     }).join('');
   }
 
   function crmRenderAtivos(c){
-    const ativos = crmProjetosDoCliente(c.id).filter(p => p.status !== 'concluido' && p.status !== 'cancelado');
+    const ativos = crmProjetosDoCliente(c.id).filter(p => p.status !== 'pago' && p.status !== 'arquivado');
     const container = document.getElementById('crm-lista-ativos');
 
     if(ativos.length === 0){
@@ -2644,14 +3027,15 @@
     const projeto = crmProjetos.find(p => p.id === projetoId);
     if(!projeto) return;
 
-    const indiceAtual = CRM_ETAPAS_ORDEM.indexOf(projeto.status);
-    const proximaEtapa = CRM_ETAPAS_ORDEM[Math.min(indiceAtual + 1, CRM_ETAPAS_ORDEM.length - 1)];
+    const indiceAtual = KAN_STATUS_ORDEM.indexOf(projeto.status);
+    const proximaEtapa = KAN_STATUS_ORDEM[Math.min(indiceAtual + 1, KAN_STATUS_ORDEM.length - 1)];
 
     try{
       const { error } = await Auth.client.from('client_projects')
         .update({ status: proximaEtapa, updated_at: new Date().toISOString() }).eq('id', projetoId);
       if(error) throw error;
       await crmCarregarDados();
+      if(kanCarregado) await kanCarregarDados();
       crmMudarAbaPerfil('ativos');
     } catch(erro){
       console.error(erro);
@@ -2684,7 +3068,7 @@
           <div class="crm-linha-item">
             <div class="crm-linha-texto">
               <div class="crm-linha-titulo">${calEscapar(p.title)}</div>
-              <div class="crm-linha-sub">${CRM_PAGAMENTO[p.payment_status]}${p.delivery_date ? ' · ' + formatarData(p.delivery_date) : ''}</div>
+              <div class="crm-linha-sub">${CRM_PAGAMENTO[p.payment_status]}${p.delivery_date ? ' · ' + formatarDataLocal(p.delivery_date) : ''}</div>
             </div>
             <span class="crm-linha-valor">${crmFormatarMoeda(p.value)}</span>
             <button type="button" class="cal-botao-secundario" data-marcar-pago="${p.id}">Marcar como pago</button>
@@ -2702,6 +3086,7 @@
         .update({ payment_status: 'pago', updated_at: new Date().toISOString() }).eq('id', projetoId);
       if(error) throw error;
       await crmCarregarDados();
+      if(kanCarregado) await kanCarregarDados();
       crmMudarAbaPerfil('financeiro');
     } catch(erro){
       console.error(erro);
@@ -2819,7 +3204,7 @@
     document.getElementById('crm-perfil-fundo').addEventListener('click', (ev) => {
       if(ev.target.id === 'crm-perfil-fundo') crmFecharPerfil();
     });
-    document.querySelectorAll('.crm-perfil-aba-botao').forEach(botao => {
+    document.querySelectorAll('#crm-perfil-abas .crm-perfil-aba-botao').forEach(botao => {
       botao.addEventListener('click', () => crmMudarAbaPerfil(botao.dataset.aba));
     });
 
@@ -2850,11 +3235,994 @@
   }
 
   /* ============================================================================================
+     PROJETOS (KANBAN)
+     Estado e constantes com prefixo "kan". Reaproveita a mesma tabela
+     "client_projects" do CRM (por isso KAN_STATUS também é usado lá) e cria
+     automaticamente eventos na tabela "events" do calendário quando uma data
+     de gravação, prazo ou pagamento é definida (veja kanSincronizarEvento).
+     ============================================================================================ */
+  const KAN_STATUS = {
+    novo_lead: { rotulo: 'Novo Lead',         cor: '#8B8078' },
+    briefing:  { rotulo: 'Briefing Recebido', cor: '#3B82F6' },
+    gravar:    { rotulo: 'Gravar',            cor: '#C9971C' },
+    editar:    { rotulo: 'Editar',            cor: '#8B5CF6' },
+    aprovacao: { rotulo: 'Aprovação',         cor: '#E08A3C' },
+    entregue:  { rotulo: 'Entregue',          cor: '#2D9D5F' },
+    pago:      { rotulo: 'Pago',              cor: '#1F7A46' },
+    arquivado: { rotulo: 'Arquivado',         cor: '#6B645C' }
+  };
+  const KAN_STATUS_ORDEM = ['novo_lead', 'briefing', 'gravar', 'editar', 'aprovacao', 'entregue', 'pago', 'arquivado'];
+  const KAN_PRIORIDADE = {
+    baixa:   { rotulo: 'Baixa',   emoji: '🟢', cor: '#2D9D5F' },
+    media:   { rotulo: 'Média',   emoji: '🟡', cor: '#C9971C' },
+    alta:    { rotulo: 'Alta',    emoji: '🟠', cor: '#E08A3C' },
+    urgente: { rotulo: 'Urgente', emoji: '🔴', cor: '#C4453C' }
+  };
+  const KAN_ARQUIVO_TIPOS = { briefing: 'Briefing', video: 'Vídeo', foto: 'Foto', contrato: 'Contrato', nota_fiscal: 'Nota Fiscal', outro: 'Outro' };
+  const KAN_TAREFAS_PADRAO = ['Gravar cenas', 'Fazer voice-over', 'Editar', 'Criar thumbnail', 'Enviar para aprovação', 'Entregar arquivos'];
+
+  let kanProjetos = [];
+  let kanTarefas = [];
+  let kanArquivos = [];
+  let kanComentarios = [];
+  let kanClientes = [];
+  let kanCarregado = false;
+  let kanVistaAtual = 'kanban';
+  let kanBusca = '';
+  let kanProjetoEditando = null;
+  let kanProjetoAtual = null;
+  let kanAbaPerfilAtual = 'informacoes';
+  let kanMesReferencia = new Date();
+  let kanDataSelecionadaCalendario = null;
+  let kanChecklistEditorItens = [];
+  let kanArrastandoId = null;
+
+  async function kanCarregarDados(){
+    try{
+      const [projetos, tarefas, arquivos, comentarios, clientes] = await Promise.all([
+        buscarTudo('client_projects'),
+        buscarTudo('project_tasks'),
+        buscarTudo('project_files'),
+        buscarTudo('project_comments'),
+        buscarTudo('clients')
+      ]);
+      kanProjetos = projetos;
+      kanTarefas = tarefas;
+      kanArquivos = arquivos;
+      kanComentarios = comentarios;
+      kanClientes = clientes.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível carregar os projetos agora. Tente recarregar a página em alguns instantes.');
+      kanProjetos = [];
+      kanTarefas = [];
+      kanArquivos = [];
+      kanComentarios = [];
+      kanClientes = [];
+    }
+    kanPopularSelects();
+    kanRenderizarTudo();
+  }
+
+  /* ============================================================================================
+     PROJETOS: formatação e cálculos auxiliares
+     ============================================================================================ */
+  function kanNomeCliente(clientId){
+    const c = kanClientes.find(x => x.id === clientId);
+    return c ? c.name : '';
+  }
+
+  function kanChecklistDoProjeto(projectId){
+    return kanTarefas.filter(t => t.project_id === projectId);
+  }
+
+  function kanArquivosDoProjeto(projectId){
+    return kanArquivos.filter(a => a.project_id === projectId);
+  }
+
+  function kanComentariosDoProjeto(projectId, tipo){
+    return kanComentarios
+      .filter(c => c.project_id === projectId && (!tipo || c.type === tipo))
+      .sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+  }
+
+  function kanProjetosFiltrados(){
+    if(!kanBusca) return kanProjetos;
+    const alvo = kanBusca.toLowerCase();
+    return kanProjetos.filter(p => {
+      const texto = [p.title, kanNomeCliente(p.client_id), p.description].filter(Boolean).join(' ').toLowerCase();
+      return texto.includes(alvo);
+    });
+  }
+
+  function kanPopularSelects(){
+    document.getElementById('kan-campo-cliente').innerHTML = kanClientes.length === 0
+      ? '<option value="" disabled selected>Cadastre um cliente primeiro</option>'
+      : '<option value="" disabled selected>Selecione um cliente</option>' + kanClientes.map(c => `<option value="${c.id}">${calEscapar(c.name)}</option>`).join('');
+    document.getElementById('kan-campo-prioridade').innerHTML = Object.entries(KAN_PRIORIDADE)
+      .map(([chave, p]) => `<option value="${chave}">${p.emoji} ${p.rotulo}</option>`).join('');
+    document.getElementById('kan-campo-status').innerHTML = KAN_STATUS_ORDEM
+      .map(chave => `<option value="${chave}">${KAN_STATUS[chave].rotulo}</option>`).join('');
+    document.getElementById('kan-campo-status-pagamento').innerHTML = Object.entries(CRM_PAGAMENTO)
+      .map(([chave, rotulo]) => `<option value="${chave}">${rotulo}</option>`).join('');
+    document.getElementById('kan-arquivo-tipo').innerHTML = Object.entries(KAN_ARQUIVO_TIPOS)
+      .map(([chave, rotulo]) => `<option value="${chave}">${rotulo}</option>`).join('');
+  }
+
+  /* ============================================================================================
+     PROJETOS: dashboard superior, produção do dia, widgets laterais
+     ============================================================================================ */
+  function kanRenderCardsResumo(){
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const inicioSemana = new Date(hoje);
+    inicioSemana.setDate(hoje.getDate() - hoje.getDay());
+    const fimSemana = new Date(inicioSemana);
+    fimSemana.setDate(inicioSemana.getDate() + 7);
+
+    const ativos = kanProjetos.filter(p => p.status !== 'pago' && p.status !== 'arquivado').length;
+    const aguardandoGravacao = kanProjetos.filter(p => p.status === 'gravar').length;
+    const emEdicao = kanProjetos.filter(p => p.status === 'editar').length;
+    const pagamentosPendentes = kanProjetos.filter(p => p.payment_status === 'pendente' || p.payment_status === 'atrasado').length;
+    const entregasSemana = kanProjetos.filter(p => {
+      if(!p.delivery_date) return false;
+      const d = new Date(p.delivery_date + 'T00:00:00');
+      return d >= inicioSemana && d < fimSemana;
+    }).length;
+
+    const cards = [
+      { rotulo: 'Trabalhos ativos', valor: ativos, destaque: true },
+      { rotulo: 'Aguardando gravação', valor: aguardandoGravacao },
+      { rotulo: 'Em edição', valor: emEdicao },
+      { rotulo: 'Pagamentos pendentes', valor: pagamentosPendentes },
+      { rotulo: 'Entregas desta semana', valor: entregasSemana }
+    ];
+
+    document.getElementById('kan-cards-resumo').innerHTML = cards.map(c => `
+      <div class="cartao-numero ${c.destaque ? 'cartao-numero-destaque' : ''}">
+        <div class="cartao-numero-valor">${c.valor.toLocaleString('pt-BR')}</div>
+        <div class="cartao-numero-rotulo">${c.rotulo}</div>
+      </div>
+    `).join('');
+  }
+
+  function kanRenderProducaoHoje(){
+    const hojeISO = calDataISO(new Date());
+    const gravarHoje = kanProjetos.filter(p => p.recording_date === hojeISO).length;
+    const editarHoje = kanProjetos.filter(p => p.status === 'editar').length;
+    const entregarHoje = kanProjetos.filter(p => p.delivery_date === hojeISO).length;
+    const cobrarHoje = kanProjetos.filter(p => p.payment_date === hojeISO && p.payment_status !== 'pago').length;
+
+    const itens = [
+      { emoji: '🎥', numero: gravarHoje, rotulo: gravarHoje === 1 ? 'conteúdo para gravar hoje' : 'conteúdos para gravar hoje' },
+      { emoji: '✂️', numero: editarHoje, rotulo: editarHoje === 1 ? 'vídeo em edição' : 'vídeos em edição' },
+      { emoji: '📦', numero: entregarHoje, rotulo: entregarHoje === 1 ? 'entrega hoje' : 'entregas hoje' },
+      { emoji: '💰', numero: cobrarHoje, rotulo: cobrarHoje === 1 ? 'cliente para cobrar hoje' : 'clientes para cobrar hoje' }
+    ];
+
+    document.getElementById('kan-producao-hoje').innerHTML = itens.map(item => `
+      <div class="kan-producao-item">
+        <span class="kan-producao-numero">${item.emoji} ${item.numero}</span>
+        <span class="kan-producao-rotulo">${item.rotulo}</span>
+      </div>
+    `).join('');
+  }
+
+  function kanLinhaWidget(p, sub){
+    const prioridade = KAN_PRIORIDADE[p.priority] || KAN_PRIORIDADE.media;
+    return `
+      <div class="crm-linha-item">
+        <span class="crm-linha-ponto" style="background:${prioridade.cor}"></span>
+        <div class="crm-linha-texto">
+          <div class="crm-linha-titulo crm-linha-titulo-link" data-id="${p.id}">${calEscapar(p.title)}</div>
+          <div class="crm-linha-sub">${sub}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  function kanRenderWidgets(){
+    const hojeISO = calDataISO(new Date());
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const inicioSemana = new Date(hoje);
+    inicioSemana.setDate(hoje.getDate() - hoje.getDay());
+    const fimSemana = new Date(inicioSemana);
+    fimSemana.setDate(inicioSemana.getDate() + 7);
+
+    const atrasados = kanProjetos
+      .filter(p => p.delivery_date && p.status !== 'pago' && p.status !== 'arquivado' && new Date(p.delivery_date + 'T00:00:00') < hoje)
+      .sort((a, b) => new Date(a.delivery_date) - new Date(b.delivery_date));
+    document.getElementById('kan-widget-atrasados').innerHTML = atrasados.length === 0
+      ? '<p class="texto-vazio">Nenhum projeto atrasado.</p>'
+      : atrasados.map(p => kanLinhaWidget(p, 'Prazo era ' + formatarDataLocal(p.delivery_date))).join('');
+
+    const entregasHoje = kanProjetos.filter(p => p.delivery_date === hojeISO);
+    document.getElementById('kan-widget-entregas-hoje').innerHTML = entregasHoje.length === 0
+      ? '<p class="texto-vazio">Nenhuma entrega hoje.</p>'
+      : entregasHoje.map(p => kanLinhaWidget(p, kanNomeCliente(p.client_id))).join('');
+
+    const pagamentosSemana = kanProjetos
+      .filter(p => p.payment_date && p.payment_status !== 'pago' && new Date(p.payment_date + 'T00:00:00') >= inicioSemana && new Date(p.payment_date + 'T00:00:00') < fimSemana)
+      .sort((a, b) => new Date(a.payment_date) - new Date(b.payment_date));
+    document.getElementById('kan-widget-pagamentos-semana').innerHTML = pagamentosSemana.length === 0
+      ? '<p class="texto-vazio">Nenhum pagamento previsto.</p>'
+      : pagamentosSemana.map(p => `
+          <div class="crm-linha-item">
+            <div class="crm-linha-texto">
+              <div class="crm-linha-titulo crm-linha-titulo-link" data-id="${p.id}">${calEscapar(p.title)}</div>
+              <div class="crm-linha-sub">${formatarDataLocal(p.payment_date)}</div>
+            </div>
+            <span class="crm-linha-valor">${crmFormatarMoeda(p.value)}</span>
+          </div>
+        `).join('');
+
+    const gravarHojeLista = kanProjetos.filter(p => p.recording_date === hojeISO);
+    document.getElementById('kan-widget-gravar-hoje').innerHTML = gravarHojeLista.length === 0
+      ? '<p class="texto-vazio">Nada para gravar hoje.</p>'
+      : gravarHojeLista.map(p => kanLinhaWidget(p, kanNomeCliente(p.client_id))).join('');
+
+    document.querySelectorAll('#painel-projetos .crm-linha-titulo-link').forEach(el => {
+      el.addEventListener('click', () => kanAbrirPerfil(el.dataset.id));
+    });
+  }
+
+  /* ============================================================================================
+     PROJETOS: vista Kanban (drag and drop)
+     ============================================================================================ */
+  function kanCartaoProjeto(p){
+    const prioridade = KAN_PRIORIDADE[p.priority] || KAN_PRIORIDADE.media;
+    const tarefas = kanChecklistDoProjeto(p.id);
+    const feitas = tarefas.filter(t => t.completed).length;
+
+    const checklistHtml = tarefas.slice(0, 3).map(t => `
+      <div class="kan-card-checklist-item ${t.completed ? 'kan-feito' : ''}">${t.completed ? '☑' : '☐'} ${calEscapar(t.title)}</div>
+    `).join('') + (tarefas.length > 3 ? `<div class="kan-card-checklist-item">+${tarefas.length - 3} mais</div>` : '');
+
+    return `
+      <div class="kan-card" draggable="true" data-id="${p.id}" style="border-left-color:${prioridade.cor}">
+        <div class="kan-card-cliente">${calEscapar(kanNomeCliente(p.client_id))}</div>
+        <div class="kan-card-titulo">${calEscapar(p.title)}</div>
+        <div class="kan-card-meta">
+          <span>${p.delivery_date ? 'Entrega: ' + formatarDataLocal(p.delivery_date) : 'Sem prazo'}</span>
+          <strong>${p.value ? crmFormatarMoeda(p.value) : ''}</strong>
+        </div>
+        ${tarefas.length > 0 ? `<div class="kan-card-checklist">${checklistHtml}</div>` : ''}
+        <div class="kan-card-rodape">
+          <span class="crm-etiqueta-status" style="background:${prioridade.cor}">${prioridade.emoji} ${prioridade.rotulo}</span>
+          ${tarefas.length > 0 ? `<span class="crm-linha-sub">${feitas}/${tarefas.length}</span>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  function kanRenderBoard(){
+    const projetos = kanProjetosFiltrados();
+    const board = document.getElementById('kan-board');
+
+    board.innerHTML = KAN_STATUS_ORDEM.map(chave => {
+      const status = KAN_STATUS[chave];
+      const doColuna = projetos.filter(p => p.status === chave);
+      return `
+        <div class="kan-coluna">
+          <div class="kan-coluna-cabecalho">
+            <span class="kan-coluna-titulo">${status.rotulo}</span>
+            <span class="kan-coluna-contagem">${doColuna.length}</span>
+          </div>
+          <div class="kan-coluna-corpo" data-status="${chave}">
+            ${doColuna.map(p => kanCartaoProjeto(p)).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    board.querySelectorAll('.kan-card').forEach(card => {
+      card.addEventListener('click', () => kanAbrirPerfil(card.dataset.id));
+      card.addEventListener('dragstart', kanAoIniciarArrasto);
+      card.addEventListener('dragend', kanAoTerminarArrasto);
+    });
+
+    board.querySelectorAll('.kan-coluna-corpo').forEach(coluna => {
+      coluna.addEventListener('dragover', (ev) => { ev.preventDefault(); coluna.classList.add('kan-alvo-arrasto'); });
+      coluna.addEventListener('dragleave', () => coluna.classList.remove('kan-alvo-arrasto'));
+      coluna.addEventListener('drop', (ev) => kanAoSoltar(ev, coluna));
+    });
+  }
+
+  function kanAoIniciarArrasto(ev){
+    kanArrastandoId = ev.currentTarget.dataset.id;
+    ev.currentTarget.classList.add('kan-arrastando');
+    ev.dataTransfer.setData('text/plain', kanArrastandoId);
+    ev.dataTransfer.effectAllowed = 'move';
+  }
+
+  function kanAoTerminarArrasto(ev){
+    ev.currentTarget.classList.remove('kan-arrastando');
+    kanArrastandoId = null;
+  }
+
+  async function kanAoSoltar(ev, coluna){
+    ev.preventDefault();
+    coluna.classList.remove('kan-alvo-arrasto');
+    const id = ev.dataTransfer.getData('text/plain') || kanArrastandoId;
+    if(!id) return;
+
+    const novoStatus = coluna.dataset.status;
+    const projeto = kanProjetos.find(p => p.id === id);
+    if(!projeto || projeto.status === novoStatus) return;
+
+    try{
+      const { error } = await Auth.client.from('client_projects')
+        .update({ status: novoStatus, updated_at: new Date().toISOString() }).eq('id', id);
+      if(error) throw error;
+      await Auth.client.from('project_comments').insert({
+        project_id: id, type: 'sistema', content: `Status alterado para ${KAN_STATUS[novoStatus].rotulo}.`
+      });
+      await kanCarregarDados();
+      if(crmCarregado) await crmCarregarDados();
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível mover o trabalho. Tente novamente.');
+    }
+  }
+
+  /* ============================================================================================
+     PROJETOS: vista Lista e vista Calendário
+     ============================================================================================ */
+  function kanRenderLista(){
+    const projetos = kanProjetosFiltrados().slice()
+      .sort((a, b) => new Date(a.delivery_date || a.created_at) - new Date(b.delivery_date || b.created_at));
+    const tbody = document.getElementById('kan-tabela-lista');
+
+    tbody.innerHTML = projetos.length === 0
+      ? '<tr><td colspan="7" class="texto-vazio">Nenhum trabalho encontrado.</td></tr>'
+      : projetos.map(p => {
+          const prioridade = KAN_PRIORIDADE[p.priority] || KAN_PRIORIDADE.media;
+          const status = KAN_STATUS[p.status] || KAN_STATUS.novo_lead;
+          return `
+            <tr class="kan-linha-lista" data-id="${p.id}" style="cursor:pointer;">
+              <td>${calEscapar(kanNomeCliente(p.client_id))}</td>
+              <td>${calEscapar(p.title)}</td>
+              <td>${p.delivery_date ? formatarDataLocal(p.delivery_date) : '-'}</td>
+              <td>${crmFormatarMoeda(p.value)}</td>
+              <td><span class="crm-etiqueta-status" style="background:${prioridade.cor}">${prioridade.emoji} ${prioridade.rotulo}</span></td>
+              <td><span class="crm-etiqueta-status" style="background:${status.cor}">${status.rotulo}</span></td>
+              <td>${CRM_PAGAMENTO[p.payment_status] || p.payment_status}</td>
+            </tr>
+          `;
+        }).join('');
+
+    tbody.querySelectorAll('.kan-linha-lista').forEach(linha => {
+      linha.addEventListener('click', () => kanAbrirPerfil(linha.dataset.id));
+    });
+  }
+
+  function kanRenderListaCalendarioDia(){
+    const container = document.getElementById('kan-calendario-lista');
+    if(!kanDataSelecionadaCalendario){
+      container.innerHTML = '<p class="texto-vazio">Clique em um dia para ver os prazos.</p>';
+      return;
+    }
+    const diaISO = calDataISO(kanDataSelecionadaCalendario);
+    const doDia = kanProjetosFiltrados().filter(p => p.delivery_date === diaISO);
+    container.innerHTML = doDia.length === 0
+      ? '<p class="texto-vazio">Nenhum prazo neste dia.</p>'
+      : doDia.map(p => kanLinhaWidget(p, kanNomeCliente(p.client_id))).join('');
+    container.querySelectorAll('.crm-linha-titulo-link').forEach(el => el.addEventListener('click', () => kanAbrirPerfil(el.dataset.id)));
+  }
+
+  function kanRenderCalendario(){
+    const container = document.getElementById('kan-mes-grade');
+    const titulo = document.getElementById('kan-mes-titulo');
+    const ano = kanMesReferencia.getFullYear();
+    const mes = kanMesReferencia.getMonth();
+    titulo.textContent = kanMesReferencia.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+
+    const primeiroDiaMes = new Date(ano, mes, 1);
+    const inicioGrade = new Date(primeiroDiaMes);
+    inicioGrade.setDate(inicioGrade.getDate() - primeiroDiaMes.getDay());
+
+    const hoje = new Date();
+    const projetos = kanProjetosFiltrados();
+
+    let html = '';
+    for(let i = 0; i < 42; i++){
+      const dia = new Date(inicioGrade);
+      dia.setDate(inicioGrade.getDate() + i);
+      const diaISO = calDataISO(dia);
+      const doDia = projetos.filter(p => p.delivery_date === diaISO);
+
+      const classes = ['cal-dia-celula'];
+      if(dia.getMonth() !== mes) classes.push('cal-fora-do-mes');
+      if(calMesmoDia(dia, hoje)) classes.push('cal-hoje');
+      if(kanDataSelecionadaCalendario && calMesmoDia(dia, kanDataSelecionadaCalendario)) classes.push('cal-selecionado');
+
+      const pontos = doDia.slice(0, 4).map(p => {
+        const prioridade = KAN_PRIORIDADE[p.priority] || KAN_PRIORIDADE.media;
+        return `<span class="cal-dia-ponto" style="background:${prioridade.cor}"></span>`;
+      }).join('');
+
+      html += `
+        <div class="${classes.join(' ')}" data-data="${diaISO}">
+          <span class="cal-dia-numero">${dia.getDate()}</span>
+          <div class="cal-dia-pontos">${pontos}</div>
+          ${doDia.length > 0 ? `<span class="cal-dia-contagem">${doDia.length}</span>` : ''}
+        </div>
+      `;
+    }
+    container.innerHTML = html;
+
+    container.querySelectorAll('.cal-dia-celula').forEach(celula => {
+      celula.addEventListener('click', () => {
+        const [a, m, d] = celula.dataset.data.split('-').map(Number);
+        kanDataSelecionadaCalendario = new Date(a, m - 1, d);
+        kanRenderCalendario();
+      });
+    });
+
+    kanRenderListaCalendarioDia();
+  }
+
+  function kanRenderizarTudo(){
+    kanRenderCardsResumo();
+    kanRenderProducaoHoje();
+    kanRenderWidgets();
+    kanRenderBoard();
+    kanRenderLista();
+    kanRenderCalendario();
+  }
+
+  function kanMudarVista(vista){
+    kanVistaAtual = vista;
+    document.querySelectorAll('#kan-vista-toggle button').forEach(b => b.classList.toggle('ativo', b.dataset.vista === vista));
+    document.getElementById('kan-vista-kanban').hidden = vista !== 'kanban';
+    document.getElementById('kan-vista-lista').hidden = vista !== 'lista';
+    document.getElementById('kan-vista-calendario').hidden = vista !== 'calendario';
+  }
+
+  /* ============================================================================================
+     PROJETOS: sincronização automática com o calendário
+     ============================================================================================ */
+  async function kanSincronizarEvento(eventoIdExistente, dataStr, titulo, categoria){
+    if(!dataStr){
+      if(eventoIdExistente){
+        await Auth.client.from('events').delete().eq('id', eventoIdExistente);
+      }
+      return null;
+    }
+    const inicio = new Date(dataStr + 'T09:00:00').toISOString();
+    if(eventoIdExistente){
+      await Auth.client.from('events').update({
+        title: titulo, category: categoria, start_date: inicio, all_day: true, updated_at: new Date().toISOString()
+      }).eq('id', eventoIdExistente);
+      return eventoIdExistente;
+    }
+    const { data, error } = await Auth.client.from('events').insert({
+      title: titulo, category: categoria, start_date: inicio, all_day: true, status: 'agendado', priority: 'media', reminder: false
+    }).select().single();
+    if(error) throw error;
+    return data.id;
+  }
+
+  /* ============================================================================================
+     PROJETOS: modal de criar/editar trabalho (com checklist)
+     ============================================================================================ */
+  function kanChecklistEditorRenderizar(){
+    const container = document.getElementById('kan-checklist-editor');
+    container.innerHTML = kanChecklistEditorItens.map((item, i) => `
+      <div class="kan-checklist-editor-linha">
+        <input type="text" value="${calEscapar(item.title)}" data-indice="${i}" placeholder="Nome da tarefa">
+        <button type="button" data-remover="${i}" aria-label="Remover tarefa">&times;</button>
+      </div>
+    `).join('');
+
+    container.querySelectorAll('input[data-indice]').forEach(input => {
+      input.addEventListener('input', (ev) => {
+        kanChecklistEditorItens[Number(ev.target.dataset.indice)].title = ev.target.value;
+      });
+    });
+    container.querySelectorAll('[data-remover]').forEach(botao => {
+      botao.addEventListener('click', () => {
+        kanChecklistEditorItens.splice(Number(botao.dataset.remover), 1);
+        kanChecklistEditorRenderizar();
+      });
+    });
+  }
+
+  function kanAbrirModalNovo(){
+    kanProjetoEditando = null;
+    document.getElementById('kan-modal-titulo').textContent = 'Novo trabalho';
+    document.getElementById('kan-form-projeto').reset();
+    document.getElementById('kan-campo-prioridade').value = 'media';
+    document.getElementById('kan-campo-status').value = 'novo_lead';
+    document.getElementById('kan-campo-status-pagamento').value = 'pendente';
+    kanChecklistEditorItens = KAN_TAREFAS_PADRAO.map(titulo => ({ id: null, title: titulo, completed: false }));
+    kanChecklistEditorRenderizar();
+    document.getElementById('kan-botao-excluir').hidden = true;
+    document.getElementById('kan-modal-fundo').hidden = false;
+  }
+
+  function kanAbrirModalEdicao(id){
+    const p = kanProjetos.find(x => x.id === id);
+    if(!p) return;
+
+    kanProjetoEditando = p.id;
+    document.getElementById('kan-modal-titulo').textContent = 'Editar trabalho';
+    document.getElementById('kan-campo-cliente').value = p.client_id || '';
+    document.getElementById('kan-campo-titulo').value = p.title || '';
+    document.getElementById('kan-campo-descricao').value = p.description || '';
+    document.getElementById('kan-campo-tipo').value = p.content_type || '';
+    document.getElementById('kan-campo-quantidade').value = p.quantity || '';
+    document.getElementById('kan-campo-prazo').value = p.delivery_date || '';
+    document.getElementById('kan-campo-valor').value = p.value || '';
+    document.getElementById('kan-campo-prioridade').value = p.priority || 'media';
+    document.getElementById('kan-campo-status').value = p.status || 'novo_lead';
+    document.getElementById('kan-campo-gravacao').value = p.recording_date || '';
+    document.getElementById('kan-campo-roteiro').value = p.script || '';
+    document.getElementById('kan-campo-briefing').value = p.briefing || '';
+    document.getElementById('kan-campo-forma-pagamento').value = p.payment_method || '';
+    document.getElementById('kan-campo-data-pagamento').value = p.payment_date || '';
+    document.getElementById('kan-campo-status-pagamento').value = p.payment_status || 'pendente';
+    document.getElementById('kan-campo-ideias').value = p.idea_bank || '';
+
+    kanChecklistEditorItens = kanChecklistDoProjeto(p.id).map(t => ({ id: t.id, title: t.title, completed: t.completed }));
+    kanChecklistEditorRenderizar();
+
+    document.getElementById('kan-botao-excluir').hidden = false;
+    document.getElementById('kan-modal-fundo').hidden = false;
+  }
+
+  function kanFecharModal(){
+    document.getElementById('kan-modal-fundo').hidden = true;
+    kanProjetoEditando = null;
+  }
+
+  async function kanSalvarProjeto(ev){
+    ev.preventDefault();
+
+    const clienteId = document.getElementById('kan-campo-cliente').value;
+    const titulo = document.getElementById('kan-campo-titulo').value.trim();
+    if(!clienteId || !titulo) return;
+
+    const prazo = document.getElementById('kan-campo-prazo').value || null;
+    const gravacao = document.getElementById('kan-campo-gravacao').value || null;
+    const dataPagamento = document.getElementById('kan-campo-data-pagamento').value || null;
+    const novoStatus = document.getElementById('kan-campo-status').value;
+
+    const payload = {
+      client_id: clienteId,
+      title: titulo,
+      description: document.getElementById('kan-campo-descricao').value.trim() || null,
+      content_type: document.getElementById('kan-campo-tipo').value.trim() || null,
+      quantity: document.getElementById('kan-campo-quantidade').value ? Number(document.getElementById('kan-campo-quantidade').value) : null,
+      delivery_date: prazo,
+      value: document.getElementById('kan-campo-valor').value ? Number(document.getElementById('kan-campo-valor').value) : null,
+      priority: document.getElementById('kan-campo-prioridade').value,
+      status: novoStatus,
+      recording_date: gravacao,
+      script: document.getElementById('kan-campo-roteiro').value.trim() || null,
+      briefing: document.getElementById('kan-campo-briefing').value.trim() || null,
+      payment_method: document.getElementById('kan-campo-forma-pagamento').value.trim() || null,
+      payment_date: dataPagamento,
+      payment_status: document.getElementById('kan-campo-status-pagamento').value,
+      idea_bank: document.getElementById('kan-campo-ideias').value.trim() || null,
+      updated_at: new Date().toISOString()
+    };
+
+    try{
+      let projectId = kanProjetoEditando;
+      const projetoAnterior = kanProjetoEditando ? kanProjetos.find(p => p.id === kanProjetoEditando) : null;
+
+      if(projectId){
+        const { error } = await Auth.client.from('client_projects').update(payload).eq('id', projectId);
+        if(error) throw error;
+        if(projetoAnterior && projetoAnterior.status !== novoStatus){
+          await Auth.client.from('project_comments').insert({
+            project_id: projectId, type: 'sistema', content: `Status alterado para ${KAN_STATUS[novoStatus].rotulo}.`
+          });
+        }
+      } else {
+        const { data, error } = await Auth.client.from('client_projects').insert(payload).select().single();
+        if(error) throw error;
+        projectId = data.id;
+        await Auth.client.from('project_comments').insert({ project_id: projectId, type: 'sistema', content: 'Projeto criado.' });
+      }
+
+      const existentes = kanChecklistDoProjeto(projectId);
+      const idsNaTela = kanChecklistEditorItens.filter(i => i.id).map(i => i.id);
+      for(const t of existentes){
+        if(!idsNaTela.includes(t.id)) await Auth.client.from('project_tasks').delete().eq('id', t.id);
+      }
+      for(const item of kanChecklistEditorItens){
+        if(!item.title.trim()) continue;
+        if(item.id){
+          await Auth.client.from('project_tasks').update({ title: item.title.trim() }).eq('id', item.id);
+        } else {
+          await Auth.client.from('project_tasks').insert({ project_id: projectId, title: item.title.trim() });
+        }
+      }
+
+      const eventoGravacaoId = await kanSincronizarEvento(projetoAnterior ? projetoAnterior.event_recording_id : null, gravacao, `Gravação: ${titulo}`, 'conteudo');
+      const eventoPrazoId = await kanSincronizarEvento(projetoAnterior ? projetoAnterior.event_delivery_id : null, prazo, `Entrega: ${titulo}`, 'conteudo');
+      const eventoPagamentoId = await kanSincronizarEvento(projetoAnterior ? projetoAnterior.event_payment_id : null, dataPagamento, `Cobrança: ${titulo}`, 'financeiro');
+
+      await Auth.client.from('client_projects').update({
+        event_recording_id: eventoGravacaoId, event_delivery_id: eventoPrazoId, event_payment_id: eventoPagamentoId
+      }).eq('id', projectId);
+
+      kanFecharModal();
+      await kanCarregarDados();
+      if(crmCarregado) await crmCarregarDados();
+      if(calCarregado) await calCarregarDados();
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível salvar o trabalho. Tente novamente.');
+    }
+  }
+
+  async function kanExcluirProjeto(){
+    if(!kanProjetoEditando) return;
+    if(!confirm('Tem certeza que deseja excluir este trabalho? Tarefas, arquivos e comentários vinculados também serão apagados.')) return;
+
+    const projeto = kanProjetos.find(p => p.id === kanProjetoEditando);
+    try{
+      if(projeto){
+        for(const eventoId of [projeto.event_recording_id, projeto.event_delivery_id, projeto.event_payment_id]){
+          if(eventoId) await Auth.client.from('events').delete().eq('id', eventoId);
+        }
+      }
+      const { error } = await Auth.client.from('client_projects').delete().eq('id', kanProjetoEditando);
+      if(error) throw error;
+      kanFecharModal();
+      kanFecharPerfil();
+      await kanCarregarDados();
+      if(crmCarregado) await crmCarregarDados();
+      if(calCarregado) await calCarregarDados();
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível excluir o trabalho. Tente novamente.');
+    }
+  }
+
+  /* ============================================================================================
+     PROJETOS: perfil individual do trabalho (abas)
+     ============================================================================================ */
+  function kanAbrirPerfil(id){
+    const p = kanProjetos.find(x => x.id === id);
+    if(!p) return;
+    kanProjetoAtual = id;
+
+    document.getElementById('kan-perfil-avatar').textContent = crmNomeParaIniciais(p.title);
+    document.getElementById('kan-perfil-titulo').textContent = p.title;
+    const status = KAN_STATUS[p.status] || KAN_STATUS.novo_lead;
+    document.getElementById('kan-perfil-sub').textContent = [
+      status.rotulo, kanNomeCliente(p.client_id),
+      p.value ? crmFormatarMoeda(p.value) : null,
+      p.delivery_date ? 'Prazo: ' + formatarDataLocal(p.delivery_date) : null
+    ].filter(Boolean).join(' · ');
+
+    document.getElementById('kan-perfil-editar').onclick = () => kanAbrirModalEdicao(p.id);
+    document.getElementById('kan-perfil-cliente-abrir').onclick = async () => {
+      kanFecharPerfil();
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('ativo'));
+      document.querySelector('.nav-item[data-tab="clientes"]').classList.add('ativo');
+      document.querySelectorAll('.painel-aba').forEach(s => { s.hidden = true; });
+      document.getElementById('painel-clientes').hidden = false;
+      document.getElementById('titulo-pagina').textContent = 'CRM de Clientes';
+      document.getElementById('filtro-periodo').hidden = true;
+      document.getElementById('cal-toolbar').hidden = true;
+      document.getElementById('crm-toolbar').hidden = false;
+      document.getElementById('kan-toolbar').hidden = true;
+      if(!crmCarregado){ crmCarregado = true; await crmCarregarDados(); }
+      crmAbrirPerfil(p.client_id);
+    };
+
+    kanMudarAbaPerfil('informacoes');
+    document.getElementById('kan-perfil-fundo').hidden = false;
+  }
+
+  function kanFecharPerfil(){
+    document.getElementById('kan-perfil-fundo').hidden = true;
+    kanProjetoAtual = null;
+  }
+
+  function kanMudarAbaPerfil(aba){
+    kanAbaPerfilAtual = aba;
+    document.querySelectorAll('#kan-perfil-abas .crm-perfil-aba-botao').forEach(b => b.classList.toggle('ativo', b.dataset.aba === aba));
+    document.querySelectorAll('#kan-perfil-fundo .crm-perfil-painel').forEach(pnl => { pnl.hidden = true; });
+    document.getElementById('kan-painel-' + aba).hidden = false;
+
+    const p = kanProjetos.find(x => x.id === kanProjetoAtual);
+    if(!p) return;
+
+    if(aba === 'informacoes') kanRenderInformacoes(p);
+    if(aba === 'checklist') kanRenderChecklistPerfil(p);
+    if(aba === 'arquivos') kanRenderArquivosPerfil(p);
+    if(aba === 'financeiro') kanRenderFinanceiroPerfil(p);
+    if(aba === 'comentarios') kanRenderComentarios(p);
+    if(aba === 'historico') kanRenderHistoricoPerfil(p);
+  }
+
+  function kanRenderInformacoes(p){
+    const cards = [
+      { rotulo: 'Tipo de conteúdo', valor: p.content_type || 'Não informado' },
+      { rotulo: 'Quantidade', valor: p.quantity ? String(p.quantity) : '-' },
+      { rotulo: 'Data de gravação', valor: p.recording_date ? formatarDataLocal(p.recording_date) : 'Não definida' },
+      { rotulo: 'Prazo de entrega', valor: p.delivery_date ? formatarDataLocal(p.delivery_date) : 'Não definido' }
+    ];
+    document.getElementById('kan-informacoes-cards').innerHTML = cards.map(c => `
+      <div class="cartao-numero">
+        <div class="cartao-numero-valor" style="font-size:1.1rem;">${c.valor}</div>
+        <div class="cartao-numero-rotulo">${c.rotulo}</div>
+      </div>
+    `).join('');
+
+    document.getElementById('kan-info-briefing').textContent = p.briefing || 'Nenhum briefing registrado ainda.';
+    document.getElementById('kan-info-roteiro').textContent = p.script || 'Nenhum roteiro registrado ainda.';
+    document.getElementById('kan-info-ideias').value = p.idea_bank || '';
+  }
+
+  async function kanSalvarIdeias(){
+    if(!kanProjetoAtual) return;
+    const texto = document.getElementById('kan-info-ideias').value;
+    try{
+      const { error } = await Auth.client.from('client_projects')
+        .update({ idea_bank: texto, updated_at: new Date().toISOString() }).eq('id', kanProjetoAtual);
+      if(error) throw error;
+      await kanCarregarDados();
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível salvar o banco de ideias. Tente novamente.');
+    }
+  }
+
+  function kanRenderChecklistPerfil(p){
+    const tarefas = kanChecklistDoProjeto(p.id);
+    const container = document.getElementById('kan-lista-checklist');
+
+    container.innerHTML = tarefas.length === 0
+      ? '<p class="texto-vazio">Nenhuma tarefa ainda.</p>'
+      : tarefas.map(t => `
+          <div class="kan-checklist-item ${t.completed ? 'kan-feito' : ''}">
+            <input type="checkbox" data-tarefa="${t.id}" ${t.completed ? 'checked' : ''}>
+            <span>${calEscapar(t.title)}</span>
+            <button type="button" data-excluir-tarefa="${t.id}" aria-label="Excluir tarefa">&times;</button>
+          </div>
+        `).join('');
+
+    container.querySelectorAll('[data-tarefa]').forEach(input => {
+      input.addEventListener('change', () => kanAlternarTarefa(input.dataset.tarefa, input.checked));
+    });
+    container.querySelectorAll('[data-excluir-tarefa]').forEach(botao => {
+      botao.addEventListener('click', () => kanExcluirTarefa(botao.dataset.excluirTarefa));
+    });
+  }
+
+  async function kanAlternarTarefa(taskId, completa){
+    try{
+      const { error } = await Auth.client.from('project_tasks').update({ completed: completa }).eq('id', taskId);
+      if(error) throw error;
+      await kanCarregarDados();
+      kanMudarAbaPerfil('checklist');
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível atualizar a tarefa. Tente novamente.');
+    }
+  }
+
+  async function kanExcluirTarefa(taskId){
+    try{
+      const { error } = await Auth.client.from('project_tasks').delete().eq('id', taskId);
+      if(error) throw error;
+      await kanCarregarDados();
+      kanMudarAbaPerfil('checklist');
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível excluir a tarefa. Tente novamente.');
+    }
+  }
+
+  async function kanAdicionarTarefaPerfil(){
+    if(!kanProjetoAtual) return;
+    const titulo = document.getElementById('kan-checklist-nova-tarefa').value.trim();
+    if(!titulo) return;
+    try{
+      const { error } = await Auth.client.from('project_tasks').insert({ project_id: kanProjetoAtual, title: titulo });
+      if(error) throw error;
+      document.getElementById('kan-checklist-nova-tarefa').value = '';
+      await kanCarregarDados();
+      kanMudarAbaPerfil('checklist');
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível adicionar a tarefa. Tente novamente.');
+    }
+  }
+
+  function kanRenderArquivosPerfil(p){
+    const arquivos = kanArquivosDoProjeto(p.id);
+    const container = document.getElementById('kan-lista-arquivos');
+
+    container.innerHTML = arquivos.length === 0
+      ? '<p class="texto-vazio">Nenhum arquivo adicionado ainda.</p>'
+      : arquivos.map(a => `
+          <div class="crm-arquivo-item">
+            <a class="crm-arquivo-nome" href="${calEscapar(a.url)}" target="_blank" rel="noopener noreferrer">${calEscapar(a.name)}</a>
+            <span class="cal-etiqueta cal-etiqueta-status">${KAN_ARQUIVO_TIPOS[a.type] || a.type}</span>
+          </div>
+        `).join('');
+  }
+
+  async function kanAdicionarArquivoPerfil(){
+    if(!kanProjetoAtual) return;
+    const nome = document.getElementById('kan-arquivo-nome').value.trim();
+    const url = document.getElementById('kan-arquivo-url').value.trim();
+    if(!nome || !url) return;
+
+    try{
+      const { error } = await Auth.client.from('project_files').insert({
+        project_id: kanProjetoAtual, name: nome, url: url, type: document.getElementById('kan-arquivo-tipo').value
+      });
+      if(error) throw error;
+      document.getElementById('kan-arquivo-nome').value = '';
+      document.getElementById('kan-arquivo-url').value = '';
+      await kanCarregarDados();
+      kanMudarAbaPerfil('arquivos');
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível adicionar o arquivo. Tente novamente.');
+    }
+  }
+
+  function kanRenderFinanceiroPerfil(p){
+    document.getElementById('kan-financeiro-cards').innerHTML = [
+      { rotulo: 'Valor do projeto', valor: crmFormatarMoeda(p.value) },
+      { rotulo: 'Status do pagamento', valor: CRM_PAGAMENTO[p.payment_status] || p.payment_status },
+      { rotulo: 'Data prevista', valor: p.payment_date ? formatarDataLocal(p.payment_date) : 'Não definida' }
+    ].map(item => `
+      <div class="cartao-numero">
+        <div class="cartao-numero-valor" style="font-size:1.1rem;">${item.valor}</div>
+        <div class="cartao-numero-rotulo">${item.rotulo}</div>
+      </div>
+    `).join('');
+
+    document.getElementById('kan-financeiro-detalhe').textContent = p.payment_method
+      ? `Forma de pagamento: ${p.payment_method}`
+      : 'Forma de pagamento não informada.';
+
+    const botaoPago = document.getElementById('kan-marcar-pago');
+    botaoPago.hidden = p.payment_status === 'pago';
+  }
+
+  async function kanMarcarProjetoPago(){
+    if(!kanProjetoAtual) return;
+    try{
+      const { error } = await Auth.client.from('client_projects')
+        .update({ payment_status: 'pago', updated_at: new Date().toISOString() }).eq('id', kanProjetoAtual);
+      if(error) throw error;
+      await Auth.client.from('project_comments').insert({ project_id: kanProjetoAtual, type: 'sistema', content: 'Pagamento recebido.' });
+      await kanCarregarDados();
+      if(crmCarregado) await crmCarregarDados();
+      kanMudarAbaPerfil('financeiro');
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível atualizar o pagamento. Tente novamente.');
+    }
+  }
+
+  function kanRenderComentarios(p){
+    const comentarios = kanComentariosDoProjeto(p.id, 'comentario');
+    const container = document.getElementById('kan-lista-comentarios');
+
+    container.innerHTML = comentarios.length === 0
+      ? '<p class="texto-vazio">Nenhum comentário ainda.</p>'
+      : comentarios.map(c => `
+          <div class="kan-comentario-item">
+            <div class="kan-comentario-data">${formatarData(c.created_at)}</div>
+            <div class="kan-comentario-texto">${calEscapar(c.content)}</div>
+          </div>
+        `).join('');
+  }
+
+  async function kanAdicionarComentario(){
+    if(!kanProjetoAtual) return;
+    const texto = document.getElementById('kan-comentario-texto').value.trim();
+    if(!texto) return;
+    try{
+      const { error } = await Auth.client.from('project_comments').insert({ project_id: kanProjetoAtual, type: 'comentario', content: texto });
+      if(error) throw error;
+      document.getElementById('kan-comentario-texto').value = '';
+      await kanCarregarDados();
+      kanMudarAbaPerfil('comentarios');
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível adicionar o comentário. Tente novamente.');
+    }
+  }
+
+  function kanRenderHistoricoPerfil(p){
+    const registros = kanComentariosDoProjeto(p.id);
+    const container = document.getElementById('kan-timeline');
+
+    container.innerHTML = registros.length === 0
+      ? '<p class="texto-vazio">Nenhum registro ainda.</p>'
+      : registros.map(r => `
+          <div class="crm-timeline-item">
+            <span class="crm-timeline-ponto"></span>
+            <div class="crm-timeline-data">${formatarData(r.created_at)}</div>
+            <div class="crm-timeline-desc">${calEscapar(r.content)}</div>
+          </div>
+        `).join('');
+  }
+
+  /* ============================================================================================
+     PROJETOS: interações (toolbar, vistas, modal, perfil)
+     ============================================================================================ */
+  function configurarKan(){
+    document.getElementById('kan-novo-projeto').addEventListener('click', kanAbrirModalNovo);
+    document.getElementById('kan-modal-fechar').addEventListener('click', kanFecharModal);
+    document.getElementById('kan-cancelar').addEventListener('click', kanFecharModal);
+    document.getElementById('kan-modal-fundo').addEventListener('click', (ev) => {
+      if(ev.target.id === 'kan-modal-fundo') kanFecharModal();
+    });
+    document.getElementById('kan-form-projeto').addEventListener('submit', kanSalvarProjeto);
+    document.getElementById('kan-botao-excluir').addEventListener('click', kanExcluirProjeto);
+    document.getElementById('kan-checklist-adicionar-linha').addEventListener('click', () => {
+      kanChecklistEditorItens.push({ id: null, title: '', completed: false });
+      kanChecklistEditorRenderizar();
+    });
+
+    document.getElementById('kan-perfil-fechar').addEventListener('click', kanFecharPerfil);
+    document.getElementById('kan-perfil-fundo').addEventListener('click', (ev) => {
+      if(ev.target.id === 'kan-perfil-fundo') kanFecharPerfil();
+    });
+    document.querySelectorAll('#kan-perfil-abas .crm-perfil-aba-botao').forEach(botao => {
+      botao.addEventListener('click', () => kanMudarAbaPerfil(botao.dataset.aba));
+    });
+
+    document.getElementById('kan-ideias-salvar').addEventListener('click', kanSalvarIdeias);
+    document.getElementById('kan-checklist-adicionar').addEventListener('click', kanAdicionarTarefaPerfil);
+    document.getElementById('kan-arquivo-adicionar').addEventListener('click', kanAdicionarArquivoPerfil);
+    document.getElementById('kan-marcar-pago').addEventListener('click', kanMarcarProjetoPago);
+    document.getElementById('kan-comentario-adicionar').addEventListener('click', kanAdicionarComentario);
+
+    document.getElementById('kan-busca').addEventListener('input', (ev) => {
+      kanBusca = ev.target.value.trim();
+      kanRenderBoard();
+      kanRenderLista();
+      kanRenderCalendario();
+    });
+
+    document.querySelectorAll('#kan-vista-toggle button').forEach(botao => {
+      botao.addEventListener('click', () => kanMudarVista(botao.dataset.vista));
+    });
+
+    document.getElementById('kan-mes-anterior').addEventListener('click', () => {
+      kanMesReferencia = new Date(kanMesReferencia.getFullYear(), kanMesReferencia.getMonth() - 1, 1);
+      kanRenderCalendario();
+    });
+    document.getElementById('kan-mes-proximo').addEventListener('click', () => {
+      kanMesReferencia = new Date(kanMesReferencia.getFullYear(), kanMesReferencia.getMonth() + 1, 1);
+      kanRenderCalendario();
+    });
+    document.getElementById('kan-mes-hoje').addEventListener('click', () => {
+      kanMesReferencia = new Date();
+      kanDataSelecionadaCalendario = new Date();
+      kanRenderCalendario();
+    });
+
+    document.addEventListener('keydown', (ev) => {
+      if(ev.key !== 'Escape') return;
+      if(!document.getElementById('kan-modal-fundo').hidden) kanFecharModal();
+      else if(!document.getElementById('kan-perfil-fundo').hidden) kanFecharPerfil();
+    });
+  }
+
+  /* ============================================================================================
      INTERAÇÕES: abas, filtro de período, sidebar mobile
      ============================================================================================ */
   function configurarAbas(){
     const botoes = document.querySelectorAll('.nav-item');
-    const titulos = { 'menu-principal': 'Menu Principal', 'portfolio': 'Portfólio', 'calendario': 'Calendário', 'clientes': 'CRM de Clientes' };
+    const titulos = { 'menu-principal': 'Menu Principal', 'portfolio': 'Portfólio', 'calendario': 'Calendário', 'clientes': 'CRM de Clientes', 'projetos': 'Projetos' };
 
     botoes.forEach(botao => {
       botao.addEventListener('click', async () => {
@@ -2867,9 +4235,11 @@
 
         const ehCalendario = botao.dataset.tab === 'calendario';
         const ehClientes = botao.dataset.tab === 'clientes';
-        document.getElementById('filtro-periodo').hidden = ehCalendario || ehClientes;
+        const ehProjetos = botao.dataset.tab === 'projetos';
+        document.getElementById('filtro-periodo').hidden = ehCalendario || ehClientes || ehProjetos;
         document.getElementById('cal-toolbar').hidden = !ehCalendario;
         document.getElementById('crm-toolbar').hidden = !ehClientes;
+        document.getElementById('kan-toolbar').hidden = !ehProjetos;
 
         if(ehCalendario && !calCarregado){
           calCarregado = true;
@@ -2878,6 +4248,10 @@
         if(ehClientes && !crmCarregado){
           crmCarregado = true;
           await crmCarregarDados();
+        }
+        if(ehProjetos && !kanCarregado){
+          kanCarregado = true;
+          await kanCarregarDados();
         }
 
         fecharSidebarMobile();
@@ -2939,6 +4313,7 @@
     configurarSidebarMobile();
     configurarCalendario();
     configurarCRM();
+    configurarKan();
     document.getElementById('botao-sair').addEventListener('click', () => Auth.logout());
 
     await carregarDados();

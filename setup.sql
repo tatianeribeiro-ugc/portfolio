@@ -238,3 +238,95 @@ create policy "CRUD completo para usuarios autenticados"
 create policy "CRUD completo para usuarios autenticados"
   on client_files for all to authenticated using (true) with check (true);
 -- ================================================================================
+
+-- --------------------------------------------------------------------------------
+-- MÓDULO DE PROJETOS (KANBAN)
+-- Reaproveita a tabela "client_projects" que já existe (criada para o CRM) em
+-- vez de criar uma tabela "projects" paralela. Assim um trabalho criado no
+-- quadro Kanban é o mesmo que aparece no histórico do cliente no CRM.
+--
+-- O quadro Kanban usa um vocabulário de status mais rico que o antigo (8
+-- colunas em vez de 7 etapas). As linhas abaixo primeiro RENOMEIAM os valores
+-- antigos para os novos equivalentes, para não perder nada que você já
+-- cadastrou, e só depois trocam o padrão da coluna.
+-- --------------------------------------------------------------------------------
+update client_projects set status = 'gravar'    where status = 'gravacao';
+update client_projects set status = 'editar'    where status = 'edicao';
+update client_projects set status = 'entregue'  where status = 'entrega';
+update client_projects set status = 'pago'      where status = 'concluido';
+update client_projects set status = 'arquivado' where status = 'cancelado';
+-- 'briefing' e 'aprovacao' já têm o mesmo nome nos dois vocabulários.
+
+alter table client_projects
+  add column if not exists priority text not null default 'media', -- baixa | media | alta | urgente
+  add column if not exists content_type text,        -- tipo de conteúdo (ex: Reels, TikTok, YouTube)
+  add column if not exists quantity integer,          -- quantidade de conteúdos/vídeos
+  add column if not exists briefing text,
+  add column if not exists script text,               -- roteiro
+  add column if not exists recording_date date,       -- data de gravação
+  add column if not exists payment_method text,       -- forma de pagamento
+  add column if not exists payment_date date,         -- data prevista de pagamento
+  add column if not exists idea_bank text,            -- banco de ideias: hooks, referências, links, observações
+  add column if not exists event_recording_id uuid references events(id) on delete set null,
+  add column if not exists event_delivery_id uuid references events(id) on delete set null,
+  add column if not exists event_payment_id uuid references events(id) on delete set null;
+
+alter table client_projects alter column status set default 'novo_lead';
+
+-- --------------------------------------------------------------------------------
+-- TABELA: project_tasks
+-- Checklist interno de cada projeto (ex: Gravar cenas, Editar, Entregar).
+-- --------------------------------------------------------------------------------
+create table if not exists project_tasks (
+  id uuid primary key default gen_random_uuid(),
+  project_id uuid not null references client_projects(id) on delete cascade,
+  title text not null,
+  completed boolean not null default false,
+  created_at timestamptz not null default now()
+);
+
+-- --------------------------------------------------------------------------------
+-- TABELA: project_files
+-- Assim como client_files, guarda só o LINK do arquivo (não faz upload real).
+-- --------------------------------------------------------------------------------
+create table if not exists project_files (
+  id uuid primary key default gen_random_uuid(),
+  project_id uuid not null references client_projects(id) on delete cascade,
+  name text not null,
+  url text not null,
+  type text not null default 'outro', -- briefing | video | foto | contrato | nota_fiscal | outro
+  created_at timestamptz not null default now()
+);
+
+-- --------------------------------------------------------------------------------
+-- TABELA: project_comments
+-- Serve para DUAS abas do perfil do projeto ao mesmo tempo: "Comentários"
+-- (type = 'comentario', escritos por você) e "Histórico" (todos os tipos,
+-- incluindo os registros automáticos que o sistema cria quando o status
+-- muda, ex: "Status alterado para Gravar").
+-- --------------------------------------------------------------------------------
+create table if not exists project_comments (
+  id uuid primary key default gen_random_uuid(),
+  project_id uuid not null references client_projects(id) on delete cascade,
+  content text not null,
+  type text not null default 'comentario', -- comentario | sistema
+  created_at timestamptz not null default now()
+);
+
+create index if not exists project_tasks_project_id_idx on project_tasks (project_id);
+create index if not exists project_files_project_id_idx on project_files (project_id);
+create index if not exists project_comments_project_id_idx on project_comments (project_id);
+
+alter table project_tasks enable row level security;
+alter table project_files enable row level security;
+alter table project_comments enable row level security;
+
+create policy "CRUD completo para usuarios autenticados"
+  on project_tasks for all to authenticated using (true) with check (true);
+
+create policy "CRUD completo para usuarios autenticados"
+  on project_files for all to authenticated using (true) with check (true);
+
+create policy "CRUD completo para usuarios autenticados"
+  on project_comments for all to authenticated using (true) with check (true);
+-- ================================================================================
