@@ -153,3 +153,88 @@ create policy "CRUD completo para usuarios autenticados"
   using (true)
   with check (true);
 -- ================================================================================
+
+-- --------------------------------------------------------------------------------
+-- CRM DE CLIENTES
+-- Reaproveita a tabela "clients" que já existe (criada para o calendário) e
+-- acrescenta as colunas que o CRM precisa, em vez de criar uma tabela paralela.
+-- Assim o cliente cadastrado no CRM é o mesmo que aparece no seletor de
+-- cliente dos eventos do calendário.
+-- --------------------------------------------------------------------------------
+alter table clients
+  add column if not exists contact_name text,          -- nome do responsável
+  add column if not exists position text,               -- cargo do responsável
+  add column if not exists website text,
+  add column if not exists city text,
+  add column if not exists niche text,
+  add column if not exists how_found text,               -- como conheceu
+  add column if not exists first_contact_date date,
+  add column if not exists average_ticket numeric,
+  add column if not exists notes text,
+  add column if not exists next_campaign_idea text,       -- diferencial: próxima ideia de campanha
+  add column if not exists status text not null default 'ativo', -- ativo | negociacao | aguardando | encerrado | perdido
+  add column if not exists updated_at timestamptz not null default now();
+
+-- --------------------------------------------------------------------------------
+-- TABELA: client_projects
+-- Histórico de trabalhos + projetos em andamento de cada cliente.
+-- --------------------------------------------------------------------------------
+create table if not exists client_projects (
+  id uuid primary key default gen_random_uuid(),
+  client_id uuid not null references clients(id) on delete cascade,
+  title text not null,
+  description text,
+  value numeric,
+  status text not null default 'briefing',        -- briefing | gravacao | edicao | aprovacao | entrega | concluido | cancelado
+  payment_status text not null default 'pendente', -- pago | pendente | atrasado
+  start_date date,
+  delivery_date date,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- --------------------------------------------------------------------------------
+-- TABELA: client_interactions
+-- Linha do tempo do relacionamento (primeiro contato, orçamento, fechamento,
+-- entrega, pagamento, anotações rápidas etc.) e também registra follow-ups.
+-- --------------------------------------------------------------------------------
+create table if not exists client_interactions (
+  id uuid primary key default gen_random_uuid(),
+  client_id uuid not null references clients(id) on delete cascade,
+  type text not null default 'nota',  -- contato | orcamento | fechamento | entrega | pagamento | nota | outro
+  description text,
+  date timestamptz not null default now(),
+  created_at timestamptz not null default now()
+);
+
+-- --------------------------------------------------------------------------------
+-- TABELA: client_files
+-- Guarda só o LINK do arquivo (ex: Google Drive), não faz upload de verdade,
+-- já que o site é 100% estático e não tem servidor de armazenamento.
+-- --------------------------------------------------------------------------------
+create table if not exists client_files (
+  id uuid primary key default gen_random_uuid(),
+  client_id uuid not null references clients(id) on delete cascade,
+  name text not null,
+  url text not null,
+  type text not null default 'outro', -- briefing | contrato | nota_fiscal | video | outro
+  created_at timestamptz not null default now()
+);
+
+create index if not exists client_projects_client_id_idx on client_projects (client_id);
+create index if not exists client_interactions_client_id_idx on client_interactions (client_id);
+create index if not exists client_files_client_id_idx on client_files (client_id);
+
+alter table client_projects enable row level security;
+alter table client_interactions enable row level security;
+alter table client_files enable row level security;
+
+create policy "CRUD completo para usuarios autenticados"
+  on client_projects for all to authenticated using (true) with check (true);
+
+create policy "CRUD completo para usuarios autenticados"
+  on client_interactions for all to authenticated using (true) with check (true);
+
+create policy "CRUD completo para usuarios autenticados"
+  on client_files for all to authenticated using (true) with check (true);
+-- ================================================================================

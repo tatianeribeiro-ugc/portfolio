@@ -468,16 +468,181 @@
   #cal-cancelar:hover{ border-color: var(--grafite); color: var(--grafite); }
 
   /* ============================================================
+     ABA CLIENTES (CRM)
+     ============================================================ */
+  .crm-toolbar{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px; }
+  .crm-toolbar[hidden]{ display:none; }
+  .crm-toolbar-esquerda, .crm-toolbar-direita{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  #crm-busca{
+    padding:10px 16px; border-radius:100px; border:1px solid var(--borda); background: var(--branco);
+    font-family: var(--fonte-corpo); font-size:0.85rem; min-width:220px;
+  }
+  #crm-busca:focus-visible{ outline:3px solid var(--coral); outline-offset:1px; }
+
+  .crm-filtros{ display:flex; gap:4px; background: var(--branco); border:1px solid var(--borda); border-radius:100px; padding:4px; margin-bottom:22px; flex-wrap:wrap; width:fit-content; }
+  .crm-filtros button{
+    padding:8px 16px; border-radius:100px; border:none; background:transparent; color: var(--texto-suave);
+    font-family: var(--fonte-corpo); font-weight:600; font-size:0.83rem; cursor:pointer; transition: all 0.2s ease;
+  }
+  .crm-filtros button.ativo{ background: var(--grafite); color: var(--branco); }
+  .crm-filtros button:focus-visible{ outline:3px solid var(--coral); outline-offset:2px; }
+
+  .crm-grid-principal{ display:grid; grid-template-columns: 2.1fr 1fr; gap:20px; align-items:start; }
+  .crm-coluna-widgets{ display:flex; flex-direction:column; gap:16px; }
+  .crm-widget h3{ font-size:0.95rem; margin-bottom:14px; }
+
+  .crm-linha-item{ display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--borda); }
+  .crm-linha-item:last-child{ border-bottom:none; padding-bottom:0; }
+  .crm-linha-item:first-child{ padding-top:0; }
+  .crm-linha-ponto{ width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+  .crm-linha-texto{ flex-grow:1; min-width:0; }
+  .crm-linha-titulo{ font-size:0.84rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .crm-linha-titulo-link{ cursor:pointer; }
+  .crm-linha-titulo-link:hover{ text-decoration:underline; color: var(--coral); }
+  .crm-linha-sub{ font-size:0.74rem; color: var(--texto-suave); }
+  .crm-linha-valor{ font-size:0.82rem; font-weight:700; flex-shrink:0; }
+
+  /* Lista de clientes (cards) */
+  .crm-lista-clientes{ display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+  .crm-cliente-card{
+    background: var(--branco); border:1px solid var(--borda); border-radius: var(--raio); padding:20px;
+    box-shadow: var(--sombra); cursor:pointer; border-left:5px solid var(--coral); transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .crm-cliente-card:hover{ transform:translateY(-2px); box-shadow:0 10px 26px rgba(26,24,22,0.1); }
+  .crm-cliente-topo{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:10px; }
+  .crm-cliente-nome{ font-family: var(--fonte-titulo); font-size:1.05rem; font-weight:500; }
+  .crm-cliente-contato{ font-size:0.8rem; color: var(--texto-suave); margin-top:2px; }
+  .crm-etiqueta-status{ font-size:0.68rem; font-weight:700; padding:4px 11px; border-radius:100px; white-space:nowrap; flex-shrink:0; color: var(--branco); }
+  .crm-cliente-meta{ display:flex; flex-direction:column; gap:6px; font-size:0.82rem; color: var(--texto-suave); margin-bottom:12px; }
+  .crm-cliente-meta a{ color: var(--texto-suave); text-decoration:none; }
+  .crm-cliente-meta a:hover{ color: var(--coral); text-decoration:underline; }
+  .crm-cliente-rodape{ display:flex; justify-content:space-between; align-items:center; gap:10px; padding-top:12px; border-top:1px solid var(--borda); font-size:0.78rem; }
+  .crm-cliente-rodape strong{ color: var(--grafite); font-family: var(--fonte-titulo); font-size:0.95rem; font-weight:500; }
+
+  /* Modal de cliente */
+  .crm-modal-fundo{ position:fixed; inset:0; background:rgba(26,24,22,0.45); display:flex; align-items:center; justify-content:center; padding:20px; z-index:200; overflow-y:auto; }
+  .crm-modal-fundo[hidden]{ display:none; }
+  .crm-modal{ background: var(--branco); border-radius: var(--raio); max-width:600px; width:100%; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(26,24,22,0.25); margin:auto; }
+  .crm-modal-cabecalho{ display:flex; justify-content:space-between; align-items:center; padding:22px 26px; border-bottom:1px solid var(--borda); position:sticky; top:0; background: var(--branco); z-index:2; }
+  .crm-modal-cabecalho h3{ font-size:1.2rem; }
+  .crm-modal-fechar{ width:32px; height:32px; border-radius:8px; border:none; background:transparent; font-size:1.4rem; line-height:1; cursor:pointer; color: var(--texto-suave); }
+  .crm-modal-fechar:hover{ background: var(--creme); color: var(--grafite); }
+
+  .crm-form{ padding:22px 26px; display:flex; flex-direction:column; gap:16px; }
+  .crm-form label{ display:flex; flex-direction:column; gap:6px; font-size:0.82rem; font-weight:600; color: var(--texto-suave); }
+  .crm-form input[type=text], .crm-form input[type=email], .crm-form input[type=url], .crm-form input[type=date],
+  .crm-form input[type=number], .crm-form select, .crm-form textarea{
+    padding:11px 14px; border-radius: var(--raio-pequeno); border:1px solid var(--borda);
+    font-family: var(--fonte-corpo); font-size:0.9rem; color: var(--grafite); background: var(--creme);
+  }
+  .crm-form input:focus-visible, .crm-form select:focus-visible, .crm-form textarea:focus-visible{ outline:3px solid var(--coral); outline-offset:1px; }
+  .crm-form textarea{ resize:vertical; font-family: var(--fonte-corpo); }
+  .crm-form-secao{ font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color: var(--coral); margin-top:4px; }
+  .crm-form-linha{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .crm-form-linha-3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; }
+  .crm-modal-rodape{ display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; border-top:1px solid var(--borda); margin-top:4px; padding-top:16px; }
+  .crm-modal-rodape-direita{ display:flex; gap:10px; margin-left:auto; }
+
+  /* Perfil individual do cliente */
+  .crm-perfil-fundo{ position:fixed; inset:0; background:rgba(26,24,22,0.5); display:flex; justify-content:flex-end; z-index:210; }
+  .crm-perfil-fundo[hidden]{ display:none; }
+  .crm-perfil{ background: var(--creme); width:min(920px, 100%); height:100%; overflow-y:auto; box-shadow:-16px 0 40px rgba(26,24,22,0.2); }
+
+  .crm-perfil-cabecalho{ background: var(--branco); border-bottom:1px solid var(--borda); padding:26px 32px; position:sticky; top:0; z-index:3; }
+  .crm-perfil-fechar{ width:34px; height:34px; border-radius:10px; border:1px solid var(--borda); background: var(--branco); font-size:1.3rem; line-height:1; cursor:pointer; color: var(--texto-suave); float:right; }
+  .crm-perfil-fechar:hover{ background: var(--creme); color: var(--grafite); }
+  .crm-perfil-topo{ display:flex; align-items:center; gap:16px; margin-bottom:18px; }
+  .crm-perfil-avatar{
+    width:56px; height:56px; border-radius:50%; background: var(--coral); color: var(--branco);
+    display:flex; align-items:center; justify-content:center; font-family: var(--fonte-titulo); font-size:1.3rem; font-weight:600; flex-shrink:0;
+  }
+  .crm-perfil-nome{ font-size:1.4rem; }
+  .crm-perfil-sub{ font-size:0.85rem; color: var(--texto-suave); margin-top:4px; }
+  .crm-perfil-acoes{ display:flex; gap:10px; flex-wrap:wrap; }
+  .crm-perfil-acoes button, .crm-perfil-acoes a{
+    padding:9px 16px; border-radius:100px; border:1.5px solid var(--borda); background: var(--branco); color: var(--grafite);
+    font-family: var(--fonte-corpo); font-weight:600; font-size:0.83rem; cursor:pointer; text-decoration:none; transition: all 0.2s ease;
+  }
+  .crm-perfil-acoes button:hover, .crm-perfil-acoes a:hover{ border-color: var(--coral); color: var(--coral); }
+  .crm-perfil-acoes button:disabled{ opacity:0.5; cursor:not-allowed; }
+  .crm-perfil-acoes button:disabled:hover{ border-color: var(--borda); color: var(--grafite); }
+
+  .crm-perfil-abas{ display:flex; gap:4px; overflow-x:auto; }
+  .crm-perfil-aba-botao{
+    padding:10px 16px; border-radius:100px 100px 0 0; border:none; background:transparent; color: var(--texto-suave);
+    font-family: var(--fonte-corpo); font-weight:600; font-size:0.83rem; cursor:pointer; white-space:nowrap; border-bottom:2.5px solid transparent;
+  }
+  .crm-perfil-aba-botao.ativo{ color: var(--coral); border-bottom-color: var(--coral); }
+
+  .crm-perfil-conteudo{ padding:26px 32px 60px 32px; }
+  .crm-perfil-painel[hidden]{ display:none; }
+
+  .crm-followup-aviso{
+    background:#FBEDE7; color: var(--coral-escuro); padding:16px 20px; border-radius: var(--raio-pequeno);
+    margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; font-weight:600; font-size:0.88rem;
+  }
+  .crm-followup-aviso button{
+    padding:9px 18px; border-radius:100px; border:none; background: var(--coral); color: var(--branco);
+    font-family: var(--fonte-corpo); font-weight:700; font-size:0.83rem; cursor:pointer; flex-shrink:0;
+  }
+  .crm-followup-aviso button:hover{ background: var(--coral-escuro); }
+
+  .crm-tabela{ width:100%; border-collapse:collapse; font-size:0.85rem; }
+  .crm-tabela th{ text-align:left; padding:10px 12px; color: var(--texto-suave); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid var(--borda); }
+  .crm-tabela td{ padding:12px; border-bottom:1px solid var(--borda); }
+  .crm-tabela tr:last-child td{ border-bottom:none; }
+
+  .crm-projeto-card{ background: var(--branco); border:1px solid var(--borda); border-radius: var(--raio-pequeno); padding:16px 18px; margin-bottom:12px; }
+  .crm-projeto-card:last-child{ margin-bottom:0; }
+  .crm-projeto-topo{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px; }
+  .crm-projeto-titulo{ font-weight:700; font-size:0.92rem; }
+  .crm-etapas{ display:flex; gap:4px; flex-wrap:wrap; }
+  .crm-etapa{ flex:1; min-width:60px; text-align:center; padding:6px 4px; border-radius:8px; background: var(--creme); font-size:0.66rem; font-weight:700; color: var(--texto-suave); }
+  .crm-etapa.crm-etapa-atual{ background: var(--coral); color: var(--branco); }
+  .crm-etapa.crm-etapa-feita{ background:#E1F3E9; color: var(--sucesso); }
+
+  .crm-arquivo-item{ display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--borda); }
+  .crm-arquivo-item:last-child{ border-bottom:none; padding-bottom:0; }
+  .crm-arquivo-item:first-child{ padding-top:0; }
+  .crm-arquivo-nome{ flex-grow:1; font-weight:600; font-size:0.86rem; text-decoration:none; color: var(--grafite); }
+  .crm-arquivo-nome:hover{ text-decoration:underline; color: var(--coral); }
+
+  #crm-notas-texto{
+    width:100%; min-height:260px; border-radius: var(--raio-pequeno); border:1px solid var(--borda);
+    background: var(--branco); padding:18px; font-family: var(--fonte-corpo); font-size:0.9rem; line-height:1.6; resize:vertical;
+  }
+  #crm-notas-texto:focus-visible{ outline:3px solid var(--coral); outline-offset:1px; }
+
+  .crm-timeline{ position:relative; padding-left:26px; }
+  .crm-timeline::before{ content:''; position:absolute; left:5px; top:6px; bottom:6px; width:2px; background: var(--borda); }
+  .crm-timeline-item{ position:relative; padding-bottom:22px; }
+  .crm-timeline-item:last-child{ padding-bottom:0; }
+  .crm-timeline-ponto{ position:absolute; left:-26px; top:3px; width:11px; height:11px; border-radius:50%; background: var(--coral); border:2px solid var(--branco); box-shadow:0 0 0 2px var(--borda); }
+  .crm-timeline-data{ font-size:0.74rem; color: var(--texto-suave); font-weight:600; }
+  .crm-timeline-desc{ font-size:0.88rem; margin-top:2px; }
+
+  .crm-mini-form{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-top:16px; padding-top:16px; border-top:1px solid var(--borda); }
+  .crm-mini-form input, .crm-mini-form select{
+    padding:9px 12px; border-radius: var(--raio-pequeno); border:1px solid var(--borda); background: var(--creme);
+    font-family: var(--fonte-corpo); font-size:0.83rem;
+  }
+  .crm-mini-form input[type=text]{ flex-grow:1; min-width:140px; }
+
+  /* ============================================================
      RESPONSIVO
      ============================================================ */
   @media (max-width: 1180px){
     .cal-grid-principal{ grid-template-columns:1fr 1fr; }
     .cal-coluna-widgets{ grid-column:1 / -1; flex-direction:row; flex-wrap:wrap; }
     .cal-coluna-widgets .cartao{ flex:1; min-width:220px; margin-bottom:0; }
+    .crm-grid-principal{ grid-template-columns:1fr; }
+    .crm-coluna-widgets{ flex-direction:row; flex-wrap:wrap; }
+    .crm-coluna-widgets .cartao{ flex:1; min-width:220px; margin-bottom:0; }
   }
   @media (max-width: 980px){
     .cards-grade{ grid-template-columns:repeat(2,1fr); }
     .portfolio-grade{ grid-template-columns:1fr; }
+    .crm-lista-clientes{ grid-template-columns:1fr; }
   }
   @media (max-width: 900px){
     .sidebar{ transform: translateX(-100%); box-shadow:0 0 40px rgba(0,0,0,0.15); }
@@ -493,6 +658,14 @@
     .cal-toolbar-esquerda, .cal-toolbar-direita{ flex-direction:column; align-items:stretch; }
     #cal-busca{ min-width:0; width:100%; }
     .cal-dia-celula{ min-height:56px; }
+    .crm-toolbar{ flex-direction:column; align-items:stretch; }
+    .crm-toolbar-esquerda, .crm-toolbar-direita{ flex-direction:column; align-items:stretch; }
+    #crm-busca{ min-width:0; width:100%; }
+    .crm-coluna-widgets{ flex-direction:column; }
+    .crm-form-linha, .crm-form-linha-3{ grid-template-columns:1fr; }
+    .crm-perfil{ width:100%; }
+    .crm-perfil-cabecalho, .crm-perfil-conteudo{ padding-left:20px; padding-right:20px; }
+    .crm-tabela{ display:block; overflow-x:auto; white-space:nowrap; }
   }
   @media (max-width: 560px){
     .cards-grade{ grid-template-columns:1fr 1fr; }
@@ -532,6 +705,10 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18"/><path d="M8 2.5v4M16 2.5v4"/></svg>
         Calendário
       </button>
+      <button type="button" class="nav-item" data-tab="clientes">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 20v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 5 18.5V20"/><circle cx="9.5" cy="8" r="3.2"/><path d="M19 20v-1.5a3.3 3.3 0 0 0-2.2-3.1"/><path d="M14.8 4.3a3.2 3.2 0 0 1 0 6.1"/></svg>
+        Clientes
+      </button>
     </nav>
 
     <div class="sidebar-rodape">
@@ -562,6 +739,13 @@
         <select id="cal-filtro-categoria"><option value="">Todas as categorias</option></select>
         <select id="cal-filtro-status"><option value="">Todos os status</option></select>
         <select id="cal-filtro-prioridade"><option value="">Todas as prioridades</option></select>
+      </div>
+    </div>
+
+    <div class="crm-toolbar" id="crm-toolbar" hidden>
+      <div class="crm-toolbar-esquerda">
+        <button type="button" class="cal-botao-primario" id="crm-novo-cliente">+ Novo Cliente</button>
+        <input type="search" id="crm-busca" placeholder="Buscar cliente...">
       </div>
     </div>
 
@@ -656,6 +840,42 @@
         </div>
       </div>
     </section>
+
+    <!-- ABA 4: CLIENTES (CRM) -->
+    <section class="painel-aba" id="painel-clientes" hidden>
+      <div class="crm-filtros" id="crm-filtros" role="group" aria-label="Filtrar clientes por status">
+        <button type="button" class="ativo" data-status="">Todos</button>
+        <button type="button" data-status="ativo">Ativos</button>
+        <button type="button" data-status="negociacao">Em negociação</button>
+        <button type="button" data-status="aguardando">Aguardando resposta</button>
+        <button type="button" data-status="encerrado">Encerrados</button>
+      </div>
+
+      <div class="cards-grade" id="crm-cards-resumo"></div>
+
+      <div class="crm-grid-principal">
+        <div id="crm-lista-clientes" class="crm-lista-clientes"></div>
+
+        <div class="crm-coluna-widgets">
+          <div class="cartao crm-widget">
+            <h3>Precisam de follow-up</h3>
+            <div id="crm-widget-followup"></div>
+          </div>
+          <div class="cartao crm-widget">
+            <h3>Clientes mais lucrativos</h3>
+            <div id="crm-widget-lucrativos"></div>
+          </div>
+          <div class="cartao crm-widget">
+            <h3>Sem trabalho há 90+ dias</h3>
+            <div id="crm-widget-parados"></div>
+          </div>
+          <div class="cartao crm-widget">
+            <h3>Próximos pagamentos</h3>
+            <div id="crm-widget-pagamentos"></div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
 
 </div>
@@ -732,6 +952,215 @@
         </div>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- Modal de criação/edição de cliente (CRM) -->
+<div class="crm-modal-fundo" id="crm-modal-fundo" hidden>
+  <div class="crm-modal" role="dialog" aria-modal="true" aria-labelledby="crm-modal-titulo">
+    <div class="crm-modal-cabecalho">
+      <h3 id="crm-modal-titulo">Novo cliente</h3>
+      <button type="button" class="crm-modal-fechar" id="crm-modal-fechar" aria-label="Fechar">&times;</button>
+    </div>
+    <form class="crm-form" id="crm-form-cliente">
+      <span class="crm-form-secao">Dados da empresa</span>
+
+      <label>Nome da empresa
+        <input type="text" id="crm-campo-nome" required>
+      </label>
+
+      <div class="crm-form-linha">
+        <label>Nome do responsável
+          <input type="text" id="crm-campo-contato">
+        </label>
+        <label>Cargo
+          <input type="text" id="crm-campo-cargo">
+        </label>
+      </div>
+
+      <div class="crm-form-linha">
+        <label>E-mail
+          <input type="email" id="crm-campo-email">
+        </label>
+        <label>WhatsApp
+          <input type="text" id="crm-campo-whatsapp" placeholder="(19) 99999-9999">
+        </label>
+      </div>
+
+      <div class="crm-form-linha-3">
+        <label>Instagram
+          <input type="text" id="crm-campo-instagram" placeholder="@marca">
+        </label>
+        <label>Site
+          <input type="url" id="crm-campo-site" placeholder="https://">
+        </label>
+        <label>Cidade
+          <input type="text" id="crm-campo-cidade">
+        </label>
+      </div>
+
+      <span class="crm-form-secao">Informações comerciais</span>
+
+      <div class="crm-form-linha">
+        <label>Nicho
+          <input type="text" id="crm-campo-nicho" placeholder="Beleza, Pet, Casa...">
+        </label>
+        <label>Como conheceu
+          <input type="text" id="crm-campo-como-conheceu" placeholder="Instagram, indicação...">
+        </label>
+      </div>
+
+      <div class="crm-form-linha">
+        <label>Primeiro contato
+          <input type="date" id="crm-campo-primeiro-contato">
+        </label>
+        <label>Valor médio contratado (R$)
+          <input type="number" id="crm-campo-ticket" min="0" step="0.01">
+        </label>
+      </div>
+
+      <label>Status
+        <select id="crm-campo-status"></select>
+      </label>
+
+      <label>Observações
+        <textarea id="crm-campo-observacoes" rows="3"></textarea>
+      </label>
+
+      <label>Próxima ideia de campanha
+        <textarea id="crm-campo-ideia" rows="2" placeholder="Ex: vídeo mostrando antes e depois do produto."></textarea>
+      </label>
+
+      <div class="crm-modal-rodape">
+        <button type="button" class="cal-botao-perigo" id="crm-botao-excluir" hidden>Excluir</button>
+        <div class="crm-modal-rodape-direita">
+          <button type="button" id="crm-cancelar">Cancelar</button>
+          <button type="submit" class="cal-botao-primario">Salvar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Perfil individual do cliente (CRM) -->
+<div class="crm-perfil-fundo" id="crm-perfil-fundo" hidden>
+  <div class="crm-perfil" role="dialog" aria-modal="true" aria-labelledby="crm-perfil-nome">
+    <div class="crm-perfil-cabecalho">
+      <button type="button" class="crm-perfil-fechar" id="crm-perfil-fechar" aria-label="Fechar perfil">&times;</button>
+      <div class="crm-perfil-topo">
+        <div class="crm-perfil-avatar" id="crm-perfil-avatar"></div>
+        <div>
+          <h2 class="crm-perfil-nome" id="crm-perfil-nome"></h2>
+          <div class="crm-perfil-sub" id="crm-perfil-sub"></div>
+        </div>
+      </div>
+      <div class="crm-perfil-acoes">
+        <button type="button" id="crm-perfil-editar">✏️ Editar</button>
+        <a href="#" id="crm-perfil-email" target="_blank" rel="noopener noreferrer">📩 Enviar e-mail</a>
+        <button type="button" disabled title="Em breve">📄 Gerar proposta</button>
+      </div>
+      <div class="crm-perfil-abas" id="crm-perfil-abas">
+        <button type="button" class="crm-perfil-aba-botao ativo" data-aba="visao">Visão Geral</button>
+        <button type="button" class="crm-perfil-aba-botao" data-aba="historico">Histórico de Trabalhos</button>
+        <button type="button" class="crm-perfil-aba-botao" data-aba="ativos">Projetos Ativos</button>
+        <button type="button" class="crm-perfil-aba-botao" data-aba="financeiro">Financeiro</button>
+        <button type="button" class="crm-perfil-aba-botao" data-aba="arquivos">Arquivos</button>
+        <button type="button" class="crm-perfil-aba-botao" data-aba="notas">Anotações</button>
+        <button type="button" class="crm-perfil-aba-botao" data-aba="timeline">Timeline</button>
+      </div>
+    </div>
+
+    <div class="crm-perfil-conteudo">
+      <!-- Visão Geral -->
+      <div class="crm-perfil-painel" id="crm-painel-visao">
+        <div class="crm-followup-aviso" id="crm-followup-aviso" hidden>
+          <span id="crm-followup-texto"></span>
+          <button type="button" id="crm-followup-botao">✨ Entrar em contato novamente</button>
+        </div>
+        <div class="cards-grade" id="crm-visao-cards"></div>
+        <div class="cartao">
+          <h3>Próxima ideia de campanha</h3>
+          <p id="crm-visao-ideia" class="texto-vazio"></p>
+        </div>
+      </div>
+
+      <!-- Histórico de Trabalhos -->
+      <div class="crm-perfil-painel" id="crm-painel-historico" hidden>
+        <div class="cartao">
+          <h3>Histórico de trabalhos</h3>
+          <div style="overflow-x:auto;">
+            <table class="crm-tabela">
+              <thead><tr><th>Data</th><th>Serviço</th><th>Valor</th><th>Status</th><th>Pagamento</th></tr></thead>
+              <tbody id="crm-tabela-historico"></tbody>
+            </table>
+          </div>
+          <div class="crm-mini-form" id="crm-form-projeto">
+            <input type="text" id="crm-projeto-titulo" placeholder="Nome do trabalho">
+            <input type="number" id="crm-projeto-valor" placeholder="Valor (R$)" min="0" step="0.01">
+            <input type="date" id="crm-projeto-data" title="Data de início">
+            <select id="crm-projeto-status"></select>
+            <select id="crm-projeto-pagamento"></select>
+            <button type="button" class="cal-botao-secundario" id="crm-projeto-adicionar">+ Novo trabalho</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Projetos Ativos -->
+      <div class="crm-perfil-painel" id="crm-painel-ativos" hidden>
+        <div class="cartao">
+          <h3>Projetos ativos</h3>
+          <div id="crm-lista-ativos"></div>
+        </div>
+      </div>
+
+      <!-- Financeiro -->
+      <div class="crm-perfil-painel" id="crm-painel-financeiro" hidden>
+        <div class="cards-grade" id="crm-financeiro-cards"></div>
+        <div class="cartao">
+          <h3>Pagamentos pendentes</h3>
+          <div id="crm-lista-pendentes"></div>
+        </div>
+      </div>
+
+      <!-- Arquivos -->
+      <div class="crm-perfil-painel" id="crm-painel-arquivos" hidden>
+        <div class="cartao">
+          <h3>Arquivos</h3>
+          <div id="crm-lista-arquivos"></div>
+          <div class="crm-mini-form">
+            <input type="text" id="crm-arquivo-nome" placeholder="Nome do arquivo">
+            <input type="text" id="crm-arquivo-url" placeholder="Link (Google Drive, etc.)">
+            <select id="crm-arquivo-tipo"></select>
+            <button type="button" class="cal-botao-secundario" id="crm-arquivo-adicionar">+ Adicionar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Anotações -->
+      <div class="crm-perfil-painel" id="crm-painel-notas" hidden>
+        <div class="cartao">
+          <h3>Anotações</h3>
+          <textarea id="crm-notas-texto" placeholder="Espaço livre para anotar o que quiser sobre este cliente..."></textarea>
+          <div class="crm-modal-rodape" style="border-top:none; margin-top:12px; padding-top:0; justify-content:flex-end;">
+            <button type="button" class="cal-botao-primario" id="crm-notas-salvar">Salvar anotações</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div class="crm-perfil-painel" id="crm-painel-timeline" hidden>
+        <div class="cartao">
+          <h3>Linha do tempo do relacionamento</h3>
+          <div class="crm-timeline" id="crm-timeline"></div>
+          <div class="crm-mini-form">
+            <select id="crm-interacao-tipo"></select>
+            <input type="text" id="crm-interacao-desc" placeholder="Descrição">
+            <input type="date" id="crm-interacao-data">
+            <button type="button" class="cal-botao-secundario" id="crm-interacao-adicionar">+ Nova interação</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1510,6 +1939,11 @@
       document.getElementById('cal-campo-cliente').value = data.id;
       document.getElementById('cal-novo-cliente-nome').value = '';
       document.getElementById('cal-novo-cliente-caixa').hidden = true;
+
+      if(crmCarregado){
+        crmClientes.push(data);
+        crmRenderizarTudo();
+      }
     } catch(erro){
       console.error(erro);
       mostrarErroGlobal('Não foi possível adicionar o cliente. Tente novamente.');
@@ -1612,11 +2046,815 @@
   }
 
   /* ============================================================================================
+     CRM DE CLIENTES
+     Estado e constantes com prefixo "crm". Reaproveita a mesma tabela "clients"
+     do calendário: ao salvar um cliente aqui, o seletor de cliente dos eventos
+     do calendário é atualizado também (e vice-versa), veja crmSincronizarComCalendario().
+     ============================================================================================ */
+  const CRM_STATUS = {
+    ativo:      { rotulo: 'Cliente Ativo',        emoji: '🟢', cor: '#2D9D5F' },
+    negociacao: { rotulo: 'Em Negociação',        emoji: '🟡', cor: '#C9971C' },
+    aguardando: { rotulo: 'Aguardando Resposta',  emoji: '🟠', cor: '#E08A3C' },
+    encerrado:  { rotulo: 'Projeto Encerrado',    emoji: '⚫', cor: '#4A4642' },
+    perdido:    { rotulo: 'Lead Perdido',         emoji: '🔴', cor: '#C4453C' }
+  };
+  const CRM_ETAPAS = { briefing: 'Briefing', gravacao: 'Gravação', edicao: 'Edição', aprovacao: 'Aprovação', entrega: 'Entrega', concluido: 'Concluído', cancelado: 'Cancelado' };
+  const CRM_ETAPAS_ORDEM = ['briefing', 'gravacao', 'edicao', 'aprovacao', 'entrega', 'concluido'];
+  const CRM_PAGAMENTO = { pago: 'Pago', pendente: 'Pendente', atrasado: 'Atrasado' };
+  const CRM_INTERACAO = { contato: 'Contato', orcamento: 'Orçamento', fechamento: 'Fechamento', entrega: 'Entrega', pagamento: 'Pagamento', nota: 'Nota', outro: 'Outro' };
+  const CRM_ARQUIVO_TIPOS = { briefing: 'Briefing', contrato: 'Contrato', nota_fiscal: 'Nota Fiscal', video: 'Vídeo', outro: 'Outro' };
+
+  let crmClientes = [];
+  let crmProjetos = [];
+  let crmInteracoes = [];
+  let crmArquivos = [];
+  let crmCarregado = false;
+  let crmFiltroStatus = '';
+  let crmBusca = '';
+  let crmClienteEditando = null;
+  let crmClienteAtual = null;
+  let crmAbaPerfilAtual = 'visao';
+
+  async function crmCarregarDados(){
+    try{
+      const [clientes, projetos, interacoes, arquivos] = await Promise.all([
+        buscarTudo('clients'),
+        buscarTudo('client_projects'),
+        buscarTudo('client_interactions'),
+        buscarTudo('client_files')
+      ]);
+      crmClientes = clientes;
+      crmProjetos = projetos;
+      crmInteracoes = interacoes;
+      crmArquivos = arquivos;
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível carregar os clientes agora. Tente recarregar a página em alguns instantes.');
+      crmClientes = [];
+      crmProjetos = [];
+      crmInteracoes = [];
+      crmArquivos = [];
+    }
+    crmPopularSelects();
+    crmRenderizarTudo();
+    crmSincronizarComCalendario();
+  }
+
+  function crmSincronizarComCalendario(){
+    calClientes = crmClientes.slice().sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+    if(calCarregado) calPopularSelects();
+  }
+
+  /* ============================================================================================
+     CRM: formatação e cálculos auxiliares
+     ============================================================================================ */
+  function crmNomeParaIniciais(nome){
+    const partes = (nome || '').trim().split(/\s+/).filter(Boolean);
+    if(partes.length === 0) return '?';
+    if(partes.length === 1) return partes[0].slice(0, 2).toUpperCase();
+    return (partes[0][0] + partes[partes.length - 1][0]).toUpperCase();
+  }
+
+  function crmFormatarMoeda(valor){
+    return (Number(valor) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  }
+
+  function crmDiasDesde(dataStr){
+    return Math.floor((new Date() - new Date(dataStr)) / (1000 * 60 * 60 * 24));
+  }
+
+  function crmProjetosDoCliente(clientId){
+    return crmProjetos.filter(p => p.client_id === clientId);
+  }
+
+  function crmInteracoesDoCliente(clientId){
+    return crmInteracoes.filter(i => i.client_id === clientId).sort((a, b) => new Date(a.date) - new Date(b.date));
+  }
+
+  function crmArquivosDoCliente(clientId){
+    return crmArquivos.filter(a => a.client_id === clientId);
+  }
+
+  function crmUltimoTrabalho(clientId){
+    const projetos = crmProjetosDoCliente(clientId).filter(p => p.start_date).sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
+    return projetos[0] || null;
+  }
+
+  function crmUltimaInteracao(clientId){
+    const interacoes = crmInteracoesDoCliente(clientId);
+    return interacoes.length ? interacoes[interacoes.length - 1] : null;
+  }
+
+  function crmPopularSelects(){
+    document.getElementById('crm-campo-status').innerHTML = Object.entries(CRM_STATUS)
+      .map(([chave, s]) => `<option value="${chave}">${s.emoji} ${s.rotulo}</option>`).join('');
+    document.getElementById('crm-projeto-status').innerHTML = Object.entries(CRM_ETAPAS)
+      .map(([chave, rotulo]) => `<option value="${chave}">${rotulo}</option>`).join('');
+    document.getElementById('crm-projeto-pagamento').innerHTML = Object.entries(CRM_PAGAMENTO)
+      .map(([chave, rotulo]) => `<option value="${chave}">${rotulo}</option>`).join('');
+    document.getElementById('crm-arquivo-tipo').innerHTML = Object.entries(CRM_ARQUIVO_TIPOS)
+      .map(([chave, rotulo]) => `<option value="${chave}">${rotulo}</option>`).join('');
+    document.getElementById('crm-interacao-tipo').innerHTML = Object.entries(CRM_INTERACAO)
+      .map(([chave, rotulo]) => `<option value="${chave}">${rotulo}</option>`).join('');
+  }
+
+  function crmClientesFiltrados(){
+    return crmClientes.filter(c => {
+      if(crmFiltroStatus && c.status !== crmFiltroStatus) return false;
+      if(crmBusca){
+        const alvo = [c.name, c.contact_name, c.instagram, c.email].filter(Boolean).join(' ').toLowerCase();
+        if(!alvo.includes(crmBusca.toLowerCase())) return false;
+      }
+      return true;
+    });
+  }
+
+  /* ============================================================================================
+     CRM: renderização (lista, cards de resumo, widgets do dashboard lateral)
+     ============================================================================================ */
+  function crmCartaoCliente(c){
+    const status = CRM_STATUS[c.status] || CRM_STATUS.ativo;
+    const ultimo = crmUltimoTrabalho(c.id);
+
+    return `
+      <div class="crm-cliente-card" data-id="${c.id}" style="border-left-color:${status.cor}">
+        <div class="crm-cliente-topo">
+          <div>
+            <div class="crm-cliente-nome">${calEscapar(c.name)}</div>
+            ${c.contact_name ? `<div class="crm-cliente-contato">${calEscapar(c.contact_name)}</div>` : ''}
+          </div>
+          <span class="crm-etiqueta-status" style="background:${status.cor}">${status.emoji} ${status.rotulo}</span>
+        </div>
+        <div class="crm-cliente-meta">
+          ${c.instagram ? `<span>📷 ${calEscapar(c.instagram)}</span>` : ''}
+          ${c.email ? `<span>✉️ ${calEscapar(c.email)}</span>` : ''}
+          ${c.phone ? `<span>💬 ${calEscapar(c.phone)}</span>` : ''}
+        </div>
+        <div class="crm-cliente-rodape">
+          <span>${ultimo ? 'Último trabalho: ' + calEscapar(ultimo.title) : 'Sem trabalhos registrados'}</span>
+          <strong>${c.average_ticket ? crmFormatarMoeda(c.average_ticket) : ''}</strong>
+        </div>
+      </div>
+    `;
+  }
+
+  function crmRenderLista(){
+    const lista = crmClientesFiltrados();
+    const container = document.getElementById('crm-lista-clientes');
+
+    if(lista.length === 0){
+      container.innerHTML = '<p class="texto-vazio">Nenhum cliente encontrado.</p>';
+      return;
+    }
+
+    container.innerHTML = lista.map(c => crmCartaoCliente(c)).join('');
+    container.querySelectorAll('.crm-cliente-card').forEach(card => {
+      card.addEventListener('click', () => crmAbrirPerfil(card.dataset.id));
+    });
+  }
+
+  function crmRenderCardsResumo(){
+    const hoje = new Date();
+    const inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+    const fimMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 1);
+
+    const clientesAtivos = crmClientes.filter(c => c.status === 'ativo').length;
+
+    const projetosDoMes = crmProjetos.filter(p => {
+      const ref = p.delivery_date || p.start_date || p.created_at;
+      if(!ref) return false;
+      const d = new Date(ref);
+      return d >= inicioMes && d < fimMes;
+    });
+    const receitaMes = projetosDoMes.filter(p => p.payment_status === 'pago').reduce((soma, p) => soma + (Number(p.value) || 0), 0);
+
+    const propostasEnviadas = crmInteracoes.filter(i => {
+      const d = new Date(i.date);
+      return i.type === 'orcamento' && d >= inicioMes && d < fimMes;
+    }).length;
+
+    const pagamentosPendentes = crmProjetos.filter(p => p.payment_status === 'pendente' || p.payment_status === 'atrasado').length;
+
+    const totalProjetos = crmProjetos.filter(p => p.status !== 'cancelado').length;
+    const concluidos = crmProjetos.filter(p => p.status === 'concluido').length;
+    const taxaFechamento = totalProjetos > 0 ? Math.round((concluidos / totalProjetos) * 100) : 0;
+
+    const cards = [
+      { rotulo: 'Clientes ativos', valor: clientesAtivos.toLocaleString('pt-BR'), destaque: true },
+      { rotulo: 'Receita do mês', valor: crmFormatarMoeda(receitaMes) },
+      { rotulo: 'Propostas enviadas', valor: propostasEnviadas.toLocaleString('pt-BR') },
+      { rotulo: 'Pagamentos pendentes', valor: pagamentosPendentes.toLocaleString('pt-BR') },
+      { rotulo: 'Taxa de fechamento', valor: taxaFechamento + '%' }
+    ];
+
+    document.getElementById('crm-cards-resumo').innerHTML = cards.map(c => `
+      <div class="cartao-numero ${c.destaque ? 'cartao-numero-destaque' : ''}">
+        <div class="cartao-numero-valor">${c.valor}</div>
+        <div class="cartao-numero-rotulo">${c.rotulo}</div>
+      </div>
+    `).join('');
+  }
+
+  function crmRenderWidgets(){
+    const precisamFollowup = crmClientes
+      .filter(c => ['ativo', 'negociacao', 'aguardando'].includes(c.status))
+      .map(c => {
+        const ultima = crmUltimaInteracao(c.id);
+        const dias = crmDiasDesde(ultima ? ultima.date : c.created_at);
+        return { cliente: c, dias };
+      })
+      .filter(item => item.dias >= 30)
+      .sort((a, b) => b.dias - a.dias)
+      .slice(0, 6);
+
+    document.getElementById('crm-widget-followup').innerHTML = precisamFollowup.length === 0
+      ? '<p class="texto-vazio">Ninguém precisa de follow-up agora.</p>'
+      : precisamFollowup.map(item => `
+          <div class="crm-linha-item">
+            <span class="crm-linha-ponto" style="background:${(CRM_STATUS[item.cliente.status] || CRM_STATUS.ativo).cor}"></span>
+            <div class="crm-linha-texto">
+              <div class="crm-linha-titulo crm-linha-titulo-link" data-id="${item.cliente.id}">${calEscapar(item.cliente.name)}</div>
+              <div class="crm-linha-sub">Há ${item.dias} dias sem contato</div>
+            </div>
+          </div>
+        `).join('');
+
+    const receitaPorCliente = crmClientes.map(c => {
+      const total = crmProjetosDoCliente(c.id).filter(p => p.payment_status === 'pago').reduce((s, p) => s + (Number(p.value) || 0), 0);
+      return { cliente: c, total };
+    }).filter(item => item.total > 0).sort((a, b) => b.total - a.total).slice(0, 5);
+
+    document.getElementById('crm-widget-lucrativos').innerHTML = receitaPorCliente.length === 0
+      ? '<p class="texto-vazio">Nenhum pagamento registrado ainda.</p>'
+      : receitaPorCliente.map(item => `
+          <div class="crm-linha-item">
+            <div class="crm-linha-texto">
+              <div class="crm-linha-titulo crm-linha-titulo-link" data-id="${item.cliente.id}">${calEscapar(item.cliente.name)}</div>
+            </div>
+            <span class="crm-linha-valor">${crmFormatarMoeda(item.total)}</span>
+          </div>
+        `).join('');
+
+    const semTrabalho = crmClientes
+      .filter(c => c.status !== 'perdido' && c.status !== 'encerrado')
+      .map(c => {
+        const ultimo = crmUltimoTrabalho(c.id);
+        const dias = crmDiasDesde(ultimo ? ultimo.start_date : c.created_at);
+        return { cliente: c, dias };
+      })
+      .filter(item => item.dias >= 90)
+      .sort((a, b) => b.dias - a.dias)
+      .slice(0, 6);
+
+    document.getElementById('crm-widget-parados').innerHTML = semTrabalho.length === 0
+      ? '<p class="texto-vazio">Todo mundo com trabalho recente.</p>'
+      : semTrabalho.map(item => `
+          <div class="crm-linha-item">
+            <div class="crm-linha-texto">
+              <div class="crm-linha-titulo crm-linha-titulo-link" data-id="${item.cliente.id}">${calEscapar(item.cliente.name)}</div>
+              <div class="crm-linha-sub">Há ${item.dias} dias</div>
+            </div>
+          </div>
+        `).join('');
+
+    const proximosPagamentos = crmProjetos
+      .filter(p => p.payment_status === 'pendente' || p.payment_status === 'atrasado')
+      .sort((a, b) => new Date(a.delivery_date || a.start_date || a.created_at) - new Date(b.delivery_date || b.start_date || b.created_at))
+      .slice(0, 6);
+
+    document.getElementById('crm-widget-pagamentos').innerHTML = proximosPagamentos.length === 0
+      ? '<p class="texto-vazio">Nenhum pagamento pendente.</p>'
+      : proximosPagamentos.map(p => {
+          const cliente = crmClientes.find(c => c.id === p.client_id);
+          return `
+            <div class="crm-linha-item">
+              <div class="crm-linha-texto">
+                <div class="crm-linha-titulo">${calEscapar(p.title)}</div>
+                <div class="crm-linha-sub">${cliente ? calEscapar(cliente.name) : ''}</div>
+              </div>
+              <span class="crm-linha-valor">${crmFormatarMoeda(p.value)}</span>
+            </div>
+          `;
+        }).join('');
+
+    document.querySelectorAll('.crm-linha-titulo-link').forEach(el => {
+      el.addEventListener('click', () => crmAbrirPerfil(el.dataset.id));
+    });
+  }
+
+  function crmRenderizarTudo(){
+    crmRenderCardsResumo();
+    crmRenderLista();
+    crmRenderWidgets();
+  }
+
+  /* ============================================================================================
+     CRM: modal de criar/editar cliente
+     ============================================================================================ */
+  function crmAbrirModalNovo(){
+    crmClienteEditando = null;
+    document.getElementById('crm-modal-titulo').textContent = 'Novo cliente';
+    document.getElementById('crm-form-cliente').reset();
+    document.getElementById('crm-campo-status').value = 'ativo';
+    document.getElementById('crm-botao-excluir').hidden = true;
+    document.getElementById('crm-modal-fundo').hidden = false;
+    document.getElementById('crm-campo-nome').focus();
+  }
+
+  function crmAbrirModalEdicao(id){
+    const c = crmClientes.find(x => x.id === id);
+    if(!c) return;
+
+    crmClienteEditando = c.id;
+    document.getElementById('crm-modal-titulo').textContent = 'Editar cliente';
+    document.getElementById('crm-campo-nome').value = c.name || '';
+    document.getElementById('crm-campo-contato').value = c.contact_name || '';
+    document.getElementById('crm-campo-cargo').value = c.position || '';
+    document.getElementById('crm-campo-email').value = c.email || '';
+    document.getElementById('crm-campo-whatsapp').value = c.phone || '';
+    document.getElementById('crm-campo-instagram').value = c.instagram || '';
+    document.getElementById('crm-campo-site').value = c.website || '';
+    document.getElementById('crm-campo-cidade').value = c.city || '';
+    document.getElementById('crm-campo-nicho').value = c.niche || '';
+    document.getElementById('crm-campo-como-conheceu').value = c.how_found || '';
+    document.getElementById('crm-campo-primeiro-contato').value = c.first_contact_date || '';
+    document.getElementById('crm-campo-ticket').value = c.average_ticket || '';
+    document.getElementById('crm-campo-status').value = c.status || 'ativo';
+    document.getElementById('crm-campo-observacoes').value = c.notes || '';
+    document.getElementById('crm-campo-ideia').value = c.next_campaign_idea || '';
+    document.getElementById('crm-botao-excluir').hidden = false;
+    document.getElementById('crm-modal-fundo').hidden = false;
+  }
+
+  function crmFecharModal(){
+    document.getElementById('crm-modal-fundo').hidden = true;
+    crmClienteEditando = null;
+  }
+
+  async function crmSalvarCliente(ev){
+    ev.preventDefault();
+
+    const nome = document.getElementById('crm-campo-nome').value.trim();
+    if(!nome) return;
+
+    const payload = {
+      name: nome,
+      contact_name: document.getElementById('crm-campo-contato').value.trim() || null,
+      position: document.getElementById('crm-campo-cargo').value.trim() || null,
+      email: document.getElementById('crm-campo-email').value.trim() || null,
+      phone: document.getElementById('crm-campo-whatsapp').value.trim() || null,
+      instagram: document.getElementById('crm-campo-instagram').value.trim() || null,
+      website: document.getElementById('crm-campo-site').value.trim() || null,
+      city: document.getElementById('crm-campo-cidade').value.trim() || null,
+      niche: document.getElementById('crm-campo-nicho').value.trim() || null,
+      how_found: document.getElementById('crm-campo-como-conheceu').value.trim() || null,
+      first_contact_date: document.getElementById('crm-campo-primeiro-contato').value || null,
+      average_ticket: document.getElementById('crm-campo-ticket').value ? Number(document.getElementById('crm-campo-ticket').value) : null,
+      status: document.getElementById('crm-campo-status').value,
+      notes: document.getElementById('crm-campo-observacoes').value.trim() || null,
+      next_campaign_idea: document.getElementById('crm-campo-ideia').value.trim() || null,
+      updated_at: new Date().toISOString()
+    };
+
+    try{
+      if(crmClienteEditando){
+        const { error } = await Auth.client.from('clients').update(payload).eq('id', crmClienteEditando);
+        if(error) throw error;
+      } else {
+        const { error } = await Auth.client.from('clients').insert(payload);
+        if(error) throw error;
+      }
+      crmFecharModal();
+      await crmCarregarDados();
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível salvar o cliente. Tente novamente.');
+    }
+  }
+
+  async function crmExcluirCliente(){
+    if(!crmClienteEditando) return;
+    if(!confirm('Tem certeza que deseja excluir este cliente? Os trabalhos, arquivos e interações vinculados também serão apagados.')) return;
+
+    try{
+      const { error } = await Auth.client.from('clients').delete().eq('id', crmClienteEditando);
+      if(error) throw error;
+      crmFecharModal();
+      crmFecharPerfil();
+      await crmCarregarDados();
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível excluir o cliente. Tente novamente.');
+    }
+  }
+
+  /* ============================================================================================
+     CRM: perfil individual do cliente (abas)
+     ============================================================================================ */
+  function crmAbrirPerfil(id){
+    const c = crmClientes.find(x => x.id === id);
+    if(!c) return;
+    crmClienteAtual = id;
+
+    document.getElementById('crm-perfil-avatar').textContent = crmNomeParaIniciais(c.name);
+    document.getElementById('crm-perfil-nome').textContent = c.name;
+
+    const status = CRM_STATUS[c.status] || CRM_STATUS.ativo;
+    const subPartes = [status.emoji + ' ' + status.rotulo];
+    if(c.contact_name) subPartes.push(c.contact_name);
+    if(c.city) subPartes.push(c.city);
+    document.getElementById('crm-perfil-sub').textContent = subPartes.join(' · ');
+
+    const linkEmail = document.getElementById('crm-perfil-email');
+    if(c.email){
+      linkEmail.href = 'mailto:' + c.email;
+      linkEmail.style.display = '';
+    } else {
+      linkEmail.style.display = 'none';
+    }
+
+    document.getElementById('crm-perfil-editar').onclick = () => crmAbrirModalEdicao(c.id);
+
+    crmMudarAbaPerfil('visao');
+    document.getElementById('crm-perfil-fundo').hidden = false;
+  }
+
+  function crmFecharPerfil(){
+    document.getElementById('crm-perfil-fundo').hidden = true;
+    crmClienteAtual = null;
+  }
+
+  function crmMudarAbaPerfil(aba){
+    crmAbaPerfilAtual = aba;
+    document.querySelectorAll('.crm-perfil-aba-botao').forEach(b => b.classList.toggle('ativo', b.dataset.aba === aba));
+    document.querySelectorAll('.crm-perfil-painel').forEach(p => { p.hidden = true; });
+    document.getElementById('crm-painel-' + aba).hidden = false;
+
+    const c = crmClientes.find(x => x.id === crmClienteAtual);
+    if(!c) return;
+
+    if(aba === 'visao') crmRenderVisaoGeral(c);
+    if(aba === 'historico') crmRenderHistorico(c);
+    if(aba === 'ativos') crmRenderAtivos(c);
+    if(aba === 'financeiro') crmRenderFinanceiro(c);
+    if(aba === 'arquivos') crmRenderArquivos(c);
+    if(aba === 'notas') crmRenderNotas(c);
+    if(aba === 'timeline') crmRenderTimeline(c);
+  }
+
+  function crmRenderVisaoGeral(c){
+    const projetos = crmProjetosDoCliente(c.id);
+    const pagos = projetos.filter(p => p.payment_status === 'pago');
+    const totalFaturado = pagos.reduce((s, p) => s + (Number(p.value) || 0), 0);
+    const ticketMedio = projetos.length ? projetos.reduce((s, p) => s + (Number(p.value) || 0), 0) / projetos.length : 0;
+    const ultimo = crmUltimoTrabalho(c.id);
+
+    const cards = [
+      { rotulo: 'Valor total faturado', valor: crmFormatarMoeda(totalFaturado) },
+      { rotulo: 'Quantidade de trabalhos', valor: String(projetos.length) },
+      { rotulo: 'Ticket médio', valor: crmFormatarMoeda(ticketMedio) },
+      { rotulo: 'Última contratação', valor: ultimo ? formatarData(ultimo.start_date) : 'Nenhuma ainda' }
+    ];
+
+    document.getElementById('crm-visao-cards').innerHTML = cards.map(item => `
+      <div class="cartao-numero">
+        <div class="cartao-numero-valor" style="font-size:1.3rem;">${item.valor}</div>
+        <div class="cartao-numero-rotulo">${item.rotulo}</div>
+      </div>
+    `).join('');
+
+    document.getElementById('crm-visao-ideia').textContent = c.next_campaign_idea || 'Nenhuma ideia registrada ainda.';
+
+    const ultimaInteracao = crmUltimaInteracao(c.id);
+    const dias = crmDiasDesde(ultimaInteracao ? ultimaInteracao.date : c.created_at);
+    const aviso = document.getElementById('crm-followup-aviso');
+
+    if(dias >= 30 && c.status !== 'encerrado' && c.status !== 'perdido'){
+      aviso.hidden = false;
+      document.getElementById('crm-followup-texto').textContent = `📅 Último contato: ${dias} dias atrás.`;
+      document.getElementById('crm-followup-botao').onclick = () => crmFollowUp(c);
+    } else {
+      aviso.hidden = true;
+    }
+  }
+
+  function crmFollowUp(c){
+    crmRegistrarInteracaoRapida(c.id, 'contato', 'Follow-up: retomou contato com o cliente.');
+    if(c.phone){
+      const digitos = c.phone.replace(/\D/g, '');
+      window.open(`https://wa.me/${digitos}`, '_blank', 'noopener,noreferrer');
+    }
+  }
+
+  async function crmRegistrarInteracaoRapida(clientId, tipo, descricao){
+    try{
+      const { error } = await Auth.client.from('client_interactions').insert({
+        client_id: clientId, type: tipo, description: descricao, date: new Date().toISOString()
+      });
+      if(error) throw error;
+      await crmCarregarDados();
+      if(crmClienteAtual) crmMudarAbaPerfil(crmAbaPerfilAtual);
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível registrar a interação. Tente novamente.');
+    }
+  }
+
+  function crmRenderHistorico(c){
+    const projetos = crmProjetosDoCliente(c.id).sort((a, b) => new Date(b.start_date || b.created_at) - new Date(a.start_date || a.created_at));
+    const tbody = document.getElementById('crm-tabela-historico');
+
+    tbody.innerHTML = projetos.length === 0
+      ? '<tr><td colspan="5" class="texto-vazio">Nenhum trabalho registrado ainda.</td></tr>'
+      : projetos.map(p => `
+          <tr>
+            <td>${p.start_date ? formatarData(p.start_date) : '-'}</td>
+            <td>${calEscapar(p.title)}</td>
+            <td>${crmFormatarMoeda(p.value)}</td>
+            <td>${CRM_ETAPAS[p.status] || p.status}</td>
+            <td>${CRM_PAGAMENTO[p.payment_status] || p.payment_status}</td>
+          </tr>
+        `).join('');
+  }
+
+  async function crmAdicionarProjeto(){
+    if(!crmClienteAtual) return;
+    const titulo = document.getElementById('crm-projeto-titulo').value.trim();
+    if(!titulo) return;
+
+    const payload = {
+      client_id: crmClienteAtual,
+      title: titulo,
+      value: document.getElementById('crm-projeto-valor').value ? Number(document.getElementById('crm-projeto-valor').value) : null,
+      start_date: document.getElementById('crm-projeto-data').value || null,
+      status: document.getElementById('crm-projeto-status').value,
+      payment_status: document.getElementById('crm-projeto-pagamento').value,
+      updated_at: new Date().toISOString()
+    };
+
+    try{
+      const { error } = await Auth.client.from('client_projects').insert(payload);
+      if(error) throw error;
+      document.getElementById('crm-projeto-titulo').value = '';
+      document.getElementById('crm-projeto-valor').value = '';
+      document.getElementById('crm-projeto-data').value = '';
+      await crmCarregarDados();
+      crmMudarAbaPerfil('historico');
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível adicionar o trabalho. Tente novamente.');
+    }
+  }
+
+  function crmEtapaHtml(p){
+    const indiceAtual = CRM_ETAPAS_ORDEM.indexOf(p.status);
+    return CRM_ETAPAS_ORDEM.map((etapa, i) => {
+      let classe = '';
+      if(i < indiceAtual) classe = 'crm-etapa-feita';
+      else if(i === indiceAtual) classe = 'crm-etapa-atual';
+      return `<span class="crm-etapa ${classe}">${CRM_ETAPAS[etapa]}</span>`;
+    }).join('');
+  }
+
+  function crmRenderAtivos(c){
+    const ativos = crmProjetosDoCliente(c.id).filter(p => p.status !== 'concluido' && p.status !== 'cancelado');
+    const container = document.getElementById('crm-lista-ativos');
+
+    if(ativos.length === 0){
+      container.innerHTML = '<p class="texto-vazio">Nenhum projeto em andamento.</p>';
+      return;
+    }
+
+    container.innerHTML = ativos.map(p => `
+      <div class="crm-projeto-card">
+        <div class="crm-projeto-topo">
+          <span class="crm-projeto-titulo">${calEscapar(p.title)}</span>
+          <button type="button" class="cal-botao-secundario" data-avancar="${p.id}">Avançar etapa</button>
+        </div>
+        <div class="crm-etapas">${crmEtapaHtml(p)}</div>
+      </div>
+    `).join('');
+
+    container.querySelectorAll('[data-avancar]').forEach(botao => {
+      botao.addEventListener('click', () => crmAvancarEtapa(botao.dataset.avancar));
+    });
+  }
+
+  async function crmAvancarEtapa(projetoId){
+    const projeto = crmProjetos.find(p => p.id === projetoId);
+    if(!projeto) return;
+
+    const indiceAtual = CRM_ETAPAS_ORDEM.indexOf(projeto.status);
+    const proximaEtapa = CRM_ETAPAS_ORDEM[Math.min(indiceAtual + 1, CRM_ETAPAS_ORDEM.length - 1)];
+
+    try{
+      const { error } = await Auth.client.from('client_projects')
+        .update({ status: proximaEtapa, updated_at: new Date().toISOString() }).eq('id', projetoId);
+      if(error) throw error;
+      await crmCarregarDados();
+      crmMudarAbaPerfil('ativos');
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível avançar a etapa. Tente novamente.');
+    }
+  }
+
+  function crmRenderFinanceiro(c){
+    const projetos = crmProjetosDoCliente(c.id);
+    const recebido = projetos.filter(p => p.payment_status === 'pago').reduce((s, p) => s + (Number(p.value) || 0), 0);
+    const pendentesLista = projetos.filter(p => p.payment_status === 'pendente' || p.payment_status === 'atrasado');
+    const pendenteTotal = pendentesLista.reduce((s, p) => s + (Number(p.value) || 0), 0);
+    const receitaTotal = projetos.reduce((s, p) => s + (Number(p.value) || 0), 0);
+
+    document.getElementById('crm-financeiro-cards').innerHTML = [
+      { rotulo: 'Pagamentos recebidos', valor: recebido },
+      { rotulo: 'Pagamentos pendentes', valor: pendenteTotal },
+      { rotulo: 'Receita total', valor: receitaTotal }
+    ].map(item => `
+      <div class="cartao-numero">
+        <div class="cartao-numero-valor" style="font-size:1.3rem;">${crmFormatarMoeda(item.valor)}</div>
+        <div class="cartao-numero-rotulo">${item.rotulo}</div>
+      </div>
+    `).join('');
+
+    const container = document.getElementById('crm-lista-pendentes');
+    container.innerHTML = pendentesLista.length === 0
+      ? '<p class="texto-vazio">Nenhum pagamento pendente.</p>'
+      : pendentesLista.map(p => `
+          <div class="crm-linha-item">
+            <div class="crm-linha-texto">
+              <div class="crm-linha-titulo">${calEscapar(p.title)}</div>
+              <div class="crm-linha-sub">${CRM_PAGAMENTO[p.payment_status]}${p.delivery_date ? ' · ' + formatarData(p.delivery_date) : ''}</div>
+            </div>
+            <span class="crm-linha-valor">${crmFormatarMoeda(p.value)}</span>
+            <button type="button" class="cal-botao-secundario" data-marcar-pago="${p.id}">Marcar como pago</button>
+          </div>
+        `).join('');
+
+    container.querySelectorAll('[data-marcar-pago]').forEach(botao => {
+      botao.addEventListener('click', () => crmMarcarPago(botao.dataset.marcarPago));
+    });
+  }
+
+  async function crmMarcarPago(projetoId){
+    try{
+      const { error } = await Auth.client.from('client_projects')
+        .update({ payment_status: 'pago', updated_at: new Date().toISOString() }).eq('id', projetoId);
+      if(error) throw error;
+      await crmCarregarDados();
+      crmMudarAbaPerfil('financeiro');
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível atualizar o pagamento. Tente novamente.');
+    }
+  }
+
+  function crmRenderArquivos(c){
+    const arquivos = crmArquivosDoCliente(c.id);
+    const container = document.getElementById('crm-lista-arquivos');
+
+    container.innerHTML = arquivos.length === 0
+      ? '<p class="texto-vazio">Nenhum arquivo adicionado ainda.</p>'
+      : arquivos.map(a => `
+          <div class="crm-arquivo-item">
+            <a class="crm-arquivo-nome" href="${calEscapar(a.url)}" target="_blank" rel="noopener noreferrer">${calEscapar(a.name)}</a>
+            <span class="cal-etiqueta cal-etiqueta-status">${CRM_ARQUIVO_TIPOS[a.type] || a.type}</span>
+          </div>
+        `).join('');
+  }
+
+  async function crmAdicionarArquivo(){
+    if(!crmClienteAtual) return;
+    const nome = document.getElementById('crm-arquivo-nome').value.trim();
+    const url = document.getElementById('crm-arquivo-url').value.trim();
+    if(!nome || !url) return;
+
+    try{
+      const { error } = await Auth.client.from('client_files').insert({
+        client_id: crmClienteAtual, name: nome, url: url, type: document.getElementById('crm-arquivo-tipo').value
+      });
+      if(error) throw error;
+      document.getElementById('crm-arquivo-nome').value = '';
+      document.getElementById('crm-arquivo-url').value = '';
+      await crmCarregarDados();
+      crmMudarAbaPerfil('arquivos');
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível adicionar o arquivo. Tente novamente.');
+    }
+  }
+
+  function crmRenderNotas(c){
+    document.getElementById('crm-notas-texto').value = c.notes || '';
+  }
+
+  async function crmSalvarNotas(){
+    if(!crmClienteAtual) return;
+    const texto = document.getElementById('crm-notas-texto').value;
+
+    try{
+      const { error } = await Auth.client.from('clients')
+        .update({ notes: texto, updated_at: new Date().toISOString() }).eq('id', crmClienteAtual);
+      if(error) throw error;
+      await crmCarregarDados();
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível salvar as anotações. Tente novamente.');
+    }
+  }
+
+  function crmRenderTimeline(c){
+    const interacoes = crmInteracoesDoCliente(c.id);
+    const container = document.getElementById('crm-timeline');
+
+    container.innerHTML = interacoes.length === 0
+      ? '<p class="texto-vazio">Nenhuma interação registrada ainda.</p>'
+      : interacoes.map(i => `
+          <div class="crm-timeline-item">
+            <span class="crm-timeline-ponto"></span>
+            <div class="crm-timeline-data">${formatarData(i.date)} · ${CRM_INTERACAO[i.type] || i.type}</div>
+            <div class="crm-timeline-desc">${calEscapar(i.description || '')}</div>
+          </div>
+        `).join('');
+  }
+
+  async function crmAdicionarInteracao(){
+    if(!crmClienteAtual) return;
+    const descricao = document.getElementById('crm-interacao-desc').value.trim();
+    const data = document.getElementById('crm-interacao-data').value;
+    if(!descricao) return;
+
+    try{
+      const { error } = await Auth.client.from('client_interactions').insert({
+        client_id: crmClienteAtual,
+        type: document.getElementById('crm-interacao-tipo').value,
+        description: descricao,
+        date: data ? new Date(data + 'T12:00:00').toISOString() : new Date().toISOString()
+      });
+      if(error) throw error;
+      document.getElementById('crm-interacao-desc').value = '';
+      document.getElementById('crm-interacao-data').value = '';
+      await crmCarregarDados();
+      crmMudarAbaPerfil('timeline');
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível registrar a interação. Tente novamente.');
+    }
+  }
+
+  /* ============================================================================================
+     CRM: interações (toolbar, filtros, busca, modal, perfil)
+     ============================================================================================ */
+  function configurarCRM(){
+    document.getElementById('crm-novo-cliente').addEventListener('click', crmAbrirModalNovo);
+    document.getElementById('crm-modal-fechar').addEventListener('click', crmFecharModal);
+    document.getElementById('crm-cancelar').addEventListener('click', crmFecharModal);
+    document.getElementById('crm-modal-fundo').addEventListener('click', (ev) => {
+      if(ev.target.id === 'crm-modal-fundo') crmFecharModal();
+    });
+    document.getElementById('crm-form-cliente').addEventListener('submit', crmSalvarCliente);
+    document.getElementById('crm-botao-excluir').addEventListener('click', crmExcluirCliente);
+
+    document.getElementById('crm-perfil-fechar').addEventListener('click', crmFecharPerfil);
+    document.getElementById('crm-perfil-fundo').addEventListener('click', (ev) => {
+      if(ev.target.id === 'crm-perfil-fundo') crmFecharPerfil();
+    });
+    document.querySelectorAll('.crm-perfil-aba-botao').forEach(botao => {
+      botao.addEventListener('click', () => crmMudarAbaPerfil(botao.dataset.aba));
+    });
+
+    document.getElementById('crm-projeto-adicionar').addEventListener('click', crmAdicionarProjeto);
+    document.getElementById('crm-arquivo-adicionar').addEventListener('click', crmAdicionarArquivo);
+    document.getElementById('crm-notas-salvar').addEventListener('click', crmSalvarNotas);
+    document.getElementById('crm-interacao-adicionar').addEventListener('click', crmAdicionarInteracao);
+
+    document.getElementById('crm-busca').addEventListener('input', (ev) => {
+      crmBusca = ev.target.value.trim();
+      crmRenderLista();
+    });
+
+    document.querySelectorAll('#crm-filtros button').forEach(botao => {
+      botao.addEventListener('click', () => {
+        document.querySelectorAll('#crm-filtros button').forEach(b => b.classList.remove('ativo'));
+        botao.classList.add('ativo');
+        crmFiltroStatus = botao.dataset.status;
+        crmRenderLista();
+      });
+    });
+
+    document.addEventListener('keydown', (ev) => {
+      if(ev.key !== 'Escape') return;
+      if(!document.getElementById('crm-modal-fundo').hidden) crmFecharModal();
+      else if(!document.getElementById('crm-perfil-fundo').hidden) crmFecharPerfil();
+    });
+  }
+
+  /* ============================================================================================
      INTERAÇÕES: abas, filtro de período, sidebar mobile
      ============================================================================================ */
   function configurarAbas(){
     const botoes = document.querySelectorAll('.nav-item');
-    const titulos = { 'menu-principal': 'Menu Principal', 'portfolio': 'Portfólio', 'calendario': 'Calendário' };
+    const titulos = { 'menu-principal': 'Menu Principal', 'portfolio': 'Portfólio', 'calendario': 'Calendário', 'clientes': 'CRM de Clientes' };
 
     botoes.forEach(botao => {
       botao.addEventListener('click', async () => {
@@ -1628,12 +2866,18 @@
         document.getElementById('titulo-pagina').textContent = titulos[botao.dataset.tab];
 
         const ehCalendario = botao.dataset.tab === 'calendario';
-        document.getElementById('filtro-periodo').hidden = ehCalendario;
+        const ehClientes = botao.dataset.tab === 'clientes';
+        document.getElementById('filtro-periodo').hidden = ehCalendario || ehClientes;
         document.getElementById('cal-toolbar').hidden = !ehCalendario;
+        document.getElementById('crm-toolbar').hidden = !ehClientes;
 
         if(ehCalendario && !calCarregado){
           calCarregado = true;
           await calCarregarDados();
+        }
+        if(ehClientes && !crmCarregado){
+          crmCarregado = true;
+          await crmCarregarDados();
         }
 
         fecharSidebarMobile();
@@ -1694,6 +2938,7 @@
     configurarFiltroPeriodo();
     configurarSidebarMobile();
     configurarCalendario();
+    configurarCRM();
     document.getElementById('botao-sair').addEventListener('click', () => Auth.logout());
 
     await carregarDados();
