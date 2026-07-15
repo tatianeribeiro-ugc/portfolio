@@ -720,11 +720,13 @@
   @media (max-width: 1000px){
     .portfolio-grade{ grid-template-columns: repeat(3, 1fr); }
   }
-  /* No celular, uma coluna só e sem inclinação: a colagem torta fica bonita
-     numa grade larga, mas em coluna estreita só deixa a legenda espremida. */
+  /* No celular, mantém a mesma disposição em grade do computador (só menor):
+     2 colunas, sem inclinação, e a legenda empilhada para não espremer o título. */
   @media (max-width: 640px){
-    .portfolio-grade{ grid-template-columns: 1fr; gap: 20px; }
-    .portfolio-item{ --rotacao: 0deg; max-width: 340px; margin: 0 auto; }
+    .portfolio-grade{ grid-template-columns: repeat(2, 1fr); gap: 16px 14px; }
+    .portfolio-item{ --rotacao: 0deg; }
+    .portfolio-legenda{ flex-direction: column; align-items:flex-start; gap: 6px; }
+    .portfolio-item-titulo{ white-space: normal; }
   }
 
   /* ============================================================
