@@ -75,6 +75,16 @@
 
   section{ padding: 88px 0; }
   @media (max-width: 768px){ section{ padding: 64px 0; } }
+  @media (max-width: 480px){
+    section{ padding: 48px 0; }
+    /* Cabeçalhos de seção com menos respiro embaixo, para o conteúdo
+       aparecer mais cedo na tela e a página "andar" mais rápido. */
+    .portfolio-cabecalho,
+    .servicos-cabecalho,
+    .investimento-cabecalho,
+    .processo-cabecalho{ margin-bottom: 28px; }
+    .fotos-cabecalho{ margin-top: 36px; }
+  }
 
   .rotulo-secao{
     display:inline-block;
@@ -330,6 +340,12 @@
     .hero-grid{ grid-template-columns: 1fr; }
     .hero-imagem-coluna{ order:-1; }
     .hero-imagem{ aspect-ratio: 16/10; }
+  }
+  /* Em telas pequenas, reduz um pouco o respiro do topo para o botão
+     "Vamos conversar" aparecer mais cedo, sem precisar rolar tanto. */
+  @media (max-width: 480px){
+    .hero{ padding-top: 112px; padding-bottom: 56px; }
+    .hero-manifesto{ margin-top: 24px; }
   }
 
   /* ============================================================
@@ -720,11 +736,26 @@
   @media (max-width: 1000px){
     .portfolio-grade{ grid-template-columns: repeat(3, 1fr); }
   }
-  /* No celular, mantém a mesma disposição em grade do computador (só menor):
-     2 colunas, sem inclinação, e a legenda empilhada para não espremer o título. */
+  /* No celular, a grade vira um carrossel horizontal (arraste para o lado),
+     em vez de empilhar as fotos numa coluna só. Sem inclinação e com a
+     legenda empilhada, para não espremer o título. */
   @media (max-width: 640px){
-    .portfolio-grade{ grid-template-columns: repeat(2, 1fr); gap: 16px 14px; }
-    .portfolio-item{ --rotacao: 0deg; }
+    .portfolio-grade{
+      display:flex;
+      grid-template-columns: unset;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 16px;
+      padding-bottom: 6px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .portfolio-grade::-webkit-scrollbar{ display:none; }
+    .portfolio-item{
+      --rotacao: 0deg;
+      flex: 0 0 64%;
+      scroll-snap-align: start;
+    }
     .portfolio-legenda{ flex-direction: column; align-items:flex-start; gap: 6px; }
     .portfolio-item-titulo{ white-space: normal; }
   }
@@ -759,7 +790,25 @@
   .servico-card p{ font-size: 0.92rem; color: rgba(20,17,13,0.72); margin:0; }
 
   @media (max-width: 1000px){ .servicos-grade{ grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 560px){ .servicos-grade{ grid-template-columns: 1fr; } }
+  /* No celular, os 4 cartões de serviço viram um carrossel horizontal
+     (arraste para o lado) em vez de empilhar um embaixo do outro. */
+  @media (max-width: 640px){
+    .servicos-grade{
+      display:flex;
+      grid-template-columns: unset;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 16px;
+      padding-bottom: 6px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .servicos-grade::-webkit-scrollbar{ display:none; }
+    .servico-card{
+      flex: 0 0 78%;
+      scroll-snap-align: start;
+    }
+  }
 
   /* ============================================================
      MEU PROCESSO: "Da rotina ao roteiro", em 3 passos, com os números
@@ -924,8 +973,24 @@
   @media (max-width: 700px){
     .investimento-detalhes{ grid-template-columns: 1fr; }
   }
-  @media (max-width: 480px){
-    .pacotes-grade{ grid-template-columns: 1fr; }
+  /* No celular, os pacotes viram um carrossel horizontal: dá pra "folhear"
+     as opções (como comparar planos), em vez de empilhar os 4 cartões. */
+  @media (max-width: 640px){
+    .pacotes-grade{
+      display:flex;
+      grid-template-columns: unset;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 16px;
+      padding-bottom: 6px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .pacotes-grade::-webkit-scrollbar{ display:none; }
+    .pacote-card{
+      flex: 0 0 72%;
+      scroll-snap-align: start;
+    }
   }
 
   /* ============================================================
