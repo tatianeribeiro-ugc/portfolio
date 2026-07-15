@@ -234,13 +234,6 @@
   .destaque-contato-texto strong{ display:block; font-size:1rem; margin-bottom:4px; }
   .destaque-contato-texto p{ font-size:0.82rem; color: var(--texto-suave); }
 
-  /* Gráfico de barras (14 dias) */
-  .grafico-barras{ display:flex; align-items:flex-end; gap:6px; height:160px; }
-  .barra-dia{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; cursor:default; }
-  .barra-dia-preenchimento{ width:100%; background: var(--coral); border-radius:6px 6px 0 0; min-height:2px; transition: background 0.2s ease; }
-  .barra-dia:hover .barra-dia-preenchimento{ background: var(--coral-escuro); }
-  .barra-dia-rotulo{ font-size:0.63rem; color: var(--texto-suave); margin-top:6px; white-space:nowrap; }
-
   .texto-vazio{ color: var(--texto-suave); font-size:0.9rem; padding:8px 0; }
 
   /* Aba Portfólio */
@@ -977,24 +970,38 @@
 
     <div class="faixa-erro-global" id="erro-global" role="alert" hidden></div>
 
-    <!-- ABA 1: MENU PRINCIPAL -->
+    <!-- ABA 1: MENU PRINCIPAL (central de comando diário) -->
     <section class="painel-aba" id="painel-menu-principal">
-      <p class="saudacao">Olá! Aqui estão os números do seu portfólio.</p>
+      <p class="saudacao">Olá! Aqui está o resumo de hoje.</p>
 
       <div class="cards-grade" id="cards-numeros"></div>
 
-      <div class="cartao destaque-contato">
-        <div class="destaque-contato-numero" id="numero-contato-cliques">0</div>
-        <div class="destaque-contato-texto">
-          <strong>Clicaram para entrar em contato</strong>
-          <p>Conta quem clicou em WhatsApp, e-mail, Instagram ou no botão de enviar o formulário.</p>
+      <div class="cartao" id="menu-bloco-agenda" hidden>
+        <h3>📅 Agenda de hoje</h3>
+        <div id="menu-lista-agenda"></div>
+        <div class="crm-modal-rodape" style="border-top:none; margin-top:12px; padding-top:0; justify-content:flex-end;">
+          <button type="button" class="cal-botao-secundario" id="menu-abrir-calendario">→ Abrir Calendário</button>
+        </div>
+      </div>
+
+      <div class="cartao" id="menu-bloco-atencao" hidden>
+        <h3>⚠️ Projetos que precisam de atenção</h3>
+        <div id="menu-lista-atencao"></div>
+        <div class="crm-modal-rodape" style="border-top:none; margin-top:12px; padding-top:0; justify-content:flex-end;">
+          <button type="button" class="cal-botao-secundario" id="menu-abrir-projetos">→ Abrir Projetos</button>
         </div>
       </div>
 
       <div class="cartao">
-        <h3>Visitas nos últimos 14 dias</h3>
-        <div class="grafico-barras" id="grafico-visitas"></div>
+        <h3>💬 Mensagens recebidas</h3>
+        <div id="menu-lista-mensagens"></div>
+        <div class="crm-modal-rodape" style="border-top:none; margin-top:12px; padding-top:0; justify-content:flex-end;">
+          <button type="button" class="cal-botao-secundario" id="menu-abrir-mensagens">→ Ver mensagens</button>
+        </div>
       </div>
+
+      <h3 style="margin:4px 0 16px 4px; font-size:1.1rem;">Resumo rápido</h3>
+      <div class="cards-grade" id="menu-resumo-rapido"></div>
     </section>
 
     <!-- ABA 2: PORTFÓLIO -->
@@ -2189,9 +2196,6 @@
     const comHora = /^\d{4}-\d{2}-\d{2}$/.test(dataStr) ? dataStr + 'T00:00:00' : dataStr;
     return new Date(comHora).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
   }
-  function formatarDataCurta(data){
-    return data.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-  }
   function formatarNomeEvento(nome){
     return nome.replace(/_/g, ' ').replace(/\b\w/g, letra => letra.toUpperCase());
   }
@@ -2259,9 +2263,7 @@
   function renderCardsNumeros(resumo){
     const cards = [
       { rotulo: 'Visitas', valor: resumo.visitas, destaque: true },
-      { rotulo: 'Visitantes únicos', valor: resumo.visitantesUnicos },
       { rotulo: 'Cliques em botões', valor: resumo.cliques },
-      { rotulo: 'Vídeos vistos', valor: resumo.videos },
       { rotulo: 'Mensagens', valor: resumo.mensagens }
     ];
 
@@ -2269,45 +2271,6 @@
       <div class="cartao-numero ${c.destaque ? 'cartao-numero-destaque' : ''}">
         <div class="cartao-numero-valor">${c.valor.toLocaleString('pt-BR')}</div>
         <div class="cartao-numero-rotulo">${c.rotulo}</div>
-      </div>
-    `).join('');
-
-    document.getElementById('numero-contato-cliques').textContent = resumo.contatoCliques.toLocaleString('pt-BR');
-  }
-
-  function renderGraficoVisitas(eventosFiltrados){
-    const container = document.getElementById('grafico-visitas');
-
-    const dias = [];
-    for(let i = 13; i >= 0; i--){
-      const d = new Date();
-      d.setHours(0, 0, 0, 0);
-      d.setDate(d.getDate() - i);
-      dias.push(d);
-    }
-
-    const contagens = dias.map(dia => {
-      const proximoDia = new Date(dia);
-      proximoDia.setDate(proximoDia.getDate() + 1);
-      const total = eventosFiltrados.filter(e => {
-        if(e.event_type !== 'page_view') return false;
-        const dataEvento = new Date(e.created_at);
-        return dataEvento >= dia && dataEvento < proximoDia;
-      }).length;
-      return { dia, total };
-    });
-
-    if(contagens.every(c => c.total === 0)){
-      container.innerHTML = '<p class="texto-vazio">Nenhuma visita registrada ainda.</p>';
-      return;
-    }
-
-    const maximo = Math.max(...contagens.map(c => c.total), 1);
-
-    container.innerHTML = contagens.map(c => `
-      <div class="barra-dia" title="${formatarDataCurta(c.dia)}: ${c.total} ${c.total === 1 ? 'visita' : 'visitas'}">
-        <div class="barra-dia-preenchimento" style="height:${c.total > 0 ? Math.max(c.total / maximo * 100, 6) : 0}%"></div>
-        <span class="barra-dia-rotulo">${formatarDataCurta(c.dia)}</span>
       </div>
     `).join('');
   }
@@ -2401,9 +2364,9 @@
 
       return `
         <div class="cartao-mensagem">
-          <button type="button" class="cartao-mensagem-topo" data-alvo="${idDetalhe}" aria-expanded="false">
+          <button type="button" class="cartao-mensagem-topo" data-alvo="${idDetalhe}" data-lead-id="${lead.id}" aria-expanded="false">
             <span class="selo-origem">${origem}</span>
-            <span class="cartao-mensagem-nome">${lead.name || 'Sem nome'}</span>
+            <span class="cartao-mensagem-nome">${!lead.read ? '<span style="color:var(--coral);">● </span>' : ''}${lead.name || 'Sem nome'}</span>
             <span class="cartao-mensagem-data">${formatarData(lead.created_at)}</span>
             <span class="cartao-mensagem-seta">${iconeSeta}</span>
           </button>
@@ -2429,8 +2392,22 @@
         alvo.hidden = !vaiAbrir;
         botao.setAttribute('aria-expanded', String(vaiAbrir));
         botao.closest('.cartao-mensagem').classList.toggle('expandido', vaiAbrir);
+        if(vaiAbrir) marcarMensagemComoLida(botao.dataset.leadId);
       });
     });
+  }
+
+  async function marcarMensagemComoLida(leadId){
+    const lead = cacheLeads.find(l => l.id === leadId);
+    if(!lead || lead.read) return;
+    lead.read = true;
+    menuRenderizarTudo();
+    try{
+      const { error } = await Auth.client.from('portfolio_leads').update({ read: true }).eq('id', leadId);
+      if(error) throw error;
+    } catch(erro){
+      console.error(erro);
+    }
   }
 
   /* ============================================================================================
@@ -2442,12 +2419,172 @@
 
     const resumo = calcularResumo(eventosFiltrados, leadsFiltrados);
     renderCardsNumeros(resumo);
-    renderGraficoVisitas(eventosFiltrados);
 
     renderVideosMaisVistos(eventosFiltrados);
     renderBotoesMaisClicados(eventosFiltrados);
     renderCliquesContato(eventosFiltrados);
     renderMensagens(leadsFiltrados);
+
+    menuRenderizarTudo();
+  }
+
+  /* ============================================================================================
+     MENU PRINCIPAL: central de comando diário
+     Usa dados do Calendário, Projetos e Financeiro, carregados antecipadamente
+     em iniciar() (veja o final do arquivo) só pra alimentar este resumo. Cada
+     bloco fica escondido quando não há nada relevante para mostrar hoje.
+     ============================================================================================ */
+  function menuFormatarHora(dataStr){
+    const d = new Date(dataStr);
+    const horas = d.getHours();
+    const minutos = d.getMinutes();
+    return minutos === 0 ? `${horas}h` : `${horas}h${String(minutos).padStart(2, '0')}`;
+  }
+
+  function menuRenderAgenda(){
+    const bloco = document.getElementById('menu-bloco-agenda');
+    const hoje = new Date();
+    const eventosHoje = (calEventos || [])
+      .filter(e => calMesmoDia(new Date(e.start_date), hoje))
+      .sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
+
+    if(eventosHoje.length === 0){
+      bloco.hidden = true;
+      return;
+    }
+    bloco.hidden = false;
+
+    document.getElementById('menu-lista-agenda').innerHTML = eventosHoje.map(e => {
+      const cat = CAL_CATEGORIAS[e.category] || CAL_CATEGORIAS.conteudo;
+      const hora = e.all_day ? 'Dia todo' : menuFormatarHora(e.start_date);
+      const cliente = (calClientes || []).find(c => c.id === e.client_id);
+      return `
+        <div class="crm-linha-item">
+          <span class="crm-linha-ponto" style="background:${e.color || cat.cor}"></span>
+          <div class="crm-linha-texto">
+            <div class="crm-linha-titulo">${hora} · ${calEscapar(e.title)}</div>
+            ${cliente ? `<div class="crm-linha-sub">${calEscapar(cliente.name)}</div>` : ''}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function menuRenderAtencao(){
+    const bloco = document.getElementById('menu-bloco-atencao');
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const em3dias = new Date(hoje);
+    em3dias.setDate(hoje.getDate() + 3);
+    const hojeISO = calDataISO(new Date());
+    const projetos = kanProjetos || [];
+
+    const entregasHoje = projetos.filter(p => p.delivery_date === hojeISO).length;
+    const aprovacoesPendentes = projetos.filter(p => p.status === 'aprovacao').length;
+    const atrasados = projetos.filter(p => p.delivery_date && p.status !== 'pago' && p.status !== 'arquivado' && new Date(p.delivery_date + 'T00:00:00') < hoje).length;
+    const pagamentosVencendo = projetos.filter(p => {
+      if(!p.payment_date || p.payment_status === 'pago') return false;
+      const d = new Date(p.payment_date + 'T00:00:00');
+      return d >= hoje && d <= em3dias;
+    }).length;
+
+    const alertas = [
+      entregasHoje > 0 ? `${entregasHoje} ${entregasHoje === 1 ? 'entrega' : 'entregas'} hoje` : null,
+      aprovacoesPendentes > 0 ? `${aprovacoesPendentes} ${aprovacoesPendentes === 1 ? 'vídeo aguardando' : 'vídeos aguardando'} aprovação` : null,
+      atrasados > 0 ? `${atrasados} ${atrasados === 1 ? 'projeto atrasado' : 'projetos atrasados'}` : null,
+      pagamentosVencendo > 0 ? `${pagamentosVencendo} ${pagamentosVencendo === 1 ? 'pagamento vencendo' : 'pagamentos vencendo'}` : null
+    ].filter(Boolean);
+
+    if(alertas.length === 0){
+      bloco.hidden = true;
+      return;
+    }
+    bloco.hidden = false;
+
+    document.getElementById('menu-lista-atencao').innerHTML = alertas.map(texto => `
+      <div class="fin-alerta-item"><span>⚠️</span><div><strong>${calEscapar(texto)}</strong></div></div>
+    `).join('');
+  }
+
+  function menuRenderMensagens(){
+    const naoLidas = (cacheLeads || []).filter(l => !l.read).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    const container = document.getElementById('menu-lista-mensagens');
+
+    if(naoLidas.length === 0){
+      container.innerHTML = '<p class="texto-vazio">Nenhuma nova mensagem.</p>';
+      return;
+    }
+
+    container.innerHTML = naoLidas.slice(0, 5).map(lead => {
+      const resumo = (lead.message || lead.brand || 'Nova mensagem recebida.').slice(0, 80);
+      return `
+        <div class="crm-linha-item">
+          <div class="crm-linha-texto">
+            <div class="crm-linha-titulo">${calEscapar(lead.name || 'Sem nome')}</div>
+            <div class="crm-linha-sub">${calEscapar(resumo)}</div>
+          </div>
+          <span class="crm-linha-valor" style="font-weight:400; font-size:0.74rem; color:var(--texto-suave);">${formatarData(lead.created_at)}</span>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function menuRenderResumo(){
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const inicioSemana = new Date(hoje);
+    inicioSemana.setDate(hoje.getDate() - hoje.getDay());
+    const fimSemana = new Date(inicioSemana);
+    fimSemana.setDate(inicioSemana.getDate() + 7);
+
+    const projetosAtivos = (kanProjetos || []).filter(p => p.status !== 'pago' && p.status !== 'arquivado').length;
+
+    const aReceberSemana = (finTransacoes || [])
+      .filter(t => t.type === 'receita' && t.status !== 'recebido' && t.due_date)
+      .filter(t => { const d = new Date(t.due_date + 'T00:00:00'); return d >= inicioSemana && d < fimSemana; })
+      .reduce((s, t) => s + Number(t.amount || 0), 0);
+
+    const proximosEventos = (calEventos || [])
+      .filter(e => new Date(e.start_date) >= hoje)
+      .sort((a, b) => new Date(a.start_date) - new Date(b.start_date));
+    const proximoTexto = proximosEventos.length > 0
+      ? formatarDataLocal(calDataISO(new Date(proximosEventos[0].start_date))) + (proximosEventos[0].all_day ? '' : ' · ' + menuFormatarHora(proximosEventos[0].start_date))
+      : 'Nenhum agendado';
+
+    const mes = hoje.getMonth() + 1, ano = hoje.getFullYear();
+    const meta = (finMetas || []).find(m => m.month === mes && m.year === ano);
+    const metaValor = meta ? Number(meta.goal_amount) : 0;
+    const recebidoMes = (finTransacoes || [])
+      .filter(t => t.type === 'receita' && t.status === 'recebido' && finNoMes(t.payment_date, hoje.getMonth(), ano))
+      .reduce((s, t) => s + Number(t.amount || 0), 0);
+    const metaTexto = metaValor > 0 ? `${crmFormatarMoeda(recebidoMes)} de ${crmFormatarMoeda(metaValor)}` : 'Sem meta definida';
+
+    const cards = [
+      { rotulo: 'Projetos ativos', valor: String(projetosAtivos) },
+      { rotulo: 'A receber esta semana', valor: crmFormatarMoeda(aReceberSemana) },
+      { rotulo: 'Próximo compromisso', valor: proximoTexto },
+      { rotulo: 'Meta financeira do mês', valor: metaTexto }
+    ];
+
+    document.getElementById('menu-resumo-rapido').innerHTML = cards.map(c => `
+      <div class="cartao-numero">
+        <div class="cartao-numero-valor" style="font-size:1.1rem;">${c.valor}</div>
+        <div class="cartao-numero-rotulo">${c.rotulo}</div>
+      </div>
+    `).join('');
+  }
+
+  function menuRenderizarTudo(){
+    menuRenderAgenda();
+    menuRenderAtencao();
+    menuRenderMensagens();
+    menuRenderResumo();
+  }
+
+  function configurarMenuPrincipal(){
+    document.getElementById('menu-abrir-calendario').addEventListener('click', () => document.querySelector('.nav-item[data-tab="calendario"]').click());
+    document.getElementById('menu-abrir-projetos').addEventListener('click', () => document.querySelector('.nav-item[data-tab="projetos"]').click());
+    document.getElementById('menu-abrir-mensagens').addEventListener('click', () => document.querySelector('.nav-item[data-tab="portfolio"]').click());
   }
 
   /* ============================================================================================
@@ -6247,9 +6384,20 @@
     configurarKan();
     configurarFinanceiro();
     configurarCriativo();
+    configurarMenuPrincipal();
     document.getElementById('botao-sair').addEventListener('click', () => Auth.logout());
 
     await carregarDados();
+
+    // Carrega Calendário, Projetos e Financeiro antecipadamente: é o que
+    // alimenta a Agenda de hoje, os alertas de Atenção e o Resumo rápido do
+    // Menu Principal. Como efeito colateral, essas abas já ficam prontas
+    // quando você clicar nelas, sem precisar buscar de novo.
+    calCarregado = true;
+    kanCarregado = true;
+    finCarregado = true;
+    await Promise.all([calCarregarDados(), kanCarregarDados(), finCarregarDados()]);
+    menuRenderizarTudo();
   })();
 </script>
 </body>

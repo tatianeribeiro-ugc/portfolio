@@ -459,3 +459,12 @@ create policy "CRUD completo para usuarios autenticados"
 create policy "CRUD completo para usuarios autenticados"
   on creative_drafts for all to authenticated using (true) with check (true);
 -- ================================================================================
+
+-- --------------------------------------------------------------------------------
+-- MENU PRINCIPAL: mensagens não lidas
+-- Uma coluna simples pra saber quais mensagens você ainda não abriu. Fica
+-- marcada como lida sozinha quando você expande a mensagem na aba Portfólio.
+-- --------------------------------------------------------------------------------
+alter table portfolio_leads
+  add column if not exists read boolean not null default false;
+-- ================================================================================
