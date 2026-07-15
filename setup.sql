@@ -91,3 +91,65 @@ create policy "Insercao publica de leads"
   to anon
   with check (true);
 -- ================================================================================
+
+-- --------------------------------------------------------------------------------
+-- TABELA: clients
+-- Clientes/marcas do calendário de gestão de projetos.
+-- --------------------------------------------------------------------------------
+create table if not exists clients (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  email text,
+  phone text,
+  instagram text,
+  company text,
+  created_at timestamptz not null default now()
+);
+
+-- --------------------------------------------------------------------------------
+-- TABELA: events
+-- Eventos do calendário: trabalhos com marcas, prazos, gravações, reuniões,
+-- pagamentos, publicações e compromissos pessoais.
+-- --------------------------------------------------------------------------------
+create table if not exists events (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  description text,                 -- também guarda as "observações" do evento
+  client_id uuid references clients(id) on delete set null,
+  category text not null default 'conteudo', -- 'cliente' | 'financeiro' | 'conteudo' | 'reuniao' | 'pessoal'
+  priority text not null default 'media',    -- 'baixa' | 'media' | 'alta'
+  status text not null default 'agendado',   -- 'agendado' | 'andamento' | 'concluido' | 'cancelado'
+  start_date timestamptz not null,
+  end_date timestamptz,
+  all_day boolean not null default false,
+  color text,                        -- opcional: sobrescreve a cor padrão da categoria
+  reminder boolean not null default false,
+  attachments jsonb,                 -- reservado para anexos no futuro (ainda sem upload no painel)
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create index if not exists events_start_date_idx on events (start_date);
+create index if not exists clients_name_idx on clients (name);
+
+-- --------------------------------------------------------------------------------
+-- ROW LEVEL SECURITY: só você (logada no painel) lê e escreve. O site público
+-- do portfólio não usa essas tabelas, então não existe policy para "anon" aqui.
+-- --------------------------------------------------------------------------------
+alter table clients enable row level security;
+alter table events enable row level security;
+
+create policy "CRUD completo para usuarios autenticados"
+  on clients
+  for all
+  to authenticated
+  using (true)
+  with check (true);
+
+create policy "CRUD completo para usuarios autenticados"
+  on events
+  for all
+  to authenticated
+  using (true)
+  with check (true);
+-- ================================================================================
