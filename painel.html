@@ -708,6 +708,48 @@
   .kan-comentario-texto{ font-size:0.88rem; }
 
   /* ============================================================
+     ABA FINANCEIRO E MEU NEGÓCIO
+     Reaproveita cards-grade/cartao-numero, crm-filtros, crm-tabela,
+     crm-modal-*, crm-perfil-*, crm-linha-item, barra-fundo/barra-preenchimento,
+     destaque-contato e cal-etiqueta-status. Só o gráfico e as metas ganham CSS novo.
+     ============================================================ */
+  .fin-toolbar{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px; }
+  .fin-toolbar[hidden]{ display:none; }
+
+  .fin-vista[hidden]{ display:none; }
+
+  .fin-grafico{ display:flex; align-items:flex-end; gap:10px; height:190px; overflow-x:auto; padding-bottom:4px; }
+  .fin-mes-grupo{ flex:1; min-width:34px; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; }
+  .fin-barra-par{ display:flex; align-items:flex-end; gap:3px; height:100%; width:100%; justify-content:center; }
+  .fin-barra{ width:9px; border-radius:5px 5px 0 0; min-height:2px; transition: background 0.2s ease; }
+  .fin-barra-receita{ background: var(--sucesso); }
+  .fin-barra-despesa{ background: var(--erro); }
+  .fin-mes-rotulo{ font-size:0.63rem; color: var(--texto-suave); margin-top:6px; white-space:nowrap; }
+  .fin-grafico-legenda{ display:flex; gap:16px; margin-top:10px; font-size:0.78rem; color: var(--texto-suave); }
+  .fin-grafico-legenda span{ display:inline-flex; align-items:center; gap:6px; }
+  .fin-grafico-legenda i{ width:9px; height:9px; border-radius:50%; display:inline-block; }
+
+  .fin-meta-valores{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; font-size:0.86rem; }
+  .fin-meta-atual{ font-family: var(--fonte-titulo); font-size:1.3rem; color: var(--coral); }
+  .fin-meta-barra-fundo{ background: var(--creme); border-radius:100px; height:12px; overflow:hidden; }
+  .fin-meta-barra-preenchimento{ background: var(--coral); height:100%; border-radius:100px; width:0%; transition: width 0.8s ease; }
+  .fin-meta-editar{ display:flex; gap:8px; margin-top:14px; }
+  .fin-meta-editar input{
+    flex-grow:1; padding:9px 12px; border-radius: var(--raio-pequeno); border:1px solid var(--borda);
+    background: var(--creme); font-family: var(--fonte-corpo); font-size:0.85rem;
+  }
+
+  .fin-alerta-item{ display:flex; align-items:flex-start; gap:10px; padding:9px 0; border-bottom:1px solid var(--borda); font-size:0.84rem; }
+  .fin-alerta-item:last-child{ border-bottom:none; padding-bottom:0; }
+  .fin-alerta-item:first-child{ padding-top:0; }
+  .fin-alerta-item strong{ display:block; }
+
+  .fin-permuta-caixa{ background:#FCE8F0; border-radius: var(--raio-pequeno); padding:16px; display:flex; flex-direction:column; gap:14px; }
+  .fin-permuta-caixa[hidden]{ display:none; }
+
+  .fin-negocio-grade{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:22px; }
+
+  /* ============================================================
      RESPONSIVO
      ============================================================ */
   @media (max-width: 1180px){
@@ -749,11 +791,14 @@
     #kan-busca{ min-width:0; width:100%; }
     .kan-producao-hoje{ flex-direction:column; gap:12px; }
     .kan-coluna{ flex-basis:240px; max-height:none; }
+    .fin-toolbar{ flex-direction:column; align-items:stretch; }
+    .fin-negocio-grade{ grid-template-columns:1fr 1fr; }
   }
   @media (max-width: 560px){
     .cards-grade{ grid-template-columns:1fr 1fr; }
     .cartao-numero-valor{ font-size:1.5rem; }
     .conteudo-topo{ flex-direction:column; align-items:flex-start; }
+    .fin-negocio-grade{ grid-template-columns:1fr; }
   }
 </style>
 </head>
@@ -795,6 +840,14 @@
       <button type="button" class="nav-item" data-tab="projetos">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="5.5" height="16" rx="1.5"/><rect x="9.7" y="4" width="5.5" height="10" rx="1.5"/><rect x="16.4" y="4" width="5.5" height="13" rx="1.5"/></svg>
         Projetos
+      </button>
+      <button type="button" class="nav-item" data-tab="financeiro">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M14.8 9.3c0-1.3-1.3-2-2.8-2s-2.8.8-2.8 2 1.2 1.8 2.8 2.1c1.6.3 2.8 1 2.8 2.1s-1.3 1.8-2.8 1.8-2.8-.6-2.9-1.9"/></svg>
+        Financeiro
+      </button>
+      <button type="button" class="nav-item" data-tab="negocio">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19h16"/><path d="M7 19v-6M12 19V8M17 19v-9"/><path d="M4 12.5 9 8l3.5 2.5L20 5"/></svg>
+        Meu Negócio
       </button>
     </nav>
 
@@ -845,6 +898,18 @@
         <button type="button" class="ativo" data-vista="kanban">Kanban</button>
         <button type="button" data-vista="lista">Lista</button>
         <button type="button" data-vista="calendario">Calendário</button>
+      </div>
+    </div>
+
+    <div class="fin-toolbar" id="fin-toolbar" hidden>
+      <div class="crm-toolbar-esquerda">
+        <button type="button" class="cal-botao-primario" id="fin-nova-receita">+ Nova Receita</button>
+        <button type="button" class="cal-botao-secundario" id="fin-nova-despesa">+ Nova Despesa</button>
+      </div>
+      <div class="crm-filtros" id="fin-vista-toggle" role="group" aria-label="Alternar visualização">
+        <button type="button" class="ativo" data-vista="receitas">Receitas</button>
+        <button type="button" data-vista="despesas">Despesas</button>
+        <button type="button" data-vista="relatorios">Relatórios</button>
       </div>
     </div>
 
@@ -1036,6 +1101,114 @@
             <h3>🎥 Gravar hoje</h3>
             <div id="kan-widget-gravar-hoje"></div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA 6: FINANCEIRO -->
+    <section class="painel-aba" id="painel-financeiro" hidden>
+      <div class="cards-grade" id="fin-cards-resumo"></div>
+
+      <div class="cartao">
+        <h3>Receitas x despesas por mês</h3>
+        <div class="fin-grafico" id="fin-grafico"></div>
+        <div class="fin-grafico-legenda">
+          <span><i style="background:var(--sucesso)"></i> Receitas</span>
+          <span><i style="background:var(--erro)"></i> Despesas</span>
+        </div>
+      </div>
+
+      <div class="crm-grid-principal">
+        <div>
+          <!-- Vista Receitas -->
+          <div class="fin-vista" id="fin-vista-receitas">
+            <div class="cartao">
+              <div style="overflow-x:auto;">
+                <table class="crm-tabela">
+                  <thead><tr><th>Data</th><th>Cliente</th><th>Projeto</th><th>Categoria</th><th>Valor</th><th>Status</th></tr></thead>
+                  <tbody id="fin-tabela-receitas"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vista Despesas -->
+          <div class="fin-vista" id="fin-vista-despesas" hidden>
+            <div class="cartao">
+              <div style="overflow-x:auto;">
+                <table class="crm-tabela">
+                  <thead><tr><th>Data</th><th>Categoria</th><th>Descrição</th><th>Valor</th><th>Ações</th></tr></thead>
+                  <tbody id="fin-tabela-despesas"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vista Relatórios -->
+          <div class="fin-vista" id="fin-vista-relatorios" hidden>
+            <div class="cards-grade" id="fin-relatorio-cards"></div>
+            <div class="crm-grid-principal">
+              <div class="cartao">
+                <h3>Melhores clientes</h3>
+                <div id="fin-relatorio-clientes"></div>
+              </div>
+              <div class="cartao">
+                <h3>Comparação entre meses</h3>
+                <div style="overflow-x:auto;">
+                  <table class="crm-tabela">
+                    <thead><tr><th>Mês</th><th>Receita</th><th>Despesa</th><th>Lucro</th></tr></thead>
+                    <tbody id="fin-tabela-comparacao"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="crm-coluna-widgets">
+          <div class="cartao crm-widget">
+            <h3>🎯 Meta do mês</h3>
+            <div class="fin-meta-valores">
+              <span>Meta: <strong id="fin-meta-alvo">R$ 0</strong></span>
+              <span class="fin-meta-atual" id="fin-meta-atual">R$ 0</span>
+            </div>
+            <div class="fin-meta-barra-fundo"><div class="fin-meta-barra-preenchimento" id="fin-meta-barra"></div></div>
+            <div class="fin-meta-editar">
+              <input type="number" id="fin-meta-input" min="0" step="0.01" placeholder="Nova meta para este mês (R$)">
+              <button type="button" class="cal-botao-secundario" id="fin-meta-salvar">Salvar</button>
+            </div>
+          </div>
+          <div class="cartao crm-widget">
+            <h3>🔔 Alertas</h3>
+            <div id="fin-widget-alertas"></div>
+          </div>
+          <div class="cartao crm-widget">
+            <h3>⏳ Próximos recebimentos</h3>
+            <div id="fin-widget-recebimentos"></div>
+          </div>
+          <div class="cartao crm-widget">
+            <h3>🔁 Despesas recorrentes</h3>
+            <div id="fin-widget-recorrentes"></div>
+            <div class="crm-mini-form">
+              <input type="text" id="fin-recorrente-nome" placeholder="Nome (ex: Canva Pro)">
+              <input type="number" id="fin-recorrente-valor" placeholder="Valor (R$)" min="0" step="0.01">
+              <select id="fin-recorrente-categoria"></select>
+              <button type="button" class="cal-botao-secundario" id="fin-recorrente-adicionar">+ Adicionar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA 7: MEU NEGÓCIO -->
+    <section class="painel-aba" id="painel-negocio" hidden>
+      <div class="fin-negocio-grade" id="negocio-cards"></div>
+
+      <div class="cartao destaque-contato">
+        <div class="destaque-contato-numero">🏆</div>
+        <div class="destaque-contato-texto">
+          <strong id="negocio-melhor-cliente">-</strong>
+          <p>Seu cliente mais lucrativo até agora.</p>
         </div>
       </div>
     </section>
@@ -1525,6 +1698,170 @@
           <h3>Linha do tempo do projeto</h3>
           <div class="crm-timeline" id="kan-timeline"></div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de nova/editar receita (Financeiro) -->
+<div class="crm-modal-fundo" id="fin-modal-receita-fundo" hidden>
+  <div class="crm-modal" role="dialog" aria-modal="true" aria-labelledby="fin-modal-receita-titulo">
+    <div class="crm-modal-cabecalho">
+      <h3 id="fin-modal-receita-titulo">Nova receita</h3>
+      <button type="button" class="crm-modal-fechar" id="fin-modal-receita-fechar" aria-label="Fechar">&times;</button>
+    </div>
+    <form class="crm-form" id="fin-form-receita">
+      <label>Cliente
+        <select id="fin-campo-cliente"><option value="">Sem cliente</option></select>
+      </label>
+      <label>Projeto (opcional)
+        <select id="fin-campo-projeto"><option value="">Sem projeto</option></select>
+      </label>
+      <label>Descrição
+        <input type="text" id="fin-campo-descricao" placeholder="Ex: Vídeo institucional">
+      </label>
+
+      <div class="crm-form-linha">
+        <label>Categoria
+          <select id="fin-campo-categoria"></select>
+        </label>
+        <label>Valor (R$)
+          <input type="number" id="fin-campo-valor" min="0" step="0.01" required>
+        </label>
+      </div>
+
+      <div class="crm-form-linha">
+        <label>Data prevista
+          <input type="date" id="fin-campo-data-prevista">
+        </label>
+        <label>Data de recebimento
+          <input type="date" id="fin-campo-data-recebimento">
+        </label>
+      </div>
+
+      <label>Forma de pagamento
+        <input type="text" id="fin-campo-forma-pagamento" placeholder="Pix, boleto...">
+      </label>
+
+      <div class="fin-permuta-caixa" id="fin-permuta-caixa" hidden>
+        <span class="crm-form-secao" style="margin-top:0;">🎁 Permuta</span>
+        <label>Produto recebido
+          <input type="text" id="fin-permuta-produto">
+        </label>
+        <label>Marca
+          <input type="text" id="fin-permuta-marca">
+        </label>
+        <label class="cal-checkbox-linha">
+          <input type="checkbox" id="fin-permuta-entregue">
+          Entrega já realizada
+        </label>
+      </div>
+
+      <label>Observações
+        <textarea id="fin-campo-observacoes" rows="2"></textarea>
+      </label>
+
+      <div class="crm-modal-rodape">
+        <button type="button" class="cal-botao-perigo" id="fin-receita-excluir" hidden>Excluir</button>
+        <div class="crm-modal-rodape-direita">
+          <button type="button" id="fin-receita-cancelar">Cancelar</button>
+          <button type="submit" class="cal-botao-primario">Salvar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal de nova/editar despesa (Financeiro) -->
+<div class="crm-modal-fundo" id="fin-modal-despesa-fundo" hidden>
+  <div class="crm-modal" role="dialog" aria-modal="true" aria-labelledby="fin-modal-despesa-titulo">
+    <div class="crm-modal-cabecalho">
+      <h3 id="fin-modal-despesa-titulo">Nova despesa</h3>
+      <button type="button" class="crm-modal-fechar" id="fin-modal-despesa-fechar" aria-label="Fechar">&times;</button>
+    </div>
+    <form class="crm-form" id="fin-form-despesa">
+      <label>Descrição
+        <input type="text" id="fin-despesa-descricao" required>
+      </label>
+      <div class="crm-form-linha">
+        <label>Categoria
+          <select id="fin-despesa-categoria"></select>
+        </label>
+        <label>Valor (R$)
+          <input type="number" id="fin-despesa-valor" min="0" step="0.01" required>
+        </label>
+      </div>
+      <div class="crm-form-linha">
+        <label>Data
+          <input type="date" id="fin-despesa-data">
+        </label>
+        <label>Forma de pagamento
+          <input type="text" id="fin-despesa-forma-pagamento">
+        </label>
+      </div>
+      <label>Observações
+        <textarea id="fin-despesa-observacoes" rows="2"></textarea>
+      </label>
+
+      <div class="crm-modal-rodape">
+        <button type="button" class="cal-botao-perigo" id="fin-despesa-excluir" hidden>Excluir</button>
+        <div class="crm-modal-rodape-direita">
+          <button type="button" id="fin-despesa-cancelar">Cancelar</button>
+          <button type="submit" class="cal-botao-primario">Salvar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Perfil individual da receita (Financeiro) -->
+<div class="crm-perfil-fundo" id="fin-perfil-fundo" hidden>
+  <div class="crm-perfil" role="dialog" aria-modal="true" aria-labelledby="fin-perfil-titulo">
+    <div class="crm-perfil-cabecalho">
+      <button type="button" class="crm-perfil-fechar" id="fin-perfil-fechar" aria-label="Fechar perfil">&times;</button>
+      <div class="crm-perfil-topo">
+        <div class="crm-perfil-avatar" id="fin-perfil-avatar">💰</div>
+        <div>
+          <h2 class="crm-perfil-nome" id="fin-perfil-titulo"></h2>
+          <div class="crm-perfil-sub" id="fin-perfil-sub"></div>
+        </div>
+      </div>
+      <div class="crm-perfil-acoes">
+        <button type="button" id="fin-perfil-editar">✏️ Editar</button>
+      </div>
+    </div>
+
+    <div class="crm-perfil-conteudo">
+      <div class="cards-grade" id="fin-perfil-cards"></div>
+
+      <div class="cartao" id="fin-perfil-permuta-cartao" hidden>
+        <h3>🎁 Permuta</h3>
+        <p id="fin-perfil-permuta-texto" class="texto-vazio"></p>
+      </div>
+
+      <div class="cartao">
+        <h3>Observações</h3>
+        <p id="fin-perfil-observacoes" class="texto-vazio"></p>
+      </div>
+
+      <div class="cartao">
+        <h3>Nota fiscal e comprovante</h3>
+        <div class="crm-form-linha">
+          <label>Link da nota fiscal
+            <input type="text" id="fin-perfil-nota-fiscal" placeholder="https://...">
+          </label>
+          <label>Link do comprovante
+            <input type="text" id="fin-perfil-comprovante" placeholder="https://...">
+          </label>
+        </div>
+        <div class="crm-modal-rodape" style="border-top:none; margin-top:12px; padding-top:0; justify-content:flex-end;">
+          <button type="button" class="cal-botao-primario" id="fin-perfil-salvar-links">Salvar links</button>
+        </div>
+      </div>
+
+      <div class="cartao">
+        <h3>Histórico</h3>
+        <div class="crm-timeline" id="fin-perfil-historico"></div>
       </div>
     </div>
   </div>
@@ -3846,14 +4183,22 @@
       const eventoPrazoId = await kanSincronizarEvento(projetoAnterior ? projetoAnterior.event_delivery_id : null, prazo, `Entrega: ${titulo}`, 'conteudo');
       const eventoPagamentoId = await kanSincronizarEvento(projetoAnterior ? projetoAnterior.event_payment_id : null, dataPagamento, `Cobrança: ${titulo}`, 'financeiro');
 
+      const idReceita = await finSincronizarReceitaDeProjeto(projetoAnterior ? projetoAnterior.financial_transaction_id : null, {
+        id: projectId, client_id: payload.client_id, title: payload.title, value: payload.value,
+        delivery_date: payload.delivery_date, payment_status: payload.payment_status,
+        payment_date: payload.payment_date, payment_method: payload.payment_method
+      });
+
       await Auth.client.from('client_projects').update({
-        event_recording_id: eventoGravacaoId, event_delivery_id: eventoPrazoId, event_payment_id: eventoPagamentoId
+        event_recording_id: eventoGravacaoId, event_delivery_id: eventoPrazoId, event_payment_id: eventoPagamentoId,
+        financial_transaction_id: idReceita
       }).eq('id', projectId);
 
       kanFecharModal();
       await kanCarregarDados();
       if(crmCarregado) await crmCarregarDados();
       if(calCarregado) await calCarregarDados();
+      if(finCarregado) await finCarregarDados();
     } catch(erro){
       console.error(erro);
       mostrarErroGlobal('Não foi possível salvar o trabalho. Tente novamente.');
@@ -3878,6 +4223,7 @@
       await kanCarregarDados();
       if(crmCarregado) await crmCarregarDados();
       if(calCarregado) await calCarregarDados();
+      if(finCarregado) await finCarregarDados();
     } catch(erro){
       console.error(erro);
       mostrarErroGlobal('Não foi possível excluir o trabalho. Tente novamente.');
@@ -4218,11 +4564,864 @@
   }
 
   /* ============================================================================================
+     FINANCEIRO
+     Estado e constantes com prefixo "fin". Reaproveita kanSincronizarEvento()
+     (já existe no módulo de Projetos) para criar/atualizar eventos no
+     calendário quando uma receita ou despesa tem data prevista/recebimento.
+     ============================================================================================ */
+  const FIN_CATEGORIAS_RECEITA = { ugc: 'UGC', permuta: 'Permuta', mentoria: 'Mentoria', afiliados: 'Afiliados', publicidade: 'Publicidade', outros: 'Outros' };
+  const FIN_CATEGORIAS_DESPESA = { equipamentos: 'Equipamentos', assinaturas: 'Assinaturas', internet: 'Internet', transporte: 'Transporte', alimentacao: 'Alimentação', cursos: 'Cursos', impostos: 'Impostos', outros: 'Outros' };
+  const FIN_STATUS_RECEITA = {
+    recebido:  { rotulo: 'Recebido',  emoji: '🟢', cor: '#2D9D5F' },
+    a_receber: { rotulo: 'A receber', emoji: '🟡', cor: '#C9971C' },
+    atrasado:  { rotulo: 'Atrasado',  emoji: '🔴', cor: '#C4453C' }
+  };
+
+  let finTransacoes = [];
+  let finMetas = [];
+  let finRecorrentes = [];
+  let finClientes = [];
+  let finProjetos = [];
+  let finCarregado = false;
+  let finVistaAtual = 'receitas';
+  let finReceitaEditando = null;
+  let finDespesaEditando = null;
+  let finReceitaAtual = null;
+
+  async function finCarregarDados(){
+    try{
+      const [transacoes, metas, recorrentes, clientes, projetos] = await Promise.all([
+        buscarTudo('financial_transactions'),
+        buscarTudo('financial_goals'),
+        buscarTudo('recurring_expenses'),
+        buscarTudo('clients'),
+        buscarTudo('client_projects')
+      ]);
+      finTransacoes = transacoes;
+      finMetas = metas;
+      finRecorrentes = recorrentes;
+      finClientes = clientes.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+      finProjetos = projetos;
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível carregar os dados financeiros agora. Tente recarregar a página em alguns instantes.');
+      finTransacoes = [];
+      finMetas = [];
+      finRecorrentes = [];
+      finClientes = [];
+      finProjetos = [];
+    }
+    finPopularSelects();
+    finRenderizarTudo();
+  }
+
+  /* ============================================================================================
+     FINANCEIRO: formatação e cálculos auxiliares
+     ============================================================================================ */
+  function finNomeCliente(id){
+    const c = finClientes.find(x => x.id === id);
+    return c ? c.name : '';
+  }
+  function finTituloProjeto(id){
+    const p = finProjetos.find(x => x.id === id);
+    return p ? p.title : '';
+  }
+  function finDataDespesa(t){
+    return t.due_date || (t.created_at ? t.created_at.slice(0, 10) : null);
+  }
+  function finNoMes(dataStr, mes, ano){
+    if(!dataStr) return false;
+    const d = new Date(dataStr + 'T00:00:00');
+    return d.getMonth() === mes && d.getFullYear() === ano;
+  }
+  function finStatusEfetivo(t){
+    if(t.status === 'recebido') return 'recebido';
+    if(t.due_date && new Date(t.due_date + 'T00:00:00') < new Date(new Date().toDateString())) return 'atrasado';
+    return 'a_receber';
+  }
+
+  function finPopularSelects(){
+    document.getElementById('fin-campo-cliente').innerHTML = '<option value="">Sem cliente</option>' +
+      finClientes.map(c => `<option value="${c.id}">${calEscapar(c.name)}</option>`).join('');
+    document.getElementById('fin-campo-categoria').innerHTML = Object.entries(FIN_CATEGORIAS_RECEITA)
+      .map(([chave, rotulo]) => `<option value="${chave}">${rotulo}</option>`).join('');
+    document.getElementById('fin-despesa-categoria').innerHTML = Object.entries(FIN_CATEGORIAS_DESPESA)
+      .map(([chave, rotulo]) => `<option value="${chave}">${rotulo}</option>`).join('');
+    document.getElementById('fin-recorrente-categoria').innerHTML = Object.entries(FIN_CATEGORIAS_DESPESA)
+      .map(([chave, rotulo]) => `<option value="${chave}">${rotulo}</option>`).join('');
+    finAtualizarSelectProjetos('');
+  }
+
+  function finAtualizarSelectProjetos(clienteId){
+    const lista = clienteId ? finProjetos.filter(p => p.client_id === clienteId) : finProjetos;
+    document.getElementById('fin-campo-projeto').innerHTML = '<option value="">Sem projeto</option>' +
+      lista.map(p => `<option value="${p.id}">${calEscapar(p.title)}</option>`).join('');
+  }
+
+  /* ============================================================================================
+     FINANCEIRO: dashboard superior, gráfico, metas, alertas, widgets laterais
+     ============================================================================================ */
+  function finRenderCardsResumo(){
+    const hoje = new Date();
+    const mesAtual = hoje.getMonth();
+    const anoAtual = hoje.getFullYear();
+
+    const faturamentoMes = finTransacoes
+      .filter(t => t.type === 'receita' && t.status === 'recebido' && finNoMes(t.payment_date, mesAtual, anoAtual))
+      .reduce((s, t) => s + Number(t.amount || 0), 0);
+
+    const receitaAnual = finTransacoes
+      .filter(t => t.type === 'receita' && t.status === 'recebido' && t.payment_date && new Date(t.payment_date + 'T00:00:00').getFullYear() === anoAtual)
+      .reduce((s, t) => s + Number(t.amount || 0), 0);
+
+    const despesasMes = finTransacoes
+      .filter(t => t.type === 'despesa' && finNoMes(finDataDespesa(t), mesAtual, anoAtual))
+      .reduce((s, t) => s + Number(t.amount || 0), 0);
+
+    const valoresAReceber = finTransacoes
+      .filter(t => t.type === 'receita' && finStatusEfetivo(t) !== 'recebido')
+      .reduce((s, t) => s + Number(t.amount || 0), 0);
+
+    const cards = [
+      { rotulo: 'Faturamento do mês', valor: crmFormatarMoeda(faturamentoMes), destaque: true },
+      { rotulo: 'Receita anual', valor: crmFormatarMoeda(receitaAnual) },
+      { rotulo: 'Despesas do mês', valor: crmFormatarMoeda(despesasMes) },
+      { rotulo: 'Lucro do mês', valor: crmFormatarMoeda(faturamentoMes - despesasMes) },
+      { rotulo: 'Valores a receber', valor: crmFormatarMoeda(valoresAReceber) }
+    ];
+
+    document.getElementById('fin-cards-resumo').innerHTML = cards.map(c => `
+      <div class="cartao-numero ${c.destaque ? 'cartao-numero-destaque' : ''}">
+        <div class="cartao-numero-valor">${c.valor}</div>
+        <div class="cartao-numero-rotulo">${c.rotulo}</div>
+      </div>
+    `).join('');
+  }
+
+  function finRenderGrafico(){
+    const anoAtual = new Date().getFullYear();
+    const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
+    const dados = meses.map((rotulo, indice) => {
+      const receita = finTransacoes
+        .filter(t => t.type === 'receita' && t.status === 'recebido' && finNoMes(t.payment_date, indice, anoAtual))
+        .reduce((s, t) => s + Number(t.amount || 0), 0);
+      const despesa = finTransacoes
+        .filter(t => t.type === 'despesa' && finNoMes(finDataDespesa(t), indice, anoAtual))
+        .reduce((s, t) => s + Number(t.amount || 0), 0);
+      return { rotulo, receita, despesa };
+    });
+
+    const maximo = Math.max(...dados.map(d => Math.max(d.receita, d.despesa)), 1);
+
+    document.getElementById('fin-grafico').innerHTML = dados.map(d => `
+      <div class="fin-mes-grupo">
+        <div class="fin-barra-par" title="${d.rotulo}: receita ${crmFormatarMoeda(d.receita)}, despesa ${crmFormatarMoeda(d.despesa)}">
+          <div class="fin-barra fin-barra-receita" style="height:${d.receita > 0 ? Math.max(d.receita / maximo * 100, 3) : 0}%"></div>
+          <div class="fin-barra fin-barra-despesa" style="height:${d.despesa > 0 ? Math.max(d.despesa / maximo * 100, 3) : 0}%"></div>
+        </div>
+        <span class="fin-mes-rotulo">${d.rotulo}</span>
+      </div>
+    `).join('');
+  }
+
+  function finRenderMeta(){
+    const hoje = new Date();
+    const mes = hoje.getMonth() + 1;
+    const ano = hoje.getFullYear();
+    const meta = finMetas.find(m => m.month === mes && m.year === ano);
+    const metaValor = meta ? Number(meta.goal_amount) : 0;
+
+    const atual = finTransacoes
+      .filter(t => t.type === 'receita' && t.status === 'recebido' && finNoMes(t.payment_date, hoje.getMonth(), ano))
+      .reduce((s, t) => s + Number(t.amount || 0), 0);
+
+    document.getElementById('fin-meta-alvo').textContent = crmFormatarMoeda(metaValor);
+    document.getElementById('fin-meta-atual').textContent = crmFormatarMoeda(atual);
+    document.getElementById('fin-meta-input').value = metaValor || '';
+
+    const pct = metaValor > 0 ? Math.min(100, Math.round(atual / metaValor * 100)) : 0;
+    const barra = document.getElementById('fin-meta-barra');
+    barra.style.width = '0%';
+    requestAnimationFrame(() => { barra.style.width = pct + '%'; });
+  }
+
+  async function finSalvarMeta(){
+    const hoje = new Date();
+    const mes = hoje.getMonth() + 1;
+    const ano = hoje.getFullYear();
+    const valor = document.getElementById('fin-meta-input').value;
+    if(!valor) return;
+
+    try{
+      const existente = finMetas.find(m => m.month === mes && m.year === ano);
+      if(existente){
+        const { error } = await Auth.client.from('financial_goals').update({ goal_amount: Number(valor) }).eq('id', existente.id);
+        if(error) throw error;
+      } else {
+        const { error } = await Auth.client.from('financial_goals').insert({ month: mes, year: ano, goal_amount: Number(valor) });
+        if(error) throw error;
+      }
+      await finCarregarDados();
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível salvar a meta. Tente novamente.');
+    }
+  }
+
+  function finRenderAlertas(){
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const em3dias = new Date(hoje);
+    em3dias.setDate(hoje.getDate() + 3);
+
+    const alertas = [];
+
+    finTransacoes.filter(t => t.type === 'despesa' && t.due_date).forEach(t => {
+      const d = new Date(t.due_date + 'T00:00:00');
+      if(d >= hoje && d <= em3dias){
+        alertas.push({ texto: `Pagamento vencendo: ${t.description || FIN_CATEGORIAS_DESPESA[t.category] || 'Despesa'}`, sub: formatarDataLocal(t.due_date) });
+      }
+    });
+
+    finTransacoes.filter(t => t.type === 'receita' && finStatusEfetivo(t) === 'atrasado').forEach(t => {
+      alertas.push({ texto: `Receita atrasada: ${t.description || finNomeCliente(t.client_id) || 'Receita'}`, sub: 'Prevista para ' + formatarDataLocal(t.due_date) });
+    });
+
+    document.getElementById('fin-widget-alertas').innerHTML = alertas.length === 0
+      ? '<p class="texto-vazio">Nenhum alerta no momento.</p>'
+      : alertas.map(a => `
+          <div class="fin-alerta-item">
+            <span>⚠️</span>
+            <div><strong>${calEscapar(a.texto)}</strong>${calEscapar(a.sub)}</div>
+          </div>
+        `).join('');
+  }
+
+  function finRenderRecebimentos(){
+    const pendentes = finTransacoes
+      .filter(t => t.type === 'receita' && finStatusEfetivo(t) !== 'recebido' && t.due_date)
+      .sort((a, b) => new Date(a.due_date) - new Date(b.due_date))
+      .slice(0, 6);
+
+    document.getElementById('fin-widget-recebimentos').innerHTML = pendentes.length === 0
+      ? '<p class="texto-vazio">Nada previsto.</p>'
+      : pendentes.map(t => `
+          <div class="crm-linha-item">
+            <div class="crm-linha-texto">
+              <div class="crm-linha-titulo crm-linha-titulo-link" data-id="${t.id}">${calEscapar(finNomeCliente(t.client_id) || t.description || 'Receita')}</div>
+              <div class="crm-linha-sub">${formatarDataLocal(t.due_date)}</div>
+            </div>
+            <span class="crm-linha-valor">${crmFormatarMoeda(t.amount)}</span>
+          </div>
+        `).join('');
+
+    document.querySelectorAll('#fin-widget-recebimentos .crm-linha-titulo-link').forEach(el => {
+      el.addEventListener('click', () => finAbrirPerfilReceita(el.dataset.id));
+    });
+  }
+
+  function finRenderRecorrentes(){
+    const container = document.getElementById('fin-widget-recorrentes');
+    container.innerHTML = finRecorrentes.length === 0
+      ? '<p class="texto-vazio">Nenhuma despesa recorrente cadastrada.</p>'
+      : finRecorrentes.map(r => `
+          <div class="crm-linha-item">
+            <div class="crm-linha-texto">
+              <div class="crm-linha-titulo">${calEscapar(r.name)}</div>
+              <div class="crm-linha-sub">${FIN_CATEGORIAS_DESPESA[r.category] || r.category}${r.amount ? ' · ' + crmFormatarMoeda(r.amount) : ''}</div>
+            </div>
+            <button type="button" class="cal-botao-secundario" data-lancar="${r.id}">Lançar</button>
+          </div>
+        `).join('');
+
+    container.querySelectorAll('[data-lancar]').forEach(botao => {
+      botao.addEventListener('click', () => finLancarRecorrente(botao.dataset.lancar));
+    });
+  }
+
+  function finLancarRecorrente(id){
+    const r = finRecorrentes.find(x => x.id === id);
+    if(!r) return;
+    finAbrirModalDespesaNova();
+    document.getElementById('fin-despesa-descricao').value = r.name;
+    document.getElementById('fin-despesa-categoria').value = r.category;
+    document.getElementById('fin-despesa-valor').value = r.amount || '';
+    document.getElementById('fin-despesa-data').value = calDataISO(new Date());
+  }
+
+  async function finAdicionarRecorrente(){
+    const nome = document.getElementById('fin-recorrente-nome').value.trim();
+    if(!nome) return;
+
+    try{
+      const { error } = await Auth.client.from('recurring_expenses').insert({
+        name: nome,
+        category: document.getElementById('fin-recorrente-categoria').value,
+        amount: document.getElementById('fin-recorrente-valor').value ? Number(document.getElementById('fin-recorrente-valor').value) : null
+      });
+      if(error) throw error;
+      document.getElementById('fin-recorrente-nome').value = '';
+      document.getElementById('fin-recorrente-valor').value = '';
+      await finCarregarDados();
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível adicionar a despesa recorrente. Tente novamente.');
+    }
+  }
+
+  /* ============================================================================================
+     FINANCEIRO: aba Receitas
+     ============================================================================================ */
+  function finRenderTabelaReceitas(){
+    const receitas = finTransacoes.filter(t => t.type === 'receita')
+      .slice().sort((a, b) => new Date(b.due_date || b.created_at) - new Date(a.due_date || a.created_at));
+    const tbody = document.getElementById('fin-tabela-receitas');
+
+    tbody.innerHTML = receitas.length === 0
+      ? '<tr><td colspan="6" class="texto-vazio">Nenhuma receita registrada ainda.</td></tr>'
+      : receitas.map(t => {
+          const status = FIN_STATUS_RECEITA[finStatusEfetivo(t)];
+          return `
+            <tr class="fin-linha-receita" data-id="${t.id}" style="cursor:pointer;">
+              <td>${t.due_date ? formatarDataLocal(t.due_date) : '-'}</td>
+              <td>${calEscapar(finNomeCliente(t.client_id)) || '-'}</td>
+              <td>${calEscapar(finTituloProjeto(t.project_id)) || '-'}</td>
+              <td>${FIN_CATEGORIAS_RECEITA[t.category] || t.category}</td>
+              <td>${crmFormatarMoeda(t.amount)}</td>
+              <td><span class="crm-etiqueta-status" style="background:${status.cor}">${status.emoji} ${status.rotulo}</span></td>
+            </tr>
+          `;
+        }).join('');
+
+    tbody.querySelectorAll('.fin-linha-receita').forEach(linha => {
+      linha.addEventListener('click', () => finAbrirPerfilReceita(linha.dataset.id));
+    });
+  }
+
+  function finAbrirModalReceitaNova(){
+    finReceitaEditando = null;
+    document.getElementById('fin-modal-receita-titulo').textContent = 'Nova receita';
+    document.getElementById('fin-form-receita').reset();
+    document.getElementById('fin-campo-categoria').value = 'ugc';
+    finAtualizarSelectProjetos('');
+    document.getElementById('fin-permuta-caixa').hidden = true;
+    document.getElementById('fin-receita-excluir').hidden = true;
+    document.getElementById('fin-modal-receita-fundo').hidden = false;
+  }
+
+  function finAbrirModalReceitaEdicao(id){
+    const t = finTransacoes.find(x => x.id === id);
+    if(!t) return;
+
+    finReceitaEditando = t.id;
+    document.getElementById('fin-modal-receita-titulo').textContent = 'Editar receita';
+    document.getElementById('fin-campo-cliente').value = t.client_id || '';
+    finAtualizarSelectProjetos(t.client_id || '');
+    document.getElementById('fin-campo-projeto').value = t.project_id || '';
+    document.getElementById('fin-campo-descricao').value = t.description || '';
+    document.getElementById('fin-campo-categoria').value = t.category || 'ugc';
+    document.getElementById('fin-campo-valor').value = t.amount || '';
+    document.getElementById('fin-campo-data-prevista').value = t.due_date || '';
+    document.getElementById('fin-campo-data-recebimento').value = t.payment_date || '';
+    document.getElementById('fin-campo-forma-pagamento').value = t.payment_method || '';
+    document.getElementById('fin-campo-observacoes').value = t.notes || '';
+    document.getElementById('fin-permuta-caixa').hidden = t.category !== 'permuta';
+    document.getElementById('fin-permuta-produto').value = t.barter_product || '';
+    document.getElementById('fin-permuta-marca').value = t.barter_brand || '';
+    document.getElementById('fin-permuta-entregue').checked = !!t.barter_delivered;
+    document.getElementById('fin-receita-excluir').hidden = false;
+    document.getElementById('fin-modal-receita-fundo').hidden = false;
+  }
+
+  function finFecharModalReceita(){
+    document.getElementById('fin-modal-receita-fundo').hidden = true;
+    finReceitaEditando = null;
+  }
+
+  async function finSalvarReceita(ev){
+    ev.preventDefault();
+
+    const valor = document.getElementById('fin-campo-valor').value;
+    if(!valor) return;
+
+    const dataPrevista = document.getElementById('fin-campo-data-prevista').value || null;
+    const dataRecebimento = document.getElementById('fin-campo-data-recebimento').value || null;
+    const categoria = document.getElementById('fin-campo-categoria').value;
+    const descricao = document.getElementById('fin-campo-descricao').value.trim() || null;
+
+    const payload = {
+      type: 'receita',
+      client_id: document.getElementById('fin-campo-cliente').value || null,
+      project_id: document.getElementById('fin-campo-projeto').value || null,
+      description: descricao,
+      category: categoria,
+      amount: Number(valor),
+      status: dataRecebimento ? 'recebido' : 'a_receber',
+      due_date: dataPrevista,
+      payment_date: dataRecebimento,
+      payment_method: document.getElementById('fin-campo-forma-pagamento').value.trim() || null,
+      notes: document.getElementById('fin-campo-observacoes').value.trim() || null,
+      barter_product: categoria === 'permuta' ? (document.getElementById('fin-permuta-produto').value.trim() || null) : null,
+      barter_brand: categoria === 'permuta' ? (document.getElementById('fin-permuta-marca').value.trim() || null) : null,
+      barter_delivered: categoria === 'permuta' ? document.getElementById('fin-permuta-entregue').checked : false,
+      updated_at: new Date().toISOString()
+    };
+
+    try{
+      let transactionId = finReceitaEditando;
+      const anterior = finReceitaEditando ? finTransacoes.find(t => t.id === finReceitaEditando) : null;
+
+      if(transactionId){
+        const { error } = await Auth.client.from('financial_transactions').update(payload).eq('id', transactionId);
+        if(error) throw error;
+      } else {
+        const { data, error } = await Auth.client.from('financial_transactions').insert(payload).select().single();
+        if(error) throw error;
+        transactionId = data.id;
+      }
+
+      const eventoVencimentoId = await kanSincronizarEvento(anterior ? anterior.event_due_id : null, dataPrevista, `Receber: ${descricao || 'receita'}`, 'financeiro');
+      const eventoPagamentoId = await kanSincronizarEvento(anterior ? anterior.event_payment_id : null, dataRecebimento, `Recebido: ${descricao || 'receita'}`, 'financeiro');
+      await Auth.client.from('financial_transactions').update({ event_due_id: eventoVencimentoId, event_payment_id: eventoPagamentoId }).eq('id', transactionId);
+
+      finFecharModalReceita();
+      await finCarregarDados();
+      if(calCarregado) await calCarregarDados();
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível salvar a receita. Tente novamente.');
+    }
+  }
+
+  async function finExcluirReceita(){
+    if(!finReceitaEditando) return;
+    if(!confirm('Tem certeza que deseja excluir esta receita?')) return;
+
+    const t = finTransacoes.find(x => x.id === finReceitaEditando);
+    try{
+      if(t){
+        for(const eventoId of [t.event_due_id, t.event_payment_id]){
+          if(eventoId) await Auth.client.from('events').delete().eq('id', eventoId);
+        }
+      }
+      const { error } = await Auth.client.from('financial_transactions').delete().eq('id', finReceitaEditando);
+      if(error) throw error;
+      finFecharModalReceita();
+      finFecharPerfilReceita();
+      await finCarregarDados();
+      if(calCarregado) await calCarregarDados();
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível excluir a receita. Tente novamente.');
+    }
+  }
+
+  /* ============================================================================================
+     FINANCEIRO: perfil individual da receita
+     ============================================================================================ */
+  function finAbrirPerfilReceita(id){
+    const t = finTransacoes.find(x => x.id === id);
+    if(!t) return;
+    finReceitaAtual = id;
+
+    document.getElementById('fin-perfil-titulo').textContent = t.description || finNomeCliente(t.client_id) || 'Receita';
+    const status = FIN_STATUS_RECEITA[finStatusEfetivo(t)];
+    document.getElementById('fin-perfil-sub').textContent = [status.emoji + ' ' + status.rotulo, finNomeCliente(t.client_id), crmFormatarMoeda(t.amount)].filter(Boolean).join(' · ');
+    document.getElementById('fin-perfil-editar').onclick = () => finAbrirModalReceitaEdicao(t.id);
+
+    const cards = [
+      { rotulo: 'Cliente', valor: finNomeCliente(t.client_id) || 'Não informado' },
+      { rotulo: 'Projeto', valor: finTituloProjeto(t.project_id) || 'Não vinculado' },
+      { rotulo: 'Categoria', valor: FIN_CATEGORIAS_RECEITA[t.category] || t.category },
+      { rotulo: 'Forma de pagamento', valor: t.payment_method || 'Não informada' }
+    ];
+    document.getElementById('fin-perfil-cards').innerHTML = cards.map(c => `
+      <div class="cartao-numero">
+        <div class="cartao-numero-valor" style="font-size:1.05rem;">${calEscapar(c.valor)}</div>
+        <div class="cartao-numero-rotulo">${c.rotulo}</div>
+      </div>
+    `).join('');
+
+    const permutaCartao = document.getElementById('fin-perfil-permuta-cartao');
+    if(t.category === 'permuta'){
+      permutaCartao.hidden = false;
+      document.getElementById('fin-perfil-permuta-texto').textContent = [
+        t.barter_product ? 'Produto: ' + t.barter_product : null,
+        t.barter_brand ? 'Marca: ' + t.barter_brand : null,
+        'Entrega: ' + (t.barter_delivered ? 'realizada' : 'pendente')
+      ].filter(Boolean).join(' · ');
+    } else {
+      permutaCartao.hidden = true;
+    }
+
+    document.getElementById('fin-perfil-observacoes').textContent = t.notes || 'Nenhuma observação.';
+    document.getElementById('fin-perfil-nota-fiscal').value = t.invoice_url || '';
+    document.getElementById('fin-perfil-comprovante').value = t.receipt_url || '';
+
+    const historico = [{ data: t.created_at, texto: 'Receita criada.' }];
+    if(t.due_date) historico.push({ data: t.due_date, texto: 'Prevista para ' + formatarDataLocal(t.due_date) + '.' });
+    if(t.payment_date) historico.push({ data: t.payment_date, texto: 'Recebida em ' + formatarDataLocal(t.payment_date) + '.' });
+    historico.sort((a, b) => new Date(a.data) - new Date(b.data));
+
+    document.getElementById('fin-perfil-historico').innerHTML = historico.map(h => `
+      <div class="crm-timeline-item">
+        <span class="crm-timeline-ponto"></span>
+        <div class="crm-timeline-desc">${calEscapar(h.texto)}</div>
+      </div>
+    `).join('');
+
+    document.getElementById('fin-perfil-fundo').hidden = false;
+  }
+
+  function finFecharPerfilReceita(){
+    document.getElementById('fin-perfil-fundo').hidden = true;
+    finReceitaAtual = null;
+  }
+
+  async function finSalvarLinksReceita(){
+    if(!finReceitaAtual) return;
+    try{
+      const { error } = await Auth.client.from('financial_transactions').update({
+        invoice_url: document.getElementById('fin-perfil-nota-fiscal').value.trim() || null,
+        receipt_url: document.getElementById('fin-perfil-comprovante').value.trim() || null,
+        updated_at: new Date().toISOString()
+      }).eq('id', finReceitaAtual);
+      if(error) throw error;
+      await finCarregarDados();
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível salvar os links. Tente novamente.');
+    }
+  }
+
+  /* ============================================================================================
+     FINANCEIRO: aba Despesas
+     ============================================================================================ */
+  function finRenderTabelaDespesas(){
+    const despesas = finTransacoes.filter(t => t.type === 'despesa')
+      .slice().sort((a, b) => new Date(finDataDespesa(b) || 0) - new Date(finDataDespesa(a) || 0));
+    const tbody = document.getElementById('fin-tabela-despesas');
+
+    tbody.innerHTML = despesas.length === 0
+      ? '<tr><td colspan="5" class="texto-vazio">Nenhuma despesa registrada ainda.</td></tr>'
+      : despesas.map(t => `
+          <tr>
+            <td>${t.due_date ? formatarDataLocal(t.due_date) : formatarData(t.created_at)}</td>
+            <td>${FIN_CATEGORIAS_DESPESA[t.category] || t.category}</td>
+            <td>${calEscapar(t.description || '-')}</td>
+            <td>${crmFormatarMoeda(t.amount)}</td>
+            <td><button type="button" class="cal-botao-secundario" data-editar-despesa="${t.id}">Editar</button></td>
+          </tr>
+        `).join('');
+
+    tbody.querySelectorAll('[data-editar-despesa]').forEach(botao => {
+      botao.addEventListener('click', () => finAbrirModalDespesaEdicao(botao.dataset.editarDespesa));
+    });
+  }
+
+  function finAbrirModalDespesaNova(){
+    finDespesaEditando = null;
+    document.getElementById('fin-modal-despesa-titulo').textContent = 'Nova despesa';
+    document.getElementById('fin-form-despesa').reset();
+    document.getElementById('fin-despesa-categoria').value = 'outros';
+    document.getElementById('fin-despesa-excluir').hidden = true;
+    document.getElementById('fin-modal-despesa-fundo').hidden = false;
+  }
+
+  function finAbrirModalDespesaEdicao(id){
+    const t = finTransacoes.find(x => x.id === id);
+    if(!t) return;
+
+    finDespesaEditando = t.id;
+    document.getElementById('fin-modal-despesa-titulo').textContent = 'Editar despesa';
+    document.getElementById('fin-despesa-descricao').value = t.description || '';
+    document.getElementById('fin-despesa-categoria').value = t.category || 'outros';
+    document.getElementById('fin-despesa-valor').value = t.amount || '';
+    document.getElementById('fin-despesa-data').value = t.due_date || '';
+    document.getElementById('fin-despesa-forma-pagamento').value = t.payment_method || '';
+    document.getElementById('fin-despesa-observacoes').value = t.notes || '';
+    document.getElementById('fin-despesa-excluir').hidden = false;
+    document.getElementById('fin-modal-despesa-fundo').hidden = false;
+  }
+
+  function finFecharModalDespesa(){
+    document.getElementById('fin-modal-despesa-fundo').hidden = true;
+    finDespesaEditando = null;
+  }
+
+  async function finSalvarDespesa(ev){
+    ev.preventDefault();
+
+    const descricao = document.getElementById('fin-despesa-descricao').value.trim();
+    const valor = document.getElementById('fin-despesa-valor').value;
+    if(!descricao || !valor) return;
+
+    const dataDespesa = document.getElementById('fin-despesa-data').value || null;
+
+    const payload = {
+      type: 'despesa',
+      description: descricao,
+      category: document.getElementById('fin-despesa-categoria').value,
+      amount: Number(valor),
+      status: 'recebido',
+      due_date: dataDespesa,
+      payment_date: dataDespesa,
+      payment_method: document.getElementById('fin-despesa-forma-pagamento').value.trim() || null,
+      notes: document.getElementById('fin-despesa-observacoes').value.trim() || null,
+      updated_at: new Date().toISOString()
+    };
+
+    try{
+      let transactionId = finDespesaEditando;
+      const anterior = finDespesaEditando ? finTransacoes.find(t => t.id === finDespesaEditando) : null;
+
+      if(transactionId){
+        const { error } = await Auth.client.from('financial_transactions').update(payload).eq('id', transactionId);
+        if(error) throw error;
+      } else {
+        const { data, error } = await Auth.client.from('financial_transactions').insert(payload).select().single();
+        if(error) throw error;
+        transactionId = data.id;
+      }
+
+      const eventoId = await kanSincronizarEvento(anterior ? anterior.event_due_id : null, dataDespesa, `Pagar: ${descricao}`, 'financeiro');
+      await Auth.client.from('financial_transactions').update({ event_due_id: eventoId }).eq('id', transactionId);
+
+      finFecharModalDespesa();
+      await finCarregarDados();
+      if(calCarregado) await calCarregarDados();
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível salvar a despesa. Tente novamente.');
+    }
+  }
+
+  async function finExcluirDespesa(){
+    if(!finDespesaEditando) return;
+    if(!confirm('Tem certeza que deseja excluir esta despesa?')) return;
+
+    const t = finTransacoes.find(x => x.id === finDespesaEditando);
+    try{
+      if(t && t.event_due_id) await Auth.client.from('events').delete().eq('id', t.event_due_id);
+      const { error } = await Auth.client.from('financial_transactions').delete().eq('id', finDespesaEditando);
+      if(error) throw error;
+      finFecharModalDespesa();
+      await finCarregarDados();
+      if(calCarregado) await calCarregarDados();
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível excluir a despesa. Tente novamente.');
+    }
+  }
+
+  /* ============================================================================================
+     FINANCEIRO: Relatórios
+     ============================================================================================ */
+  function finRenderRelatorios(){
+    const anoAtual = new Date().getFullYear();
+    const recebidasAno = finTransacoes.filter(t => t.type === 'receita' && t.status === 'recebido' && t.payment_date && new Date(t.payment_date + 'T00:00:00').getFullYear() === anoAtual);
+    const despesasAno = finTransacoes.filter(t => t.type === 'despesa' && finDataDespesa(t) && new Date(finDataDespesa(t) + 'T00:00:00').getFullYear() === anoAtual);
+
+    const faturamentoAno = recebidasAno.reduce((s, t) => s + Number(t.amount || 0), 0);
+    const despesaAnoTotal = despesasAno.reduce((s, t) => s + Number(t.amount || 0), 0);
+    const ticketMedio = recebidasAno.length ? faturamentoAno / recebidasAno.length : 0;
+
+    document.getElementById('fin-relatorio-cards').innerHTML = [
+      { rotulo: 'Faturamento do ano', valor: crmFormatarMoeda(faturamentoAno) },
+      { rotulo: 'Ticket médio', valor: crmFormatarMoeda(ticketMedio) },
+      { rotulo: 'Lucro líquido do ano', valor: crmFormatarMoeda(faturamentoAno - despesaAnoTotal) }
+    ].map(c => `
+      <div class="cartao-numero">
+        <div class="cartao-numero-valor" style="font-size:1.2rem;">${c.valor}</div>
+        <div class="cartao-numero-rotulo">${c.rotulo}</div>
+      </div>
+    `).join('');
+
+    const porCliente = new Map();
+    recebidasAno.forEach(t => {
+      if(!t.client_id) return;
+      porCliente.set(t.client_id, (porCliente.get(t.client_id) || 0) + Number(t.amount || 0));
+    });
+    const ranking = Array.from(porCliente.entries()).map(([id, total]) => ({ id, total })).sort((a, b) => b.total - a.total).slice(0, 8);
+
+    document.getElementById('fin-relatorio-clientes').innerHTML = ranking.length === 0
+      ? '<p class="texto-vazio">Nenhuma receita recebida de cliente este ano ainda.</p>'
+      : ranking.map(r => `
+          <div class="crm-linha-item">
+            <div class="crm-linha-texto"><div class="crm-linha-titulo">${calEscapar(finNomeCliente(r.id))}</div></div>
+            <span class="crm-linha-valor">${crmFormatarMoeda(r.total)}</span>
+          </div>
+        `).join('');
+
+    const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+    document.getElementById('fin-tabela-comparacao').innerHTML = meses.map((rotulo, indice) => {
+      const receita = recebidasAno.filter(t => new Date(t.payment_date + 'T00:00:00').getMonth() === indice).reduce((s, t) => s + Number(t.amount || 0), 0);
+      const despesa = despesasAno.filter(t => new Date(finDataDespesa(t) + 'T00:00:00').getMonth() === indice).reduce((s, t) => s + Number(t.amount || 0), 0);
+      return `<tr><td>${rotulo}</td><td>${crmFormatarMoeda(receita)}</td><td>${crmFormatarMoeda(despesa)}</td><td>${crmFormatarMoeda(receita - despesa)}</td></tr>`;
+    }).join('');
+  }
+
+  function finMudarVista(vista){
+    finVistaAtual = vista;
+    document.querySelectorAll('#fin-vista-toggle button').forEach(b => b.classList.toggle('ativo', b.dataset.vista === vista));
+    document.getElementById('fin-vista-receitas').hidden = vista !== 'receitas';
+    document.getElementById('fin-vista-despesas').hidden = vista !== 'despesas';
+    document.getElementById('fin-vista-relatorios').hidden = vista !== 'relatorios';
+  }
+
+  function finRenderizarTudo(){
+    finRenderCardsResumo();
+    finRenderGrafico();
+    finRenderMeta();
+    finRenderAlertas();
+    finRenderRecebimentos();
+    finRenderRecorrentes();
+    finRenderTabelaReceitas();
+    finRenderTabelaDespesas();
+    finRenderRelatorios();
+  }
+
+  /* ============================================================================================
+     FINANCEIRO: integração automática Projetos → Receita
+     Chamada de dentro de kanSalvarProjeto() sempre que um trabalho tem valor.
+     ============================================================================================ */
+  async function finSincronizarReceitaDeProjeto(transacaoIdExistente, projeto){
+    if(!projeto.value){
+      return transacaoIdExistente || null;
+    }
+    const payload = {
+      type: 'receita',
+      client_id: projeto.client_id,
+      project_id: projeto.id,
+      description: projeto.title,
+      category: 'ugc',
+      amount: Number(projeto.value),
+      status: projeto.payment_status === 'pago' ? 'recebido' : 'a_receber',
+      due_date: projeto.delivery_date || null,
+      payment_date: projeto.payment_status === 'pago' ? (projeto.payment_date || calDataISO(new Date())) : null,
+      payment_method: projeto.payment_method || null,
+      updated_at: new Date().toISOString()
+    };
+    if(transacaoIdExistente){
+      await Auth.client.from('financial_transactions').update(payload).eq('id', transacaoIdExistente);
+      return transacaoIdExistente;
+    }
+    const { data, error } = await Auth.client.from('financial_transactions').insert(payload).select().single();
+    if(error) throw error;
+    return data.id;
+  }
+
+  /* ============================================================================================
+     FINANCEIRO: interações
+     ============================================================================================ */
+  function configurarFinanceiro(){
+    document.getElementById('fin-nova-receita').addEventListener('click', finAbrirModalReceitaNova);
+    document.getElementById('fin-nova-despesa').addEventListener('click', finAbrirModalDespesaNova);
+
+    document.getElementById('fin-modal-receita-fechar').addEventListener('click', finFecharModalReceita);
+    document.getElementById('fin-receita-cancelar').addEventListener('click', finFecharModalReceita);
+    document.getElementById('fin-modal-receita-fundo').addEventListener('click', (ev) => {
+      if(ev.target.id === 'fin-modal-receita-fundo') finFecharModalReceita();
+    });
+    document.getElementById('fin-form-receita').addEventListener('submit', finSalvarReceita);
+    document.getElementById('fin-receita-excluir').addEventListener('click', finExcluirReceita);
+    document.getElementById('fin-campo-categoria').addEventListener('change', (ev) => {
+      document.getElementById('fin-permuta-caixa').hidden = ev.target.value !== 'permuta';
+    });
+    document.getElementById('fin-campo-cliente').addEventListener('change', (ev) => finAtualizarSelectProjetos(ev.target.value));
+
+    document.getElementById('fin-modal-despesa-fechar').addEventListener('click', finFecharModalDespesa);
+    document.getElementById('fin-despesa-cancelar').addEventListener('click', finFecharModalDespesa);
+    document.getElementById('fin-modal-despesa-fundo').addEventListener('click', (ev) => {
+      if(ev.target.id === 'fin-modal-despesa-fundo') finFecharModalDespesa();
+    });
+    document.getElementById('fin-form-despesa').addEventListener('submit', finSalvarDespesa);
+    document.getElementById('fin-despesa-excluir').addEventListener('click', finExcluirDespesa);
+
+    document.getElementById('fin-perfil-fechar').addEventListener('click', finFecharPerfilReceita);
+    document.getElementById('fin-perfil-fundo').addEventListener('click', (ev) => {
+      if(ev.target.id === 'fin-perfil-fundo') finFecharPerfilReceita();
+    });
+    document.getElementById('fin-perfil-salvar-links').addEventListener('click', finSalvarLinksReceita);
+
+    document.getElementById('fin-meta-salvar').addEventListener('click', finSalvarMeta);
+    document.getElementById('fin-recorrente-adicionar').addEventListener('click', finAdicionarRecorrente);
+
+    document.querySelectorAll('#fin-vista-toggle button').forEach(botao => {
+      botao.addEventListener('click', () => finMudarVista(botao.dataset.vista));
+    });
+
+    document.addEventListener('keydown', (ev) => {
+      if(ev.key !== 'Escape') return;
+      if(!document.getElementById('fin-modal-receita-fundo').hidden) finFecharModalReceita();
+      else if(!document.getElementById('fin-modal-despesa-fundo').hidden) finFecharModalDespesa();
+      else if(!document.getElementById('fin-perfil-fundo').hidden) finFecharPerfilReceita();
+    });
+  }
+
+  /* ============================================================================================
+     MEU NEGÓCIO
+     Página só de leitura: reaproveita os dados já carregados do Financeiro e
+     de Projetos, garantindo que os dois estejam carregados antes de renderizar.
+     ============================================================================================ */
+  async function negocioCarregarERenderizar(){
+    if(!finCarregado){ finCarregado = true; await finCarregarDados(); }
+    if(!kanCarregado){ kanCarregado = true; await kanCarregarDados(); }
+    negocioRenderizar();
+  }
+
+  function negocioRenderizar(){
+    const anoAtual = new Date().getFullYear();
+    const anoAnterior = anoAtual - 1;
+
+    const recebidasAnoAtual = finTransacoes.filter(t => t.type === 'receita' && t.status === 'recebido' && t.payment_date && new Date(t.payment_date + 'T00:00:00').getFullYear() === anoAtual);
+    const recebidasAnoAnterior = finTransacoes.filter(t => t.type === 'receita' && t.status === 'recebido' && t.payment_date && new Date(t.payment_date + 'T00:00:00').getFullYear() === anoAnterior);
+
+    const faturamentoAno = recebidasAnoAtual.reduce((s, t) => s + Number(t.amount || 0), 0);
+    const faturamentoAnoAnterior = recebidasAnoAnterior.reduce((s, t) => s + Number(t.amount || 0), 0);
+    const crescimento = faturamentoAnoAnterior > 0 ? Math.round((faturamentoAno - faturamentoAnoAnterior) / faturamentoAnoAnterior * 100) : null;
+
+    const metaAnual = finMetas.filter(m => m.year === anoAtual).reduce((s, m) => s + Number(m.goal_amount || 0), 0);
+
+    const porCliente = new Map();
+    recebidasAnoAtual.forEach(t => {
+      if(!t.client_id) return;
+      porCliente.set(t.client_id, (porCliente.get(t.client_id) || 0) + Number(t.amount || 0));
+    });
+    let melhorClienteId = null, melhorValor = 0;
+    porCliente.forEach((valor, id) => { if(valor > melhorValor){ melhorValor = valor; melhorClienteId = id; } });
+
+    const videosEntregues = kanProjetos.filter(p => p.status === 'entregue' || p.status === 'pago').reduce((s, p) => s + (Number(p.quantity) || 1), 0);
+    const ticketMedio = recebidasAnoAtual.length ? faturamentoAno / recebidasAnoAtual.length : 0;
+
+    document.getElementById('negocio-cards').innerHTML = [
+      { rotulo: 'Faturamento do ano', valor: crmFormatarMoeda(faturamentoAno) },
+      { rotulo: 'Crescimento vs ano anterior', valor: crescimento === null ? 'Sem dados do ano anterior' : (crescimento >= 0 ? '+' : '') + crescimento + '%' },
+      { rotulo: 'Meta anual', valor: crmFormatarMoeda(metaAnual) },
+      { rotulo: 'Vídeos entregues', valor: videosEntregues.toLocaleString('pt-BR') },
+      { rotulo: 'Ticket médio', valor: crmFormatarMoeda(ticketMedio) }
+    ].map(c => `
+      <div class="cartao-numero">
+        <div class="cartao-numero-valor" style="font-size:1.3rem;">${c.valor}</div>
+        <div class="cartao-numero-rotulo">${c.rotulo}</div>
+      </div>
+    `).join('');
+
+    document.getElementById('negocio-melhor-cliente').textContent = melhorClienteId
+      ? (kanNomeCliente(melhorClienteId) || 'Cliente sem nome')
+      : 'Ainda sem dados suficientes';
+  }
+
+  /* ============================================================================================
      INTERAÇÕES: abas, filtro de período, sidebar mobile
      ============================================================================================ */
   function configurarAbas(){
     const botoes = document.querySelectorAll('.nav-item');
-    const titulos = { 'menu-principal': 'Menu Principal', 'portfolio': 'Portfólio', 'calendario': 'Calendário', 'clientes': 'CRM de Clientes', 'projetos': 'Projetos' };
+    const titulos = {
+      'menu-principal': 'Menu Principal', 'portfolio': 'Portfólio', 'calendario': 'Calendário',
+      'clientes': 'CRM de Clientes', 'projetos': 'Projetos', 'financeiro': 'Financeiro', 'negocio': 'Meu Negócio'
+    };
 
     botoes.forEach(botao => {
       botao.addEventListener('click', async () => {
@@ -4236,10 +5435,13 @@
         const ehCalendario = botao.dataset.tab === 'calendario';
         const ehClientes = botao.dataset.tab === 'clientes';
         const ehProjetos = botao.dataset.tab === 'projetos';
-        document.getElementById('filtro-periodo').hidden = ehCalendario || ehClientes || ehProjetos;
+        const ehFinanceiro = botao.dataset.tab === 'financeiro';
+        const ehNegocio = botao.dataset.tab === 'negocio';
+        document.getElementById('filtro-periodo').hidden = ehCalendario || ehClientes || ehProjetos || ehFinanceiro || ehNegocio;
         document.getElementById('cal-toolbar').hidden = !ehCalendario;
         document.getElementById('crm-toolbar').hidden = !ehClientes;
         document.getElementById('kan-toolbar').hidden = !ehProjetos;
+        document.getElementById('fin-toolbar').hidden = !ehFinanceiro;
 
         if(ehCalendario && !calCarregado){
           calCarregado = true;
@@ -4252,6 +5454,13 @@
         if(ehProjetos && !kanCarregado){
           kanCarregado = true;
           await kanCarregarDados();
+        }
+        if(ehFinanceiro && !finCarregado){
+          finCarregado = true;
+          await finCarregarDados();
+        }
+        if(ehNegocio){
+          await negocioCarregarERenderizar();
         }
 
         fecharSidebarMobile();
@@ -4314,6 +5523,7 @@
     configurarCalendario();
     configurarCRM();
     configurarKan();
+    configurarFinanceiro();
     document.getElementById('botao-sair').addEventListener('click', () => Auth.logout());
 
     await carregarDados();

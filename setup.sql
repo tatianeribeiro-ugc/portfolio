@@ -330,3 +330,86 @@ create policy "CRUD completo para usuarios autenticados"
 create policy "CRUD completo para usuarios autenticados"
   on project_comments for all to authenticated using (true) with check (true);
 -- ================================================================================
+
+-- --------------------------------------------------------------------------------
+-- MÓDULO FINANCEIRO
+-- Uma única tabela para receitas E despesas (campo "type"), o que facilita
+-- o gráfico "receitas x despesas" e os relatórios. Permuta é só uma categoria
+-- de receita a mais, com 3 colunas extras para não perder o controle dela.
+-- --------------------------------------------------------------------------------
+create table if not exists financial_transactions (
+  id uuid primary key default gen_random_uuid(),
+  type text not null default 'receita',      -- receita | despesa
+  client_id uuid references clients(id) on delete set null,
+  project_id uuid references client_projects(id) on delete set null,
+  description text,
+  category text not null default 'outros',
+  amount numeric not null default 0,
+  status text not null default 'a_receber',  -- recebido | a_receber | atrasado (despesas usam "recebido" como "pago")
+  due_date date,                              -- data prevista (receita) / data da despesa
+  payment_date date,                          -- data de recebimento (ou de pagamento, no caso de despesa)
+  payment_method text,
+  notes text,
+  invoice_url text,                           -- nota fiscal (link)
+  receipt_url text,                           -- comprovante (link)
+  barter_product text,                        -- permuta: produto recebido
+  barter_brand text,                          -- permuta: marca
+  barter_delivered boolean not null default false, -- permuta: entrega já realizada
+  event_due_id uuid references events(id) on delete set null,
+  event_payment_id uuid references events(id) on delete set null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- --------------------------------------------------------------------------------
+-- TABELA: financial_goals
+-- Uma meta por mês/ano. O valor ATUAL não fica salvo aqui: é sempre
+-- calculado a partir das receitas recebidas de fato, pra nunca ficar
+-- desatualizado.
+-- --------------------------------------------------------------------------------
+create table if not exists financial_goals (
+  id uuid primary key default gen_random_uuid(),
+  month integer not null,
+  year integer not null,
+  goal_amount numeric not null default 0,
+  created_at timestamptz not null default now(),
+  unique (month, year)
+);
+
+-- --------------------------------------------------------------------------------
+-- TABELA: recurring_expenses
+-- Lista de referência de despesas fixas (Canva Pro, internet, domínio...).
+-- Não lança nada sozinha todo mês (o site é estático, sem tarefa agendada);
+-- serve para lembrar você e lançar rápido com um clique.
+-- --------------------------------------------------------------------------------
+create table if not exists recurring_expenses (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  category text not null default 'outros',
+  amount numeric,
+  due_day integer,
+  active boolean not null default true,
+  created_at timestamptz not null default now()
+);
+
+-- Liga cada projeto à receita pendente que é criada automaticamente para ele.
+alter table client_projects
+  add column if not exists financial_transaction_id uuid references financial_transactions(id) on delete set null;
+
+create index if not exists financial_transactions_due_date_idx on financial_transactions (due_date);
+create index if not exists financial_transactions_client_id_idx on financial_transactions (client_id);
+create index if not exists financial_transactions_project_id_idx on financial_transactions (project_id);
+
+alter table financial_transactions enable row level security;
+alter table financial_goals enable row level security;
+alter table recurring_expenses enable row level security;
+
+create policy "CRUD completo para usuarios autenticados"
+  on financial_transactions for all to authenticated using (true) with check (true);
+
+create policy "CRUD completo para usuarios autenticados"
+  on financial_goals for all to authenticated using (true) with check (true);
+
+create policy "CRUD completo para usuarios autenticados"
+  on recurring_expenses for all to authenticated using (true) with check (true);
+-- ================================================================================
