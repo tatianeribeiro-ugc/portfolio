@@ -750,6 +750,56 @@
   .fin-negocio-grade{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:22px; }
 
   /* ============================================================
+     ABA BANCO CRIATIVO
+     Reaproveita cards-grade/cartao-numero, crm-toolbar, crm-filtros,
+     crm-modal-*, crm-perfil-* e crm-etiqueta-status. Só os cards de item,
+     as tags e os rascunhos rápidos ganham CSS novo.
+     ============================================================ */
+  .criativo-grade{ display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-bottom:24px; }
+  .criativo-card{
+    background: var(--branco); border:1px solid var(--borda); border-radius: var(--raio); padding:18px;
+    box-shadow: var(--sombra); cursor:pointer; border-left:5px solid var(--coral); transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .criativo-card:hover{ transform:translateY(-2px); box-shadow:0 10px 26px rgba(26,24,22,0.1); }
+  .criativo-card-topo{ display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:8px; }
+  .criativo-favorito{
+    background:none; border:none; cursor:pointer; font-size:1.05rem; line-height:1; flex-shrink:0;
+    opacity:0.35; transition: opacity 0.2s ease, transform 0.15s ease;
+  }
+  .criativo-favorito:hover{ transform:scale(1.15); }
+  .criativo-favorito.ativo{ opacity:1; }
+  .criativo-card-titulo{ font-family: var(--fonte-titulo); font-size:1.02rem; font-weight:500; margin-bottom:8px; }
+  .criativo-card-preview{
+    font-size:0.85rem; color: var(--texto-suave); margin-bottom:12px; line-height:1.5;
+    display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .criativo-tags{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px; }
+  .criativo-tag{ font-size:0.68rem; font-weight:600; background: var(--creme); color: var(--texto-suave); padding:3px 10px; border-radius:100px; }
+  .criativo-card-rodape{ display:flex; justify-content:space-between; align-items:center; gap:10px; padding-top:10px; border-top:1px solid var(--borda); font-size:0.76rem; color: var(--texto-suave); }
+
+  .criativo-tag-input-linha{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .criativo-tag-input-linha input{ flex-grow:1; min-width:140px; }
+  .criativo-tags-selecionadas{ display:flex; flex-wrap:wrap; gap:6px; }
+  .criativo-tag-removivel{
+    display:inline-flex; align-items:center; gap:6px; font-size:0.72rem; font-weight:600; background: var(--creme);
+    color: var(--grafite); padding:4px 6px 4px 12px; border-radius:100px;
+  }
+  .criativo-tag-removivel button{ background:none; border:none; cursor:pointer; color: var(--texto-suave); font-size:0.95rem; line-height:1; padding:0 4px; }
+  .criativo-tag-removivel button:hover{ color: var(--erro); }
+
+  .criativo-rascunho-item{ display:flex; align-items:center; gap:10px; padding:9px 0; border-bottom:1px solid var(--borda); font-size:0.87rem; }
+  .criativo-rascunho-item:last-child{ border-bottom:none; padding-bottom:0; }
+  .criativo-rascunho-item:first-child{ padding-top:0; }
+  .criativo-rascunho-item span{ flex-grow:1; }
+  .criativo-rascunho-item button{ background:none; border:none; color: var(--texto-suave); cursor:pointer; font-size:1rem; flex-shrink:0; }
+  .criativo-rascunho-item button:hover{ color: var(--erro); }
+
+  .criativo-perfil-conteudo-texto{
+    white-space:pre-wrap; font-size:0.92rem; line-height:1.7; background: var(--creme);
+    border-radius: var(--raio-pequeno); padding:18px;
+  }
+
+  /* ============================================================
      RESPONSIVO
      ============================================================ */
   @media (max-width: 1180px){
@@ -764,6 +814,7 @@
     .cards-grade{ grid-template-columns:repeat(2,1fr); }
     .portfolio-grade{ grid-template-columns:1fr; }
     .crm-lista-clientes{ grid-template-columns:1fr; }
+    .criativo-grade{ grid-template-columns:1fr; }
   }
   @media (max-width: 900px){
     .sidebar{ transform: translateX(-100%); box-shadow:0 0 40px rgba(0,0,0,0.15); }
@@ -849,6 +900,10 @@
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19h16"/><path d="M7 19v-6M12 19V8M17 19v-9"/><path d="M4 12.5 9 8l3.5 2.5L20 5"/></svg>
         Meu Negócio
       </button>
+      <button type="button" class="nav-item" data-tab="criativo">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.6.6 1 1.4 1 2.3V16h6v-.2c0-.9.4-1.7 1-2.3A6 6 0 0 0 12 3Z"/></svg>
+        Banco Criativo
+      </button>
     </nav>
 
     <div class="sidebar-rodape">
@@ -910,6 +965,13 @@
         <button type="button" class="ativo" data-vista="receitas">Receitas</button>
         <button type="button" data-vista="despesas">Despesas</button>
         <button type="button" data-vista="relatorios">Relatórios</button>
+      </div>
+    </div>
+
+    <div class="crm-toolbar" id="criativo-toolbar" hidden>
+      <div class="crm-toolbar-esquerda">
+        <button type="button" class="cal-botao-primario" id="criativo-novo-item">+ Novo item</button>
+        <input type="search" id="criativo-busca" placeholder="Buscar...">
       </div>
     </div>
 
@@ -1209,6 +1271,31 @@
         <div class="destaque-contato-texto">
           <strong id="negocio-melhor-cliente">-</strong>
           <p>Seu cliente mais lucrativo até agora.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA 8: BANCO CRIATIVO -->
+    <section class="painel-aba" id="painel-criativo" hidden>
+      <div class="crm-filtros" id="criativo-filtros" role="group" aria-label="Filtrar por tipo">
+        <button type="button" class="ativo" data-filtro="todos">Todos</button>
+        <button type="button" data-filtro="ideia">Ideias</button>
+        <button type="button" data-filtro="roteiro">Roteiros</button>
+        <button type="button" data-filtro="aprovado">Aprovados</button>
+        <button type="button" data-filtro="gancho">Ganchos</button>
+        <button type="button" data-filtro="favoritos">Favoritos</button>
+      </div>
+
+      <div class="cards-grade" id="criativo-cards-resumo"></div>
+
+      <div class="criativo-grade" id="criativo-grade"></div>
+
+      <div class="cartao">
+        <h3>🧠 Ideias para usar depois</h3>
+        <div id="criativo-lista-rascunhos"></div>
+        <div class="crm-mini-form">
+          <input type="text" id="criativo-novo-rascunho" placeholder="Ex: Vídeo de date night.">
+          <button type="button" class="cal-botao-secundario" id="criativo-adicionar-rascunho">+ Adicionar</button>
         </div>
       </div>
     </section>
@@ -1862,6 +1949,130 @@
       <div class="cartao">
         <h3>Histórico</h3>
         <div class="crm-timeline" id="fin-perfil-historico"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de novo/editar item (Banco Criativo) -->
+<div class="crm-modal-fundo" id="criativo-modal-fundo" hidden>
+  <div class="crm-modal" role="dialog" aria-modal="true" aria-labelledby="criativo-modal-titulo">
+    <div class="crm-modal-cabecalho">
+      <h3 id="criativo-modal-titulo">Novo item</h3>
+      <button type="button" class="crm-modal-fechar" id="criativo-modal-fechar" aria-label="Fechar">&times;</button>
+    </div>
+    <form class="crm-form" id="criativo-form">
+      <label>Tipo
+        <select id="criativo-campo-tipo">
+          <option value="ideia">💡 Ideia</option>
+          <option value="roteiro">🎬 Roteiro</option>
+          <option value="aprovado">⭐ Roteiro aprovado</option>
+          <option value="gancho">🎣 Gancho</option>
+        </select>
+      </label>
+
+      <label id="criativo-linha-titulo">Título
+        <input type="text" id="criativo-campo-titulo">
+      </label>
+
+      <label>Cliente (opcional)
+        <select id="criativo-campo-cliente"><option value="">Sem cliente</option></select>
+      </label>
+
+      <label id="criativo-linha-extra" hidden>
+        <span id="criativo-rotulo-extra">Nicho</span>
+        <input type="text" id="criativo-campo-extra">
+      </label>
+
+      <label>
+        <span id="criativo-rotulo-conteudo">Descrição</span>
+        <textarea id="criativo-campo-conteudo" rows="6"></textarea>
+      </label>
+
+      <label id="criativo-linha-resultado" hidden>Resultado obtido
+        <input type="text" id="criativo-campo-resultado" placeholder="Ex: 50 mil visualizações, gerou 8 vendas...">
+      </label>
+      <label id="criativo-linha-observacoes" hidden>Observações
+        <textarea id="criativo-campo-observacoes" rows="2"></textarea>
+      </label>
+
+      <label>Tags
+        <div class="criativo-tag-input-linha">
+          <input type="text" id="criativo-campo-tag-nova" placeholder="Digite uma tag e aperte Enter">
+        </div>
+      </label>
+      <div class="criativo-tags-selecionadas" id="criativo-tags-selecionadas"></div>
+
+      <label>📎 Link de referência (opcional)
+        <input type="text" id="criativo-campo-link" placeholder="https://...">
+      </label>
+
+      <label class="cal-checkbox-linha">
+        <input type="checkbox" id="criativo-campo-favorito">
+        ❤️ Favorito
+      </label>
+
+      <div class="crm-modal-rodape">
+        <button type="button" class="cal-botao-perigo" id="criativo-botao-excluir" hidden>Excluir</button>
+        <div class="crm-modal-rodape-direita">
+          <button type="button" id="criativo-cancelar">Cancelar</button>
+          <button type="submit" class="cal-botao-primario">Salvar</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Perfil individual do item (Banco Criativo) -->
+<div class="crm-perfil-fundo" id="criativo-perfil-fundo" hidden>
+  <div class="crm-perfil" role="dialog" aria-modal="true" aria-labelledby="criativo-perfil-titulo">
+    <div class="crm-perfil-cabecalho">
+      <button type="button" class="crm-perfil-fechar" id="criativo-perfil-fechar" aria-label="Fechar perfil">&times;</button>
+      <div class="crm-perfil-topo">
+        <div class="crm-perfil-avatar" id="criativo-perfil-avatar"></div>
+        <div>
+          <h2 class="crm-perfil-nome" id="criativo-perfil-titulo"></h2>
+          <div class="crm-perfil-sub" id="criativo-perfil-sub"></div>
+        </div>
+      </div>
+      <div class="crm-perfil-acoes">
+        <button type="button" id="criativo-perfil-favoritar">❤️ Favoritar</button>
+        <button type="button" id="criativo-perfil-editar">✏️ Editar</button>
+        <button type="button" id="criativo-perfil-duplicar" hidden>📄 Duplicar</button>
+        <button type="button" id="criativo-perfil-copiar" hidden>📋 Copiar</button>
+        <button type="button" id="criativo-perfil-excluir">🗑️ Excluir</button>
+      </div>
+    </div>
+
+    <div class="crm-perfil-conteudo">
+      <div class="cartao" id="criativo-perfil-extra-cartao" hidden>
+        <h3 id="criativo-perfil-extra-rotulo">Nicho</h3>
+        <p id="criativo-perfil-extra-texto" class="texto-vazio"></p>
+      </div>
+
+      <div class="cartao">
+        <h3 id="criativo-perfil-conteudo-rotulo">Conteúdo</h3>
+        <p class="criativo-perfil-conteudo-texto" id="criativo-perfil-conteudo-texto"></p>
+      </div>
+
+      <div class="cartao" id="criativo-perfil-resultado-cartao" hidden>
+        <h3>Resultado obtido</h3>
+        <p id="criativo-perfil-resultado-texto" class="texto-vazio"></p>
+      </div>
+
+      <div class="cartao" id="criativo-perfil-observacoes-cartao" hidden>
+        <h3>Observações</h3>
+        <p id="criativo-perfil-observacoes-texto" class="texto-vazio"></p>
+      </div>
+
+      <div class="cartao" id="criativo-perfil-tags-cartao" hidden>
+        <h3>Tags</h3>
+        <div class="criativo-tags" id="criativo-perfil-tags"></div>
+      </div>
+
+      <div class="cartao" id="criativo-perfil-link-cartao" hidden>
+        <h3>📎 Link de referência</h3>
+        <p><a id="criativo-perfil-link" href="#" target="_blank" rel="noopener noreferrer"></a></p>
       </div>
     </div>
   </div>
@@ -5414,13 +5625,518 @@
   }
 
   /* ============================================================================================
+     BANCO CRIATIVO
+     Módulo de propósito simples: uma tabela (creative_bank) para os 4 tipos
+     de item, mais uma tabela solta (creative_drafts) pros rascunhos rápidos.
+     Sem abas internas, sem integrações automáticas com outros módulos.
+     ============================================================================================ */
+  const CRIATIVO_TIPOS = {
+    ideia:    { rotulo: 'Ideia',            emoji: '💡', cor: '#3B82F6' },
+    roteiro:  { rotulo: 'Roteiro',          emoji: '🎬', cor: '#8B5CF6' },
+    aprovado: { rotulo: 'Roteiro aprovado', emoji: '⭐', cor: '#C9971C' },
+    gancho:   { rotulo: 'Gancho',           emoji: '🎣', cor: '#2D9D5F' }
+  };
+  const CRIATIVO_ROTULOS_CONTEUDO = { ideia: 'Descrição', roteiro: 'Roteiro completo', aprovado: 'Roteiro completo', gancho: 'Texto do gancho' };
+
+  let criativoItens = [];
+  let criativoRascunhos = [];
+  let criativoClientes = [];
+  let criativoCarregado = false;
+  let criativoFiltro = 'todos';
+  let criativoBusca = '';
+  let criativoEditando = null;
+  let criativoAtual = null;
+  let criativoTagsSelecionadas = [];
+
+  async function criativoCarregarDados(){
+    try{
+      const [itens, rascunhos, clientes] = await Promise.all([
+        buscarTudo('creative_bank'),
+        buscarTudo('creative_drafts'),
+        buscarTudo('clients')
+      ]);
+      criativoItens = itens;
+      criativoRascunhos = rascunhos.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+      criativoClientes = clientes.sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível carregar o Banco Criativo agora. Tente recarregar a página em alguns instantes.');
+      criativoItens = [];
+      criativoRascunhos = [];
+      criativoClientes = [];
+    }
+    criativoPopularSelects();
+    criativoRenderizarTudo();
+  }
+
+  function criativoNomeCliente(id){
+    const c = criativoClientes.find(x => x.id === id);
+    return c ? c.name : '';
+  }
+
+  function criativoPopularSelects(){
+    document.getElementById('criativo-campo-cliente').innerHTML = '<option value="">Sem cliente</option>' +
+      criativoClientes.map(c => `<option value="${c.id}">${calEscapar(c.name)}</option>`).join('');
+  }
+
+  function criativoItensFiltrados(){
+    return criativoItens.filter(item => {
+      if(criativoFiltro === 'favoritos'){ if(!item.favorite) return false; }
+      else if(criativoFiltro !== 'todos'){ if(item.type !== criativoFiltro) return false; }
+      if(criativoBusca){
+        const alvo = [item.title, item.content, (item.tags || []).join(' '), criativoNomeCliente(item.client_id)]
+          .filter(Boolean).join(' ').toLowerCase();
+        if(!alvo.includes(criativoBusca.toLowerCase())) return false;
+      }
+      return true;
+    });
+  }
+
+  /* ============================================================================================
+     BANCO CRIATIVO: dashboard e grade de cards
+     ============================================================================================ */
+  function criativoRenderCardsResumo(){
+    const cards = [
+      { rotulo: 'Total de ideias', valor: criativoItens.filter(i => i.type === 'ideia').length, destaque: true },
+      { rotulo: 'Roteiros criados', valor: criativoItens.filter(i => i.type === 'roteiro').length },
+      { rotulo: 'Roteiros aprovados', valor: criativoItens.filter(i => i.type === 'aprovado').length },
+      { rotulo: 'Ganchos salvos', valor: criativoItens.filter(i => i.type === 'gancho').length },
+      { rotulo: 'Favoritos', valor: criativoItens.filter(i => i.favorite).length }
+    ];
+
+    document.getElementById('criativo-cards-resumo').innerHTML = cards.map(c => `
+      <div class="cartao-numero ${c.destaque ? 'cartao-numero-destaque' : ''}">
+        <div class="cartao-numero-valor">${c.valor.toLocaleString('pt-BR')}</div>
+        <div class="cartao-numero-rotulo">${c.rotulo}</div>
+      </div>
+    `).join('');
+  }
+
+  function criativoCartaoItem(item){
+    const tipo = CRIATIVO_TIPOS[item.type] || CRIATIVO_TIPOS.ideia;
+    const cliente = criativoNomeCliente(item.client_id);
+    const titulo = item.title || (item.type === 'gancho' ? (item.content || '').slice(0, 60) : 'Sem título');
+    const tags = (item.tags || []).slice(0, 4);
+
+    return `
+      <div class="criativo-card" data-id="${item.id}" style="border-left-color:${tipo.cor}">
+        <div class="criativo-card-topo">
+          <span class="crm-etiqueta-status" style="background:${tipo.cor}">${tipo.emoji} ${tipo.rotulo}</span>
+          <div style="display:flex; gap:4px; align-items:center;">
+            ${item.type === 'gancho' ? `<button type="button" class="criativo-favorito" data-copiar="${item.id}" aria-label="Copiar" title="Copiar">📋</button>` : ''}
+            <button type="button" class="criativo-favorito ${item.favorite ? 'ativo' : ''}" data-favoritar="${item.id}" aria-label="Favoritar" title="Favoritar">❤️</button>
+          </div>
+        </div>
+        <div class="criativo-card-titulo">${calEscapar(titulo)}</div>
+        <div class="criativo-card-preview">${calEscapar(item.content || '')}</div>
+        ${tags.length > 0 ? `<div class="criativo-tags">${tags.map(t => `<span class="criativo-tag">${calEscapar(t)}</span>`).join('')}</div>` : ''}
+        <div class="criativo-card-rodape">
+          <span>${formatarData(item.created_at)}</span>
+          ${cliente ? `<span>${calEscapar(cliente)}</span>` : ''}
+        </div>
+      </div>
+    `;
+  }
+
+  function criativoRenderGrade(){
+    const itens = criativoItensFiltrados().slice().sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    const container = document.getElementById('criativo-grade');
+
+    if(itens.length === 0){
+      container.innerHTML = '<p class="texto-vazio">Nenhum item encontrado.</p>';
+      return;
+    }
+
+    container.innerHTML = itens.map(item => criativoCartaoItem(item)).join('');
+
+    container.querySelectorAll('.criativo-card').forEach(card => {
+      card.addEventListener('click', (ev) => {
+        if(ev.target.closest('[data-favoritar]') || ev.target.closest('[data-copiar]')) return;
+        criativoAbrirPerfil(card.dataset.id);
+      });
+    });
+    container.querySelectorAll('[data-favoritar]').forEach(botao => {
+      botao.addEventListener('click', (ev) => { ev.stopPropagation(); criativoAlternarFavorito(botao.dataset.favoritar); });
+    });
+    container.querySelectorAll('[data-copiar]').forEach(botao => {
+      botao.addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        const item = criativoItens.find(x => x.id === botao.dataset.copiar);
+        if(item) criativoCopiarConteudo(item.content, botao);
+      });
+    });
+  }
+
+  async function criativoAlternarFavorito(id){
+    const item = criativoItens.find(x => x.id === id);
+    if(!item) return;
+    try{
+      const { error } = await Auth.client.from('creative_bank')
+        .update({ favorite: !item.favorite, updated_at: new Date().toISOString() }).eq('id', id);
+      if(error) throw error;
+      const estavaAberto = criativoAtual === id;
+      await criativoCarregarDados();
+      if(estavaAberto) criativoAbrirPerfil(id);
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível favoritar. Tente novamente.');
+    }
+  }
+
+  function criativoCopiarConteudo(texto, botao){
+    if(!texto) return;
+    navigator.clipboard.writeText(texto).then(() => {
+      if(botao){
+        const original = botao.textContent;
+        botao.textContent = '✅';
+        setTimeout(() => { botao.textContent = original; }, 1200);
+      }
+    }).catch(() => {
+      mostrarErroGlobal('Não foi possível copiar. Copie o texto manualmente.');
+    });
+  }
+
+  /* ============================================================================================
+     BANCO CRIATIVO: modal de criar/editar item (campos mudam conforme o tipo)
+     ============================================================================================ */
+  function criativoAtualizarCamposPorTipo(tipo){
+    document.getElementById('criativo-linha-titulo').hidden = tipo === 'gancho';
+    document.getElementById('criativo-linha-extra').hidden = (tipo !== 'roteiro' && tipo !== 'gancho');
+    document.getElementById('criativo-rotulo-extra').textContent = tipo === 'roteiro' ? 'Nicho' : 'Categoria';
+    document.getElementById('criativo-linha-resultado').hidden = tipo !== 'aprovado';
+    document.getElementById('criativo-linha-observacoes').hidden = tipo !== 'aprovado';
+    document.getElementById('criativo-rotulo-conteudo').textContent = CRIATIVO_ROTULOS_CONTEUDO[tipo] || 'Conteúdo';
+  }
+
+  function criativoTagsRenderizar(){
+    document.getElementById('criativo-tags-selecionadas').innerHTML = criativoTagsSelecionadas.map((tag, i) => `
+      <span class="criativo-tag-removivel">${calEscapar(tag)}<button type="button" data-remover-tag="${i}">&times;</button></span>
+    `).join('');
+    document.querySelectorAll('#criativo-tags-selecionadas [data-remover-tag]').forEach(botao => {
+      botao.addEventListener('click', () => {
+        criativoTagsSelecionadas.splice(Number(botao.dataset.removerTag), 1);
+        criativoTagsRenderizar();
+      });
+    });
+  }
+
+  function criativoAbrirModalNovo(){
+    criativoEditando = null;
+    document.getElementById('criativo-modal-titulo').textContent = 'Novo item';
+    document.getElementById('criativo-form').reset();
+    document.getElementById('criativo-campo-tipo').value = 'ideia';
+    criativoAtualizarCamposPorTipo('ideia');
+    criativoTagsSelecionadas = [];
+    criativoTagsRenderizar();
+    document.getElementById('criativo-botao-excluir').hidden = true;
+    document.getElementById('criativo-modal-fundo').hidden = false;
+    document.getElementById('criativo-campo-titulo').focus();
+  }
+
+  function criativoAbrirModalEdicao(id){
+    const item = criativoItens.find(x => x.id === id);
+    if(!item) return;
+
+    criativoEditando = item.id;
+    document.getElementById('criativo-modal-titulo').textContent = 'Editar item';
+    document.getElementById('criativo-campo-tipo').value = item.type;
+    criativoAtualizarCamposPorTipo(item.type);
+    document.getElementById('criativo-campo-titulo').value = item.title || '';
+    document.getElementById('criativo-campo-cliente').value = item.client_id || '';
+    document.getElementById('criativo-campo-extra').value = item.extra_label || '';
+    document.getElementById('criativo-campo-conteudo').value = item.content || '';
+    document.getElementById('criativo-campo-resultado').value = item.result || '';
+    document.getElementById('criativo-campo-observacoes').value = item.notes || '';
+    document.getElementById('criativo-campo-link').value = item.reference_link || '';
+    document.getElementById('criativo-campo-favorito').checked = !!item.favorite;
+    criativoTagsSelecionadas = (item.tags || []).slice();
+    criativoTagsRenderizar();
+    document.getElementById('criativo-botao-excluir').hidden = false;
+    document.getElementById('criativo-modal-fundo').hidden = false;
+  }
+
+  function criativoFecharModal(){
+    document.getElementById('criativo-modal-fundo').hidden = true;
+    criativoEditando = null;
+  }
+
+  async function criativoSalvar(ev){
+    ev.preventDefault();
+
+    const tipo = document.getElementById('criativo-campo-tipo').value;
+    const titulo = document.getElementById('criativo-campo-titulo').value.trim();
+    const conteudo = document.getElementById('criativo-campo-conteudo').value.trim();
+    if(tipo !== 'gancho' && !titulo) return;
+    if(!conteudo) return;
+
+    const payload = {
+      type: tipo,
+      title: titulo || null,
+      content: conteudo,
+      extra_label: (tipo === 'roteiro' || tipo === 'gancho') ? (document.getElementById('criativo-campo-extra').value.trim() || null) : null,
+      result: tipo === 'aprovado' ? (document.getElementById('criativo-campo-resultado').value.trim() || null) : null,
+      notes: tipo === 'aprovado' ? (document.getElementById('criativo-campo-observacoes').value.trim() || null) : null,
+      client_id: document.getElementById('criativo-campo-cliente').value || null,
+      tags: criativoTagsSelecionadas,
+      reference_link: document.getElementById('criativo-campo-link').value.trim() || null,
+      favorite: document.getElementById('criativo-campo-favorito').checked,
+      updated_at: new Date().toISOString()
+    };
+
+    try{
+      if(criativoEditando){
+        const { error } = await Auth.client.from('creative_bank').update(payload).eq('id', criativoEditando);
+        if(error) throw error;
+      } else {
+        const { error } = await Auth.client.from('creative_bank').insert(payload);
+        if(error) throw error;
+      }
+      criativoFecharModal();
+      await criativoCarregarDados();
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível salvar o item. Tente novamente.');
+    }
+  }
+
+  async function criativoExcluir(){
+    if(!criativoEditando) return;
+    if(!confirm('Tem certeza que deseja excluir este item?')) return;
+
+    try{
+      const { error } = await Auth.client.from('creative_bank').delete().eq('id', criativoEditando);
+      if(error) throw error;
+      criativoFecharModal();
+      criativoFecharPerfil();
+      await criativoCarregarDados();
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível excluir o item. Tente novamente.');
+    }
+  }
+
+  async function criativoDuplicar(id){
+    const item = criativoItens.find(x => x.id === id);
+    if(!item) return;
+
+    const copia = { ...item };
+    delete copia.id;
+    delete copia.created_at;
+    copia.title = (item.title || 'Sem título') + ' (cópia)';
+    copia.updated_at = new Date().toISOString();
+
+    try{
+      const { error } = await Auth.client.from('creative_bank').insert(copia);
+      if(error) throw error;
+      criativoFecharPerfil();
+      await criativoCarregarDados();
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível duplicar o item. Tente novamente.');
+    }
+  }
+
+  /* ============================================================================================
+     BANCO CRIATIVO: perfil individual do item
+     ============================================================================================ */
+  function criativoAbrirPerfil(id){
+    const item = criativoItens.find(x => x.id === id);
+    if(!item) return;
+    criativoAtual = id;
+
+    const tipo = CRIATIVO_TIPOS[item.type] || CRIATIVO_TIPOS.ideia;
+    document.getElementById('criativo-perfil-avatar').textContent = tipo.emoji;
+    document.getElementById('criativo-perfil-titulo').textContent = item.title || (item.type === 'gancho' ? 'Gancho' : 'Sem título');
+    document.getElementById('criativo-perfil-sub').textContent = [tipo.rotulo, criativoNomeCliente(item.client_id), formatarData(item.created_at)].filter(Boolean).join(' · ');
+
+    document.getElementById('criativo-perfil-editar').onclick = () => criativoAbrirModalEdicao(item.id);
+
+    const botaoFavoritar = document.getElementById('criativo-perfil-favoritar');
+    botaoFavoritar.textContent = item.favorite ? '💔 Remover dos favoritos' : '❤️ Favoritar';
+    botaoFavoritar.onclick = () => criativoAlternarFavorito(item.id);
+
+    const botaoDuplicar = document.getElementById('criativo-perfil-duplicar');
+    botaoDuplicar.hidden = !(item.type === 'roteiro' || item.type === 'aprovado');
+    botaoDuplicar.onclick = () => criativoDuplicar(item.id);
+
+    const botaoCopiar = document.getElementById('criativo-perfil-copiar');
+    botaoCopiar.hidden = item.type !== 'gancho';
+    botaoCopiar.textContent = '📋 Copiar';
+    botaoCopiar.onclick = () => criativoCopiarConteudo(item.content, botaoCopiar);
+
+    document.getElementById('criativo-perfil-excluir').onclick = () => { criativoEditando = item.id; criativoExcluir(); };
+
+    const extraCartao = document.getElementById('criativo-perfil-extra-cartao');
+    if((item.type === 'roteiro' || item.type === 'gancho') && item.extra_label){
+      extraCartao.hidden = false;
+      document.getElementById('criativo-perfil-extra-rotulo').textContent = item.type === 'roteiro' ? 'Nicho' : 'Categoria';
+      document.getElementById('criativo-perfil-extra-texto').textContent = item.extra_label;
+    } else {
+      extraCartao.hidden = true;
+    }
+
+    document.getElementById('criativo-perfil-conteudo-rotulo').textContent = CRIATIVO_ROTULOS_CONTEUDO[item.type] || 'Conteúdo';
+    document.getElementById('criativo-perfil-conteudo-texto').textContent = item.content || '';
+
+    const resultadoCartao = document.getElementById('criativo-perfil-resultado-cartao');
+    if(item.type === 'aprovado' && item.result){
+      resultadoCartao.hidden = false;
+      document.getElementById('criativo-perfil-resultado-texto').textContent = item.result;
+    } else {
+      resultadoCartao.hidden = true;
+    }
+
+    const observacoesCartao = document.getElementById('criativo-perfil-observacoes-cartao');
+    if(item.type === 'aprovado' && item.notes){
+      observacoesCartao.hidden = false;
+      document.getElementById('criativo-perfil-observacoes-texto').textContent = item.notes;
+    } else {
+      observacoesCartao.hidden = true;
+    }
+
+    const tagsCartao = document.getElementById('criativo-perfil-tags-cartao');
+    if(item.tags && item.tags.length > 0){
+      tagsCartao.hidden = false;
+      document.getElementById('criativo-perfil-tags').innerHTML = item.tags.map(t => `<span class="criativo-tag">${calEscapar(t)}</span>`).join('');
+    } else {
+      tagsCartao.hidden = true;
+    }
+
+    const linkCartao = document.getElementById('criativo-perfil-link-cartao');
+    if(item.reference_link){
+      linkCartao.hidden = false;
+      const link = document.getElementById('criativo-perfil-link');
+      link.href = item.reference_link;
+      link.textContent = item.reference_link;
+    } else {
+      linkCartao.hidden = true;
+    }
+
+    document.getElementById('criativo-perfil-fundo').hidden = false;
+  }
+
+  function criativoFecharPerfil(){
+    document.getElementById('criativo-perfil-fundo').hidden = true;
+    criativoAtual = null;
+  }
+
+  /* ============================================================================================
+     BANCO CRIATIVO: rascunhos rápidos ("Ideias para usar depois")
+     ============================================================================================ */
+  function criativoRenderRascunhos(){
+    const container = document.getElementById('criativo-lista-rascunhos');
+    container.innerHTML = criativoRascunhos.length === 0
+      ? '<p class="texto-vazio">Nenhum rascunho ainda.</p>'
+      : criativoRascunhos.map(r => `
+          <div class="criativo-rascunho-item">
+            <span>${calEscapar(r.content)}</span>
+            <button type="button" data-excluir-rascunho="${r.id}" aria-label="Excluir rascunho">&times;</button>
+          </div>
+        `).join('');
+
+    container.querySelectorAll('[data-excluir-rascunho]').forEach(botao => {
+      botao.addEventListener('click', () => criativoExcluirRascunho(botao.dataset.excluirRascunho));
+    });
+  }
+
+  async function criativoAdicionarRascunho(){
+    const texto = document.getElementById('criativo-novo-rascunho').value.trim();
+    if(!texto) return;
+
+    try{
+      const { error } = await Auth.client.from('creative_drafts').insert({ content: texto });
+      if(error) throw error;
+      document.getElementById('criativo-novo-rascunho').value = '';
+      await criativoCarregarDados();
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível adicionar o rascunho. Tente novamente.');
+    }
+  }
+
+  async function criativoExcluirRascunho(id){
+    try{
+      const { error } = await Auth.client.from('creative_drafts').delete().eq('id', id);
+      if(error) throw error;
+      await criativoCarregarDados();
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível excluir o rascunho. Tente novamente.');
+    }
+  }
+
+  function criativoRenderizarTudo(){
+    criativoRenderCardsResumo();
+    criativoRenderGrade();
+    criativoRenderRascunhos();
+  }
+
+  /* ============================================================================================
+     BANCO CRIATIVO: interações
+     ============================================================================================ */
+  function configurarCriativo(){
+    document.getElementById('criativo-novo-item').addEventListener('click', criativoAbrirModalNovo);
+    document.getElementById('criativo-modal-fechar').addEventListener('click', criativoFecharModal);
+    document.getElementById('criativo-cancelar').addEventListener('click', criativoFecharModal);
+    document.getElementById('criativo-modal-fundo').addEventListener('click', (ev) => {
+      if(ev.target.id === 'criativo-modal-fundo') criativoFecharModal();
+    });
+    document.getElementById('criativo-form').addEventListener('submit', criativoSalvar);
+    document.getElementById('criativo-botao-excluir').addEventListener('click', criativoExcluir);
+    document.getElementById('criativo-campo-tipo').addEventListener('change', (ev) => criativoAtualizarCamposPorTipo(ev.target.value));
+
+    document.getElementById('criativo-campo-tag-nova').addEventListener('keydown', (ev) => {
+      if(ev.key === 'Enter' || ev.key === ','){
+        ev.preventDefault();
+        const valor = ev.target.value.trim().replace(/,$/, '');
+        if(valor && !criativoTagsSelecionadas.includes(valor)){
+          criativoTagsSelecionadas.push(valor);
+          criativoTagsRenderizar();
+        }
+        ev.target.value = '';
+      }
+    });
+
+    document.getElementById('criativo-perfil-fechar').addEventListener('click', criativoFecharPerfil);
+    document.getElementById('criativo-perfil-fundo').addEventListener('click', (ev) => {
+      if(ev.target.id === 'criativo-perfil-fundo') criativoFecharPerfil();
+    });
+
+    document.getElementById('criativo-busca').addEventListener('input', (ev) => {
+      criativoBusca = ev.target.value.trim();
+      criativoRenderGrade();
+    });
+
+    document.querySelectorAll('#criativo-filtros button').forEach(botao => {
+      botao.addEventListener('click', () => {
+        document.querySelectorAll('#criativo-filtros button').forEach(b => b.classList.remove('ativo'));
+        botao.classList.add('ativo');
+        criativoFiltro = botao.dataset.filtro;
+        criativoRenderGrade();
+      });
+    });
+
+    document.getElementById('criativo-adicionar-rascunho').addEventListener('click', criativoAdicionarRascunho);
+    document.getElementById('criativo-novo-rascunho').addEventListener('keydown', (ev) => {
+      if(ev.key === 'Enter'){ ev.preventDefault(); criativoAdicionarRascunho(); }
+    });
+
+    document.addEventListener('keydown', (ev) => {
+      if(ev.key !== 'Escape') return;
+      if(!document.getElementById('criativo-modal-fundo').hidden) criativoFecharModal();
+      else if(!document.getElementById('criativo-perfil-fundo').hidden) criativoFecharPerfil();
+    });
+  }
+
+  /* ============================================================================================
      INTERAÇÕES: abas, filtro de período, sidebar mobile
      ============================================================================================ */
   function configurarAbas(){
     const botoes = document.querySelectorAll('.nav-item');
     const titulos = {
       'menu-principal': 'Menu Principal', 'portfolio': 'Portfólio', 'calendario': 'Calendário',
-      'clientes': 'CRM de Clientes', 'projetos': 'Projetos', 'financeiro': 'Financeiro', 'negocio': 'Meu Negócio'
+      'clientes': 'CRM de Clientes', 'projetos': 'Projetos', 'financeiro': 'Financeiro', 'negocio': 'Meu Negócio',
+      'criativo': 'Banco Criativo'
     };
 
     botoes.forEach(botao => {
@@ -5437,11 +6153,13 @@
         const ehProjetos = botao.dataset.tab === 'projetos';
         const ehFinanceiro = botao.dataset.tab === 'financeiro';
         const ehNegocio = botao.dataset.tab === 'negocio';
-        document.getElementById('filtro-periodo').hidden = ehCalendario || ehClientes || ehProjetos || ehFinanceiro || ehNegocio;
+        const ehCriativo = botao.dataset.tab === 'criativo';
+        document.getElementById('filtro-periodo').hidden = ehCalendario || ehClientes || ehProjetos || ehFinanceiro || ehNegocio || ehCriativo;
         document.getElementById('cal-toolbar').hidden = !ehCalendario;
         document.getElementById('crm-toolbar').hidden = !ehClientes;
         document.getElementById('kan-toolbar').hidden = !ehProjetos;
         document.getElementById('fin-toolbar').hidden = !ehFinanceiro;
+        document.getElementById('criativo-toolbar').hidden = !ehCriativo;
 
         if(ehCalendario && !calCarregado){
           calCarregado = true;
@@ -5461,6 +6179,10 @@
         }
         if(ehNegocio){
           await negocioCarregarERenderizar();
+        }
+        if(ehCriativo && !criativoCarregado){
+          criativoCarregado = true;
+          await criativoCarregarDados();
         }
 
         fecharSidebarMobile();
@@ -5524,6 +6246,7 @@
     configurarCRM();
     configurarKan();
     configurarFinanceiro();
+    configurarCriativo();
     document.getElementById('botao-sair').addEventListener('click', () => Auth.logout());
 
     await carregarDados();

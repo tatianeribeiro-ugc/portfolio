@@ -413,3 +413,49 @@ create policy "CRUD completo para usuarios autenticados"
 create policy "CRUD completo para usuarios autenticados"
   on recurring_expenses for all to authenticated using (true) with check (true);
 -- ================================================================================
+
+-- --------------------------------------------------------------------------------
+-- BANCO CRIATIVO
+-- De propósito simples: uma tabela só para os 4 tipos de item (ideia, roteiro,
+-- roteiro aprovado, gancho). O rótulo "Nicho" (roteiro) e "Categoria" (gancho)
+-- usam a mesma coluna "extra_label", só o texto do rótulo muda no painel
+-- conforme o tipo, pra não duplicar duas colunas quase iguais.
+-- --------------------------------------------------------------------------------
+create table if not exists creative_bank (
+  id uuid primary key default gen_random_uuid(),
+  type text not null default 'ideia',  -- ideia | roteiro | aprovado | gancho
+  title text,
+  content text,                         -- descrição (ideia) | roteiro completo (roteiro/aprovado) | texto do gancho
+  extra_label text,                     -- nicho (roteiro) | categoria (gancho)
+  result text,                          -- resultado obtido (só em "aprovado")
+  notes text,                           -- observações (só em "aprovado")
+  client_id uuid references clients(id) on delete set null,
+  tags text[],
+  reference_link text,
+  favorite boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+-- --------------------------------------------------------------------------------
+-- TABELA: creative_drafts
+-- A seção "Ideias para usar depois": rascunhos soltos, sem título nem
+-- categoria, só o texto mesmo. Serve como bloco de notas de ideias futuras.
+-- --------------------------------------------------------------------------------
+create table if not exists creative_drafts (
+  id uuid primary key default gen_random_uuid(),
+  content text not null,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists creative_bank_type_idx on creative_bank (type);
+
+alter table creative_bank enable row level security;
+alter table creative_drafts enable row level security;
+
+create policy "CRUD completo para usuarios autenticados"
+  on creative_bank for all to authenticated using (true) with check (true);
+
+create policy "CRUD completo para usuarios autenticados"
+  on creative_drafts for all to authenticated using (true) with check (true);
+-- ================================================================================
