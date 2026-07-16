@@ -468,3 +468,38 @@ create policy "CRUD completo para usuarios autenticados"
 alter table portfolio_leads
   add column if not exists read boolean not null default false;
 -- ================================================================================
+
+-- --------------------------------------------------------------------------------
+-- SINCRONIZAÇÃO COM O GOOGLE CALENDAR
+-- google_event_id liga um evento local ao evento correspondente no Google.
+-- last_synced_at guarda quando essa linha foi sincronizada pela última vez,
+-- usado pra decidir quem "ganha" quando os dois lados mudaram (o mais recente).
+-- --------------------------------------------------------------------------------
+alter table events
+  add column if not exists google_event_id text unique,
+  add column if not exists last_synced_at timestamptz;
+
+-- --------------------------------------------------------------------------------
+-- TABELA: google_calendar_tokens
+-- Só uma linha (id sempre = 1). Guarda o token de acesso ao Google Calendar.
+-- IMPORTANTE: RLS está ligado e NENHUMA policy é criada de propósito: nem
+-- "anon" nem "authenticated" conseguem ler ou escrever aqui. Só a service_role
+-- (usada exclusivamente dentro da Edge Function, nunca no navegador) enxerga
+-- esta tabela, porque a service_role ignora RLS. É onde ficam as credenciais
+-- mais sensíveis do projeto.
+-- --------------------------------------------------------------------------------
+create table if not exists google_calendar_tokens (
+  id integer primary key default 1,
+  refresh_token text,
+  access_token text,
+  access_token_expires_at timestamptz,
+  calendar_id text not null default 'primary',
+  sync_token text,
+  updated_at timestamptz not null default now(),
+  constraint google_calendar_tokens_singleton check (id = 1)
+);
+
+alter table events enable row level security; -- (já estava ligado, sem mudança de comportamento)
+alter table google_calendar_tokens enable row level security;
+-- Nenhuma policy aqui de propósito: fica bloqueado para anon/authenticated.
+-- ================================================================================

@@ -930,6 +930,14 @@
       </div>
     </div>
 
+    <div class="cal-toolbar" id="cal-google-barra" hidden style="margin-top:-10px;">
+      <span id="cal-google-status" style="font-size:0.82rem; color:var(--texto-suave); font-weight:600;">⚪ Google Calendar não conectado</span>
+      <div class="cal-toolbar-direita">
+        <button type="button" class="cal-botao-secundario" id="cal-google-conectar">Conectar Google Calendar</button>
+        <button type="button" class="cal-botao-secundario" id="cal-google-sincronizar" hidden>🔄 Sincronizar agora</button>
+      </div>
+    </div>
+
     <div class="crm-toolbar" id="crm-toolbar" hidden>
       <div class="crm-toolbar-esquerda">
         <button type="button" class="cal-botao-primario" id="crm-novo-cliente">+ Novo Cliente</button>
@@ -2608,6 +2616,83 @@
     calRenderizarTudo();
   }
 
+  /* ============================================================================================
+     CALENDÁRIO: sincronização com o Google Calendar
+     Sem tarefa agendada: o painel chama a Edge Function "push" logo depois de
+     salvar/excluir/arrastar um evento, e chama "pull" sempre que o Calendário
+     é aberto. google-calendar-sync exige estar logada (mesma sessão do painel).
+     ============================================================================================ */
+  async function calGoogleFetch(acao, extra){
+    const { data: sessao } = await Auth.client.auth.getSession();
+    const token = sessao && sessao.session ? sessao.session.access_token : null;
+    const resp = await fetch(`${SUPABASE_URL}/functions/v1/google-calendar-sync`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ action: acao, ...extra })
+    });
+    return resp.json();
+  }
+
+  function calGoogleAtualizarStatus(resultado){
+    const status = document.getElementById('cal-google-status');
+    const botaoConectar = document.getElementById('cal-google-conectar');
+    const botaoSincronizar = document.getElementById('cal-google-sincronizar');
+    if(!status) return;
+    if(resultado && resultado.conectado){
+      status.textContent = '🟢 Google Calendar conectado';
+      botaoConectar.hidden = true;
+      botaoSincronizar.hidden = false;
+    } else {
+      status.textContent = '⚪ Google Calendar não conectado';
+      botaoConectar.hidden = false;
+      botaoSincronizar.hidden = true;
+    }
+  }
+
+  async function calGoogleEmpurrarEvento(id){
+    try{
+      const resultado = await calGoogleFetch('push_one', { eventId: id });
+      calGoogleAtualizarStatus(resultado);
+    } catch(erro){
+      console.error(erro);
+    }
+  }
+
+  async function calGooglePullSilencioso(){
+    try{
+      const resultado = await calGoogleFetch('pull');
+      calGoogleAtualizarStatus(resultado);
+      if(resultado.conectado && resultado.processados > 0){
+        await calCarregarDados();
+        menuRenderizarTudo();
+      }
+    } catch(erro){
+      console.error(erro);
+    }
+  }
+
+  function calGoogleConectar(){
+    window.location.href = `${SUPABASE_URL}/functions/v1/google-oauth-start`;
+  }
+
+  async function calGoogleSincronizarAgora(){
+    const botao = document.getElementById('cal-google-sincronizar');
+    const textoOriginal = botao.textContent;
+    botao.textContent = 'Sincronizando...';
+    botao.disabled = true;
+    try{
+      const resultado = await calGoogleFetch('full');
+      calGoogleAtualizarStatus(resultado);
+      if(resultado.conectado){ await calCarregarDados(); menuRenderizarTudo(); }
+    } catch(erro){
+      console.error(erro);
+      mostrarErroGlobal('Não foi possível sincronizar com o Google Calendar agora.');
+    } finally {
+      botao.textContent = textoOriginal;
+      botao.disabled = false;
+    }
+  }
+
   function calEscapar(texto){
     const div = document.createElement('div');
     div.textContent = texto || '';
@@ -2926,15 +3011,18 @@
     };
 
     try{
+      let idSalvo = calEventoEditando;
       if(calEventoEditando){
         const { error } = await Auth.client.from('events').update(payload).eq('id', calEventoEditando);
         if(error) throw error;
       } else {
-        const { error } = await Auth.client.from('events').insert(payload);
+        const { data, error } = await Auth.client.from('events').insert(payload).select().single();
         if(error) throw error;
+        idSalvo = data.id;
       }
       calFecharModal();
       await calCarregarDados();
+      calGoogleEmpurrarEvento(idSalvo);
     } catch(erro){
       console.error(erro);
       mostrarErroGlobal('Não foi possível salvar o evento. Tente novamente.');
@@ -2945,11 +3033,15 @@
     if(!calEventoEditando) return;
     if(!confirm('Tem certeza que deseja excluir este evento?')) return;
 
+    const eventoAntigo = calEventos.find(e => e.id === calEventoEditando);
+    const googleEventId = eventoAntigo ? eventoAntigo.google_event_id : null;
+
     try{
       const { error } = await Auth.client.from('events').delete().eq('id', calEventoEditando);
       if(error) throw error;
       calFecharModal();
       await calCarregarDados();
+      if(googleEventId) calGoogleFetch('delete_one', { googleEventId }).catch(erro => console.error(erro));
     } catch(erro){
       console.error(erro);
       mostrarErroGlobal('Não foi possível excluir o evento. Tente novamente.');
@@ -2964,14 +3056,17 @@
     const copia = { ...original };
     delete copia.id;
     delete copia.created_at;
+    delete copia.google_event_id;
+    delete copia.last_synced_at;
     copia.title = original.title + ' (cópia)';
     copia.updated_at = new Date().toISOString();
 
     try{
-      const { error } = await Auth.client.from('events').insert(copia);
+      const { data, error } = await Auth.client.from('events').insert(copia).select().single();
       if(error) throw error;
       calFecharModal();
       await calCarregarDados();
+      calGoogleEmpurrarEvento(data.id);
     } catch(erro){
       console.error(erro);
       mostrarErroGlobal('Não foi possível duplicar o evento. Tente novamente.');
@@ -3052,6 +3147,7 @@
         .eq('id', id);
       if(error) throw error;
       await calCarregarDados();
+      calGoogleEmpurrarEvento(id);
     } catch(erro){
       console.error(erro);
       mostrarErroGlobal('Não foi possível mover o evento. Tente novamente.');
@@ -3073,6 +3169,8 @@
     document.getElementById('cal-botao-duplicar').addEventListener('click', calDuplicarEvento);
     document.getElementById('cal-botao-novo-cliente').addEventListener('click', calAbrirNovoCliente);
     document.getElementById('cal-confirmar-novo-cliente').addEventListener('click', calConfirmarNovoCliente);
+    document.getElementById('cal-google-conectar').addEventListener('click', calGoogleConectar);
+    document.getElementById('cal-google-sincronizar').addEventListener('click', calGoogleSincronizarAgora);
 
     document.getElementById('cal-mes-anterior').addEventListener('click', () => {
       calMesReferencia = new Date(calMesReferencia.getFullYear(), calMesReferencia.getMonth() - 1, 1);
@@ -6293,6 +6391,7 @@
         const ehCriativo = botao.dataset.tab === 'criativo';
         document.getElementById('filtro-periodo').hidden = ehCalendario || ehClientes || ehProjetos || ehFinanceiro || ehNegocio || ehCriativo;
         document.getElementById('cal-toolbar').hidden = !ehCalendario;
+        document.getElementById('cal-google-barra').hidden = !ehCalendario;
         document.getElementById('crm-toolbar').hidden = !ehClientes;
         document.getElementById('kan-toolbar').hidden = !ehProjetos;
         document.getElementById('fin-toolbar').hidden = !ehFinanceiro;
@@ -6301,6 +6400,9 @@
         if(ehCalendario && !calCarregado){
           calCarregado = true;
           await calCarregarDados();
+        }
+        if(ehCalendario){
+          calGooglePullSilencioso();
         }
         if(ehClientes && !crmCarregado){
           crmCarregado = true;
@@ -6398,6 +6500,7 @@
     finCarregado = true;
     await Promise.all([calCarregarDados(), kanCarregarDados(), finCarregarDados()]);
     menuRenderizarTudo();
+    calGooglePullSilencioso();
   })();
 </script>
 </body>
