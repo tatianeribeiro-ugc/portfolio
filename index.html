@@ -155,6 +155,7 @@
     font-weight: 600;
     letter-spacing: -0.01em;
     white-space: nowrap;
+    color: var(--azul);
   }
   .logo em{ color: var(--laranja); font-style: italic; }
 
@@ -238,7 +239,16 @@
     gap: 56px;
     align-items:center;
   }
-  .hero h1{ font-size: clamp(2.4rem, 5vw, 3.6rem); }
+  .hero-nome{
+    font-family: var(--fonte-titulo);
+    font-size: clamp(2.8rem, 6.5vw, 4.4rem);
+    font-weight: 600;
+    color: var(--azul);
+    line-height: 1.05;
+    margin: 10px 0 24px 0;
+  }
+  .hero-nome-laranja{ color: var(--laranja); }
+  .hero h1{ font-size: clamp(1.7rem, 3vw, 2.2rem); line-height: 1.3; }
   .hero-destaque-azul{ color: var(--azul); }
   .hero-destaque-laranja{ color: var(--laranja); }
   .hero-sub{ font-size: 1.15rem; max-width: 520px; color: rgba(20,17,13,0.78); }
@@ -366,15 +376,15 @@
   }
   .sobre-texto p.sobre-saudacao{
     font-family: var(--fonte-titulo);
-    font-style: italic;
     font-size: clamp(1.5rem, 3.6vw, 2.6rem);
-    font-weight: 500;
+    font-weight: 600;
     line-height: 1.15;
     color: var(--tinta);
     margin-bottom: 24px;
     white-space: nowrap;
   }
-  .sobre-nome-destaque{ color: var(--laranja); font-style: italic; font-weight: 600; }
+  .sobre-nome-azul{ color: var(--azul); }
+  .sobre-nome-laranja{ color: var(--laranja); }
   .sobre-texto p{ font-size: 1.03rem; color: rgba(20,17,13,0.8); }
 
   /* Cores de destaque específicas desta seção (hex exatos pedidos para o texto Sobre). */
@@ -764,17 +774,31 @@
      SERVIÇOS
      ============================================================ */
   .servicos-cabecalho{ max-width: 620px; margin-bottom: 48px; }
-  .servicos-grade{
-    display:grid;
-    grid-template-columns: repeat(4, 1fr);
+
+  /* Carrossel horizontal (mesmo padrão de setas do carrossel de vídeos,
+     classes .carrossel-seta* reaproveitadas do Portfólio). */
+  .servicos-carrossel-wrap{ position:relative; }
+  .servicos-carrossel{
+    display:flex;
     gap: 22px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
+  .servicos-carrossel::-webkit-scrollbar{ display:none; }
   .servico-card{
+    flex: 0 0 320px;
+    scroll-snap-align: start;
     background: var(--branco);
     border-radius: var(--raio);
     padding: 32px 26px;
     box-shadow: var(--sombra);
     border: 1px solid var(--borda);
+    display:flex;
+    flex-direction:column;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
   .servico-card:hover{ transform: translateY(-6px); box-shadow: var(--sombra-forte); }
@@ -787,27 +811,25 @@
     margin-bottom: 20px;
   }
   .servico-card h3{ font-size: 1.15rem; margin-bottom: 8px; }
-  .servico-card p{ font-size: 0.92rem; color: rgba(20,17,13,0.72); margin:0; }
+  .servico-card p{ font-size: 0.92rem; color: rgba(20,17,13,0.72); margin: 0 0 22px 0; }
+  .servico-cta{
+    display:inline-flex;
+    align-items:center;
+    gap: 8px;
+    margin-top: auto;
+    color: var(--laranja);
+    font-weight: 700;
+    font-size: 0.82rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .servico-cta:hover{ text-decoration: underline; }
+  .servico-cta svg{ flex-shrink:0; }
 
-  @media (max-width: 1000px){ .servicos-grade{ grid-template-columns: repeat(2, 1fr); } }
-  /* No celular, os 4 cartões de serviço viram um carrossel horizontal
-     (arraste para o lado) em vez de empilhar um embaixo do outro. */
   @media (max-width: 640px){
-    .servicos-grade{
-      display:flex;
-      grid-template-columns: unset;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      gap: 16px;
-      padding-bottom: 6px;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-    .servicos-grade::-webkit-scrollbar{ display:none; }
-    .servico-card{
-      flex: 0 0 78%;
-      scroll-snap-align: start;
-    }
+    .servico-card{ flex-basis: 78%; }
+    .servicos-carrossel-wrap .carrossel-seta{ display:none; }
   }
 
   /* ============================================================
@@ -888,7 +910,7 @@
 
   .pacotes-grade{
     display:grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
     margin-bottom: 32px;
   }
@@ -967,14 +989,11 @@
     color: rgba(20,17,13,0.6);
   }
 
-  @media (max-width: 900px){
-    .pacotes-grade{ grid-template-columns: repeat(2, 1fr); }
-  }
   @media (max-width: 700px){
     .investimento-detalhes{ grid-template-columns: 1fr; }
   }
   /* No celular, os pacotes viram um carrossel horizontal: dá pra "folhear"
-     as opções (como comparar planos), em vez de empilhar os 4 cartões. */
+     as opções (como comparar planos), em vez de empilhar os 3 cartões. */
   @media (max-width: 640px){
     .pacotes-grade{
       display:flex;
@@ -1032,7 +1051,7 @@
   }
   .campo{ margin-bottom: 20px; }
   .campo label{ display:block; font-weight: 700; font-size: 0.85rem; margin-bottom: 8px; }
-  .campo input, .campo textarea{
+  .campo input, .campo textarea, .campo select{
     width: 100%;
     padding: 13px 16px;
     border-radius: var(--raio-pequeno);
@@ -1043,10 +1062,19 @@
     color: var(--tinta);
     resize: vertical;
   }
-  .campo input:focus, .campo textarea:focus{
+  .campo input:focus, .campo textarea:focus, .campo select:focus{
     outline: none;
     border-color: var(--azul);
     box-shadow: 0 0 0 3px rgba(0,73,164,0.15);
+  }
+  .campo select{
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 42px;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2314110d' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
   }
   .formulario .botao{ width: 100%; }
   .mensagem-confirmacao{
@@ -1142,6 +1170,7 @@
     <div class="container hero-grid">
       <div class="revelar">
         <span class="rotulo-secao rotulo-hero">Criadora de Conteúdo UGC</span>
+        <p class="hero-nome">Tati <span class="hero-nome-laranja">Ribeiro</span></p>
         <h1 id="hero-titulo"></h1>
         <p class="hero-sub" id="hero-subtitulo"></p>
         <div class="hero-acoes">
@@ -1248,9 +1277,17 @@
       <div class="servicos-cabecalho revelar">
         <span class="rotulo-secao">Serviços</span>
         <h2>Como posso ajudar a sua <em class="destaque-laranja-em">marca</em></h2>
-        <p>Conteúdo pensado para performar em anúncios e redes sociais, entregue com agilidade e direção criativa profissional.</p>
+        <p>Conteúdo feito para se conectar com quem consome. Pensado para redes sociais e campanhas, com agilidade e direção criativa profissional.</p>
       </div>
-      <div class="servicos-grade" id="grade-servicos"></div>
+      <div class="servicos-carrossel-wrap revelar" id="servicos-carrossel-wrap">
+        <button type="button" class="carrossel-seta carrossel-seta-esq" id="seta-servicos-esq" aria-label="Serviços anteriores" hidden>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="servicos-carrossel" id="grade-servicos"></div>
+        <button type="button" class="carrossel-seta carrossel-seta-dir" id="seta-servicos-dir" aria-label="Mais serviços" hidden>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+      </div>
     </div>
   </section>
 
@@ -1314,6 +1351,17 @@
         <div class="campo">
           <label for="campo-email">E-mail</label>
           <input type="email" id="campo-email" name="email" required autocomplete="email">
+        </div>
+        <div class="campo">
+          <label for="campo-servico">Qual serviço te interessa?</label>
+          <select id="campo-servico" name="servico" required>
+            <option value="" disabled selected>Selecione uma opção</option>
+            <option value="Pacote (vídeo + fotos)">Pacote (vídeo + fotos)</option>
+            <option value="Vídeo UGC">Vídeo UGC</option>
+            <option value="Fotos de Produto">Fotos de Produto</option>
+            <option value="Roteiro Estratégico">Roteiro Estratégico</option>
+            <option value="Não sei ainda">Não sei ainda</option>
+          </select>
         </div>
         <div class="campo">
           <label for="campo-mensagem">Mensagem</label>
@@ -1383,8 +1431,8 @@
 
     // EDITE AQUI: textos da primeira dobra (hero)
     hero: {
-      tituloHtml: "Histórias que fazem <span class=\"hero-destaque-azul\">produtos</span> encontrarem espaço na <span class=\"hero-destaque-laranja\">vida real</span>.",
-      subtitulo: "Sou a Tati Ribeiro, criadora de conteúdo UGC. Crio conteúdos baseados na vida real, usando storytelling e experiências genuínas para aproximar pessoas e marcas de forma natural.",
+      tituloHtml: "Produto inserido na <span class=\"hero-destaque-laranja\">vida real</span>. Roteiro planejado estrategicamente para <span class=\"hero-destaque-azul\">conectar primeiro</span>, vender depois.",
+      subtitulo: "Cada roteiro segue uma estrutura testada: um gancho que cria conexão real, o produto aparecendo naturalmente na rotina e um convite leve para o próximo passo, sem parecer propaganda.",
       manifesto: "Porque as pessoas se conectam com histórias que poderiam viver também."
     },
 
@@ -1392,10 +1440,10 @@
     // "destaque-laranja-sobre" pintam a palavra na cor correspondente (definidas no CSS).
     sobre: {
       titulo: "Sobre Mim",
-      saudacaoHtml: "Oii, eu sou a <span class=\"sobre-nome-destaque\">Tati Ribeiro</span>!",
+      saudacaoHtml: "Oii, eu sou a <span class=\"sobre-nome-azul\">Tati</span> <span class=\"sobre-nome-laranja\">Ribeiro</span>!",
       corpoHtml: `
-        <p>Moro em Campinas, tenho 34 anos, sou cristã, mãe, esposa, nutricionista por formação e criadora de <span class="destaque-azul-sobre">conteúdo</span> por paixão.</p>
         <p>Sempre fui aquela pessoa que observa tudo, cria <span class="destaque-laranja-sobre">histórias</span> na cabeça e enxerga possibilidades nas pequenas coisas do dia a dia. Talvez seja por isso que me apaixonei pelo UGC.</p>
+        <p>Moro em Campinas, tenho 34 anos, sou cristã, mãe, esposa, nutricionista por formação e criadora de <span class="destaque-azul-sobre">conteúdo</span> por paixão.</p>
         <p>Depois da maternidade, redescobri meu estilo, minha criatividade e a forma como me comunico.</p>
         <p>Hoje transformo experiências, rotinas e descobertas em conteúdos leves, estratégicos e <span class="destaque-azul-sobre">autênticos</span>.</p>
         <p class="sobre-marcas-linha">Já tive a oportunidade de criar conteúdos para marcas como: <span class="sobre-marcas">Azulim • Astra Fit • CRF Pilates • Miss Plus Ateliê</span>.</p>
@@ -1479,27 +1527,30 @@
       { titulo: "Produto testado com o pet", categoria: "pet", foto: "fotos/pet-2.png", gradiente: "linear-gradient(150deg, #df7900, #14110d)" }
     ],
 
-    // EDITE AQUI: serviços oferecidos (ícone é apenas decorativo, em SVG simples)
+    // EDITE AQUI: serviços oferecidos (ícone é apenas decorativo, em SVG simples).
+    // "ctaTexto" é o texto do botão de cada card e "ctaMensagem" é a mensagem que
+    // já vem preenchida quando a marca clica e abre o WhatsApp.
     servicos: [
       {
         titulo: "Vídeo UGC",
-        descricao: "Vídeos autênticos, gravados em cenário natural, prontos para redes sociais e campanhas pagas.",
-        icone: "camera"
+        descricao: "Vídeos autênticos, gravados em cenário específico de acordo com produto/roteiro, prontos para redes sociais e campanhas pagas.",
+        icone: "camera",
+        ctaTexto: "Quero um vídeo UGC",
+        ctaMensagem: "Olá, Tati! Quero um vídeo UGC para minha marca."
       },
       {
-        titulo: "Reels",
-        descricao: "Roteiro, gravação e edição de reels com ganchos pensados para reter a atenção do público.",
-        icone: "play"
+        titulo: "Fotos de Produto",
+        descricao: "Ensaio fotográfico criativo do seu produto com estética UGC e/ou editorial, pronto para e-commerce e redes sociais.",
+        icone: "foto",
+        ctaTexto: "Quero fotos do meu produto",
+        ctaMensagem: "Olá, Tati! Quero fotos do meu produto."
       },
       {
-        titulo: "Fotos de produto",
-        descricao: "Ensaio fotográfico do seu produto com estética editorial, pronto para e-commerce e redes sociais.",
-        icone: "foto"
-      },
-      {
-        titulo: "Roteiro",
-        descricao: "Roteiros pensados em conversão, com domínio de vários formatos, do problema e solução ao storytelling.",
-        icone: "lapis"
+        titulo: "Roteiro Estratégico",
+        descricao: "Roteiro escrito com estrutura testada: gancho de conexão, produto inserido na rotina e um convite leve para o próximo passo. Pronto para você gravar ou repassar para sua equipe.",
+        icone: "lapis",
+        ctaTexto: "Quero um roteiro estratégico",
+        ctaMensagem: "Olá, Tati! Quero um roteiro estratégico para minha marca."
       }
     ],
 
@@ -1518,7 +1569,7 @@
       },
       {
         titulo: "Conectar",
-        descricao: "Após a aprovação, entrego conteúdos prontos para conectar pessoas e marcas por meio de histórias naturais e estratégicas.",
+        descricao: "Envio para aprovação da marca e, após aprovado, entrego o conteúdo pronto para conectar pessoas e marcas por meio de histórias naturais e estratégicas.",
         pergunta: "Como isso gera identificação?"
       }
     ],
@@ -1529,9 +1580,8 @@
       titulo: "Quanto vale transformar o seu <span class=\"hero-destaque-azul\">produto</span> em uma <em class=\"hero-destaque-laranja\">necessidade de compra</em>?",
       pacotes: [
         { nome: "Pacote Básico", itens: "1 vídeo + 2 fotos", preco: "R$ 280,00" },
-        { nome: "Pacote Plus", itens: "2 vídeos + 4 fotos", preco: "R$ 540,00" },
-        { nome: "Pacote Pro", itens: "3 vídeos + 6 fotos", preco: "R$ 810,00" },
-        { nome: "Pacote Completo", itens: "4 vídeos + 8 fotos", preco: "R$ 1.000,00", destaque: true }
+        { nome: "Pacote Pro", itens: "3 vídeos + 6 fotos", preco: "R$ 750,00" },
+        { nome: "Pacote Completo", itens: "5 vídeos + 10 fotos", preco: "R$ 1.120,00", destaque: true }
       ],
       inclusos: [
         "Roteiro individualizado",
@@ -1542,8 +1592,9 @@
         "Licença para ADS por 90 dias"
       ],
       adicionais: [
-        { nome: "Vídeo extra", preco: "R$ 120,00" },
-        { nome: "Foto extra", preco: "R$ 25,00" },
+        { nome: "Roteiro avulso (sem gravação/edição)", preco: "R$ 80,00" },
+        { nome: "Vídeo extra", preco: "R$ 180,00" },
+        { nome: "Foto extra", preco: "R$ 40,00" },
         { nome: "Post Collab", preco: "R$ 100,00" },
         { nome: "Gancho extra", preco: "R$ 40,00" },
         { nome: "CTA extra", preco: "R$ 40,00" },
@@ -1560,7 +1611,6 @@
      ============================================================================================ */
   const ICONES = {
     camera: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l1.5-2h7L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg>',
-    play: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M10 9l5 3-5 3V9z" fill="currentColor" stroke="none"/></svg>',
     foto: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 17l-5.5-5-4 4L9 14l-6 5"/></svg>',
     lapis: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>'
   };
@@ -1734,14 +1784,49 @@
     });
   }
 
+  const ICONE_WHATSAPP_PEQUENO = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2.003c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.38 1.26 4.84L2 22l5.36-1.35a9.9 9.9 0 0 0 4.68 1.19h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01a9.82 9.82 0 0 0-7-2.9zm5.78 14.02c-.24.68-1.4 1.3-1.94 1.38-.5.08-1.13.11-1.82-.12-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.79-4.17-4.94-4.36-.14-.2-1.18-1.57-1.18-3 0-1.42.75-2.12 1.01-2.41.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.66.5.24.58.82 2.01.9 2.15.07.15.12.32.02.51-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.14-.3.3-.13.58.17.29.75 1.24 1.61 2.01 1.11.98 2.04 1.29 2.33 1.44.29.14.46.12.63-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.63-.15.26.1 1.63.77 1.91.91.28.14.47.21.54.33.06.12.06.7-.18 1.38z"/></svg>';
+
   function montarServicos(){
-    document.getElementById('grade-servicos').innerHTML = CONFIG.servicos.map(servico => `
-      <div class="servico-card revelar">
-        <div class="servico-icone">${ICONES[servico.icone] || ''}</div>
-        <h3>${servico.titulo}</h3>
-        <p>${servico.descricao}</p>
-      </div>
-    `).join('');
+    document.getElementById('grade-servicos').innerHTML = CONFIG.servicos.map(servico => {
+      const whatsappUrl = `https://wa.me/${CONFIG.contato.whatsappNumero}?text=${encodeURIComponent(servico.ctaMensagem)}`;
+      return `
+        <div class="servico-card revelar">
+          <div class="servico-icone">${ICONES[servico.icone] || ''}</div>
+          <h3>${servico.titulo}</h3>
+          <p>${servico.descricao}</p>
+          <a class="servico-cta" href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" data-rastreio="servico_${servico.icone}">
+            ${ICONE_WHATSAPP_PEQUENO}
+            ${servico.ctaTexto}
+          </a>
+        </div>
+      `;
+    }).join('');
+    atualizarSetasServicos();
+  }
+
+  // Mostra/esconde as setas do carrossel de serviços dependendo de quanto ainda dá para rolar.
+  function atualizarSetasServicos(){
+    const track = document.getElementById('grade-servicos');
+    const setaEsq = document.getElementById('seta-servicos-esq');
+    const setaDir = document.getElementById('seta-servicos-dir');
+    if(!track) return;
+    const maximo = track.scrollWidth - track.clientWidth - 2;
+    setaEsq.hidden = track.scrollLeft <= 4;
+    setaDir.hidden = maximo <= 4 || track.scrollLeft >= maximo;
+  }
+
+  function configurarCarrosselServicos(){
+    const track = document.getElementById('grade-servicos');
+    if(!track) return;
+
+    document.getElementById('seta-servicos-esq').addEventListener('click', () => {
+      track.scrollBy({ left: -track.clientWidth * 0.9, behavior: 'smooth' });
+    });
+    document.getElementById('seta-servicos-dir').addEventListener('click', () => {
+      track.scrollBy({ left: track.clientWidth * 0.9, behavior: 'smooth' });
+    });
+    track.addEventListener('scroll', atualizarSetasServicos);
+    window.addEventListener('resize', atualizarSetasServicos);
   }
 
   function montarProcesso(){
@@ -1878,16 +1963,17 @@
 
       const nome = document.getElementById('campo-nome').value.trim();
       const email = document.getElementById('campo-email').value.trim();
+      const servico = document.getElementById('campo-servico').value;
       const mensagem = document.getElementById('campo-mensagem').value.trim();
 
       const assunto = encodeURIComponent(`Proposta de parceria, contato de ${nome}`);
-      const corpo = encodeURIComponent(`Nome: ${nome}\nE-mail: ${email}\n\nMensagem:\n${mensagem}`);
+      const corpo = encodeURIComponent(`Nome: ${nome}\nE-mail: ${email}\nServiço de interesse: ${servico}\n\nMensagem:\n${mensagem}`);
 
       window.location.href = `mailto:${CONFIG.contato.email}?subject=${assunto}&body=${corpo}`;
 
       if(window.Rastreio){
         Rastreio.buttonClick('contact_formulario');
-        Rastreio.lead({ name: nome, email: email, message: mensagem, source: 'contact' });
+        Rastreio.lead({ name: nome, email: email, message: `Serviço de interesse: ${servico}\n\n${mensagem}`, source: 'contact' });
       }
 
       confirmacao.classList.add('visivel');
@@ -1924,6 +2010,7 @@
     configurarAnimacaoEntrada();
     configurarFormulario();
     configurarCarrosselVideos();
+    configurarCarrosselServicos();
     configurarRastreioCliques();
   });
 </script>
