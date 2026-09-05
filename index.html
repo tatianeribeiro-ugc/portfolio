@@ -620,18 +620,54 @@
   .destaque-laranja-em{ color: var(--laranja); }
 
   /* ============================================================
-     FILTROS DE NICHO + CARROSSEL DE VÍDEOS, ESTILO STREAMING
-     (dentro da seção Portfólio, antes das fotos). Clicar num nicho troca
-     o carrossel na hora, sem recarregar a página. O botão de filtro reaproveita
-     o estilo ".filtro-botao" já usado no filtro de fotos, mais abaixo.
+     NICHOS DE VÍDEO, ESTILO STREAMING (dentro da seção Portfólio, antes
+     das fotos). Todos os nichos ficam sempre visíveis, um abaixo do outro;
+     os "atalhos" abaixo só rolam a página até o nicho (âncora), não filtram.
      ============================================================ */
+  .atalhos-nichos{
+    display:flex;
+    flex-wrap:wrap;
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+  .atalho-nicho{
+    padding: 9px 20px;
+    border-radius: 100px;
+    border: 1.5px solid var(--laranja);
+    background: transparent;
+    font-family: var(--fonte-corpo);
+    font-weight: 600;
+    font-size: 0.88rem;
+    color: var(--laranja);
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+  .atalho-nicho:hover,
+  .atalho-nicho:focus-visible{ background: var(--laranja); color: var(--branco); }
+  .atalho-nicho:focus-visible{ outline: 3px solid var(--azul); outline-offset: 2px; }
+
   .fotos-cabecalho h3{
     font-size: 1.3rem;
     margin-bottom: 20px;
   }
   .fotos-cabecalho{ margin-top: 56px; }
 
-  .video-nicho-ativo{ font-size: 1.3rem; margin-bottom: 20px; }
+  /* Um bloco por nicho, empilhados, sem filtro/botão — cada um com seu
+     próprio título+contagem e seu próprio carrossel independente. */
+  .nicho-videos-bloco{ margin-bottom: 56px; }
+  .nicho-videos-bloco:last-child{ margin-bottom: 0; }
+  .video-nicho-titulo{
+    display:flex;
+    align-items:baseline;
+    gap: 10px;
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+  .video-nicho-contagem{
+    font-family: var(--fonte-corpo);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: rgba(20,17,13,0.45);
+  }
 
   .carrossel-videos-wrap{ position:relative; }
   .carrossel-videos{
@@ -1417,26 +1453,21 @@
     <div class="container">
       <div class="portfolio-cabecalho">
         <div class="portfolio-intro revelar">
-          <span class="rotulo-secao">Portfólio</span>
-          <h2>Trabalhos por <em class="destaque-laranja-em">nicho</em>, em vídeo e em foto</h2>
-          <p style="color: rgba(20,17,13,0.7); font-size:0.98rem; max-width:520px;">Vídeos organizados por nicho logo abaixo. A galeria completa de fotos vem na sequência.</p>
+          <span class="rotulo-secao">Conteúdo</span>
+          <h2>Qual história sua marca quer construir hoje?</h2>
+          <p style="color: rgba(20,17,13,0.7); font-size:0.98rem; max-width:520px;">Vídeos organizados por nicho. Escolha ou sugira algo único.</p>
         </div>
       </div>
 
-      <!-- FILTROS DE NICHO + CARROSSEL DE VÍDEOS -->
-      <div class="filtros revelar" id="filtros-videos" role="group" aria-label="Filtrar vídeos por nicho"></div>
+      <!-- Atalhos de navegação: só rolam até o nicho (âncora), não filtram nem
+           escondem nada — todos os nichos continuam visíveis na lista abaixo.
+           EDITE AQUI: gerados automaticamente a partir de CONFIG.videosPorNicho. -->
+      <div class="atalhos-nichos revelar" id="atalhos-nichos" aria-label="Ir direto para um nicho"></div>
 
-      <h3 class="video-nicho-ativo revelar" id="titulo-nicho-ativo"></h3>
-
-      <div class="carrossel-videos-wrap revelar" id="carrossel-videos-wrap">
-        <button type="button" class="carrossel-seta carrossel-seta-esq" id="seta-videos-esq" aria-label="Vídeos anteriores" hidden>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
-        </button>
-        <div class="carrossel-videos" id="carrossel-videos"></div>
-        <button type="button" class="carrossel-seta carrossel-seta-dir" id="seta-videos-dir" aria-label="Mais vídeos">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
-        </button>
-      </div>
+      <!-- TODOS OS NICHOS DE VÍDEO, UM ABAIXO DO OUTRO (sem filtro/botões).
+           EDITE AQUI: para adicionar/trocar vídeos, mexa em CONFIG.videosPorNicho.
+           Cada nicho vira um bloco com título + contagem e seu próprio carrossel. -->
+      <div class="nichos-videos" id="nichos-videos"></div>
 
       <!-- GALERIA DE FOTOS COM FILTRO POR NICHO -->
       <div class="fotos-cabecalho revelar">
@@ -1659,16 +1690,6 @@
         ]
       },
       {
-        nicho: "pet",
-        rotulo: "PETs",
-        videos: [
-          { youtubeId: "0i2ZFRrx0Cg" },
-          { youtubeId: "Owc3PnPbOkY" },
-          { youtubeId: "q2CkbyxZGv8" },
-          { youtubeId: "-qoS9D5oUJs" }
-        ]
-      },
-      {
         nicho: "casa-e-limpeza",
         rotulo: "Casa & Limpeza",
         videos: [
@@ -1680,11 +1701,13 @@
         ]
       },
       {
-        nicho: "lifestyle",
-        rotulo: "Lifestyle",
+        nicho: "pet",
+        rotulo: "PETs",
         videos: [
-          { youtubeId: "Xsu33s_4CcE" },
-          { youtubeId: "tNqnPAUQdtU" }
+          { youtubeId: "0i2ZFRrx0Cg" },
+          { youtubeId: "Owc3PnPbOkY" },
+          { youtubeId: "q2CkbyxZGv8" },
+          { youtubeId: "-qoS9D5oUJs" }
         ]
       },
       {
@@ -1694,6 +1717,14 @@
           { youtubeId: "sE7yB0iLQ90" },
           { youtubeId: "JCYCE97zhpE" },
           { youtubeId: "hAZB8izOnNU" }
+        ]
+      },
+      {
+        nicho: "lifestyle",
+        rotulo: "Lifestyle",
+        videos: [
+          { youtubeId: "Xsu33s_4CcE" },
+          { youtubeId: "tNqnPAUQdtU" }
         ]
       },
       {
@@ -1847,78 +1878,81 @@
     document.getElementById('sobre-corpo').innerHTML = CONFIG.sobre.corpoHtml;
   }
 
-  // Qual nicho está selecionado agora (índice em CONFIG.videosPorNicho).
-  let nichoAtivoVideos = 0;
-
-  // Monta os botões de filtro (um por nicho) e liga o clique de cada um.
-  function montarFiltrosVideos(){
-    const container = document.getElementById('filtros-videos');
-    container.innerHTML = CONFIG.videosPorNicho.map((bloco, indice) => `
-      <button type="button" class="filtro-botao${indice === 0 ? ' ativo' : ''}" data-indice="${indice}" aria-pressed="${indice === 0}">${bloco.rotulo}</button>
+  // Monta os atalhos que só rolam a página até o nicho (âncora), sem filtrar
+  // nem esconder nada — todos os nichos continuam sempre visíveis na lista.
+  function montarAtalhosNichos(){
+    const container = document.getElementById('atalhos-nichos');
+    container.innerHTML = CONFIG.videosPorNicho.map(bloco => `
+      <a href="#nicho-${bloco.nicho}" class="atalho-nicho">${bloco.rotulo}</a>
     `).join('');
-
-    container.addEventListener('click', (evento) => {
-      const botao = evento.target.closest('.filtro-botao');
-      if(!botao) return;
-      container.querySelectorAll('.filtro-botao').forEach(b => {
-        b.classList.remove('ativo');
-        b.setAttribute('aria-pressed', 'false');
-      });
-      botao.classList.add('ativo');
-      botao.setAttribute('aria-pressed', 'true');
-      nichoAtivoVideos = Number(botao.dataset.indice);
-      renderizarCarrosselVideos();
-    });
   }
 
-  // Desenha o carrossel com os vídeos do nicho ativo. Cada vídeo começa como
-  // uma "fachada" (capa + botão de play simples, sem nada do YouTube visível).
-  // Só ao clicar é que o player real carrega, já tocando.
-  // EDITE AQUI: para trocar um vídeo, troque o "youtubeId" no CONFIG.videosPorNicho acima.
-  function renderizarCarrosselVideos(){
-    const bloco = CONFIG.videosPorNicho[nichoAtivoVideos];
-    document.getElementById('titulo-nicho-ativo').textContent = bloco.rotulo;
-
-    const track = document.getElementById('carrossel-videos');
-    track.innerHTML = bloco.videos.map((video, indice) => `
-      <div class="video-item">
-        <button type="button" class="video-card" data-youtube="${video.youtubeId}" data-titulo="${bloco.rotulo} ${indice + 1}" aria-label="Assistir vídeo ${indice + 1} de ${bloco.rotulo}">
-          <img class="video-card-thumb" src="https://i.ytimg.com/vi/${video.youtubeId}/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${video.youtubeId}/sddefault.jpg'" alt="" loading="lazy">
-          <span class="video-card-play" aria-hidden="true">${ICONE_PLAY}</span>
-          <span class="video-card-rotulo-hover">▶ Assistir vídeo</span>
-        </button>
+  // Monta TODOS os nichos empilhados (sem filtro): cada um com seu título +
+  // contagem e seu próprio carrossel independente. Cada vídeo começa como uma
+  // "fachada" (capa + botão de play simples, sem nada do YouTube visível) —
+  // só ao clicar é que o player real carrega, já tocando.
+  // EDITE AQUI: para adicionar/trocar um vídeo ou nicho, mexa em CONFIG.videosPorNicho acima.
+  function montarNichosVideos(){
+    const container = document.getElementById('nichos-videos');
+    container.innerHTML = CONFIG.videosPorNicho.map(bloco => `
+      <div class="nicho-videos-bloco revelar" id="nicho-${bloco.nicho}">
+        <h3 class="video-nicho-titulo">${bloco.rotulo} <span class="video-nicho-contagem">${bloco.videos.length}</span></h3>
+        <div class="carrossel-videos-wrap">
+          <button type="button" class="carrossel-seta carrossel-seta-esq" aria-label="Vídeos anteriores de ${bloco.rotulo}" hidden>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <div class="carrossel-videos">
+            ${bloco.videos.map((video, indice) => `
+              <div class="video-item">
+                <button type="button" class="video-card" data-youtube="${video.youtubeId}" data-titulo="${bloco.rotulo} ${indice + 1}" aria-label="Assistir vídeo ${indice + 1} de ${bloco.rotulo}">
+                  <img class="video-card-thumb" src="https://i.ytimg.com/vi/${video.youtubeId}/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${video.youtubeId}/sddefault.jpg'" alt="" loading="lazy">
+                  <span class="video-card-play" aria-hidden="true">${ICONE_PLAY}</span>
+                  <span class="video-card-rotulo-hover">▶ Assistir vídeo</span>
+                </button>
+              </div>
+            `).join('')}
+          </div>
+          <button type="button" class="carrossel-seta carrossel-seta-dir" aria-label="Mais vídeos de ${bloco.rotulo}">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+        </div>
       </div>
     `).join('');
-
-    track.scrollTo({ left: 0 });
-    atualizarSetasCarrossel();
   }
 
-  // Mostra/esconde as setas dependendo de quanto ainda dá para rolar.
-  function atualizarSetasCarrossel(){
-    const track = document.getElementById('carrossel-videos');
-    const setaEsq = document.getElementById('seta-videos-esq');
-    const setaDir = document.getElementById('seta-videos-dir');
+  // Mostra/esconde as setas de UM carrossel, dependendo de quanto ainda dá para rolar.
+  function atualizarSetasCarrossel(wrap){
+    const track = wrap.querySelector('.carrossel-videos');
+    const setaEsq = wrap.querySelector('.carrossel-seta-esq');
+    const setaDir = wrap.querySelector('.carrossel-seta-dir');
     if(!track) return;
     const maximo = track.scrollWidth - track.clientWidth - 2;
     setaEsq.hidden = track.scrollLeft <= 4;
     setaDir.hidden = maximo <= 4 || track.scrollLeft >= maximo;
   }
 
-  // Liga as setas e o clique de play (delegado, porque os cards trocam a cada filtro).
+  // Liga as setas de CADA carrossel de nicho, e o clique de play (delegado
+  // num único listener no container, já que os cards não trocam mais).
   function configurarCarrosselVideos(){
-    const track = document.getElementById('carrossel-videos');
+    const container = document.getElementById('nichos-videos');
 
-    document.getElementById('seta-videos-esq').addEventListener('click', () => {
-      track.scrollBy({ left: -track.clientWidth * 0.9, behavior: 'smooth' });
+    container.querySelectorAll('.carrossel-videos-wrap').forEach(wrap => {
+      const track = wrap.querySelector('.carrossel-videos');
+      wrap.querySelector('.carrossel-seta-esq').addEventListener('click', () => {
+        track.scrollBy({ left: -track.clientWidth * 0.9, behavior: 'smooth' });
+      });
+      wrap.querySelector('.carrossel-seta-dir').addEventListener('click', () => {
+        track.scrollBy({ left: track.clientWidth * 0.9, behavior: 'smooth' });
+      });
+      track.addEventListener('scroll', () => atualizarSetasCarrossel(wrap));
+      atualizarSetasCarrossel(wrap);
     });
-    document.getElementById('seta-videos-dir').addEventListener('click', () => {
-      track.scrollBy({ left: track.clientWidth * 0.9, behavior: 'smooth' });
-    });
-    track.addEventListener('scroll', atualizarSetasCarrossel);
-    window.addEventListener('resize', atualizarSetasCarrossel);
 
-    document.getElementById('carrossel-videos-wrap').addEventListener('click', (evento) => {
+    window.addEventListener('resize', () => {
+      container.querySelectorAll('.carrossel-videos-wrap').forEach(atualizarSetasCarrossel);
+    });
+
+    container.addEventListener('click', (evento) => {
       const botao = evento.target.closest('.video-card');
       if(!botao) return;
       const id = botao.dataset.youtube;
@@ -2197,8 +2231,8 @@
     montarCabecalho();
     montarHero();
     montarSobre();
-    montarFiltrosVideos();
-    renderizarCarrosselVideos();
+    montarAtalhosNichos();
+    montarNichosVideos();
     montarFiltros();
     montarPortfolio();
     montarServicos();
