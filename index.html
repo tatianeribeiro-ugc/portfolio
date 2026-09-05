@@ -697,17 +697,6 @@
   }
   .video-item:hover{ box-shadow: var(--sombra-forte); z-index: 4; }
 
-  .video-foto{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    object-fit: cover;
-    background: var(--tinta);
-    border: 0;
-    z-index:0;
-  }
-
   /* Card "fachada": mostra a capa do vídeo com um botão de play simples,
      sem nenhuma marca do YouTube. Só carrega o player de verdade ao clicar. */
   .video-card{
@@ -741,14 +730,26 @@
     z-index:2;
     width: 52px; height: 52px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.92);
-    color: var(--tinta);
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--laranja);
     display:flex;
     align-items:center;
     justify-content:center;
     transition: background 0.25s ease;
   }
   .video-item:hover .video-card-play{ background: var(--branco); }
+
+  /* Prévia muda ao passar o mouse: um iframe temporário toca por cima da
+     capa, sem som e sem controles. Some quando o mouse sai do card. */
+  .video-card-preview{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    border:0;
+    z-index:1;
+    pointer-events:none;
+  }
   .video-card:focus-visible{ outline: 3px solid var(--azul); outline-offset: 3px; }
   .video-card-rotulo-hover{
     position:absolute;
@@ -1297,6 +1298,56 @@
     padding: 12px 18px; border-radius: 8px; z-index: 2000;
   }
   .pular-link:focus{ left: 16px; top: 16px; }
+
+  /* ============================================================
+     LIGHTBOX DE VÍDEO: ao clicar num card, o vídeo abre ampliado,
+     centralizado, com som. Fecha no X, no fundo escuro ou na tecla Esc.
+     ============================================================ */
+  .video-lightbox{
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 56px 20px;
+  }
+  .video-lightbox[hidden]{ display:none; }
+  .video-lightbox-backdrop{
+    position:absolute;
+    inset:0;
+    background: rgba(20,17,13,0.88);
+  }
+  .video-lightbox-conteudo{
+    position:relative;
+    z-index:1;
+    width: 100%;
+    max-width: 400px;
+    aspect-ratio: 9/16;
+    max-height: 100%;
+    border-radius: var(--raio);
+    overflow:hidden;
+    box-shadow: var(--sombra-forte);
+    background: var(--tinta);
+  }
+  .video-lightbox-player{ position:absolute; inset:0; width:100%; height:100%; }
+  .video-lightbox-player iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+  .video-lightbox-fechar{
+    position:absolute;
+    top:10px; right:10px;
+    z-index:2;
+    width:36px; height:36px;
+    border-radius:50%;
+    background: rgba(20,17,13,0.55);
+    color: var(--branco);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition: background 0.2s ease;
+  }
+  .video-lightbox-fechar:hover{ background: rgba(20,17,13,0.8); }
+  .video-lightbox-fechar:focus-visible{ outline: 3px solid var(--laranja); outline-offset: 2px; }
 </style>
 </head>
 <body>
@@ -1599,6 +1650,18 @@
     </div>
   </div>
 </footer>
+
+<!-- Lightbox de vídeo: ao clicar num card de vídeo, ele abre ampliado aqui,
+     centralizado na tela, com som. Fica escondido (hidden) até ser aberto pelo JS. -->
+<div class="video-lightbox" id="video-lightbox" hidden>
+  <div class="video-lightbox-backdrop" id="video-lightbox-backdrop"></div>
+  <div class="video-lightbox-conteudo">
+    <button type="button" class="video-lightbox-fechar" id="video-lightbox-fechar" aria-label="Fechar vídeo">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="video-lightbox-player" id="video-lightbox-player"></div>
+  </div>
+</div>
 
 <!-- Supabase carregado por CDN, usado só para gravar visitas/cliques/vídeos assistidos
      (chave anon, com permissão apenas de INSERT, veja setup.sql) -->
@@ -1952,22 +2015,73 @@
       container.querySelectorAll('.carrossel-videos-wrap').forEach(atualizarSetasCarrossel);
     });
 
+    // Clicar num card não troca mais o card no lugar: abre o vídeo ampliado
+    // no lightbox, com som (veja abrirLightboxVideo mais abaixo).
     container.addEventListener('click', (evento) => {
       const botao = evento.target.closest('.video-card');
       if(!botao) return;
+      abrirLightboxVideo(botao.dataset.youtube, botao.dataset.titulo);
+    });
+  }
+
+  // Prévia sem som ao passar o mouse: depois de um pequeno atraso (evita
+  // carregar prévia à toa ao só passar o cursor de leve pelos cards), toca
+  // um iframe mudo e sem controles por cima da capa. Some ao tirar o mouse.
+  function configurarPreviewHoverVideos(){
+    const container = document.getElementById('nichos-videos');
+
+    container.addEventListener('mouseover', (evento) => {
+      const item = evento.target.closest('.video-item');
+      if(!item || item.contains(evento.relatedTarget)) return;
+      const botao = item.querySelector('.video-card');
+      if(!botao || item.querySelector('.video-card-preview')) return;
       const id = botao.dataset.youtube;
-      const titulo = botao.dataset.titulo;
+      item.dataset.previewTimeout = setTimeout(() => {
+        const preview = document.createElement('iframe');
+        preview.className = 'video-card-preview';
+        preview.tabIndex = -1;
+        preview.setAttribute('aria-hidden', 'true');
+        preview.src = `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=0&loop=1&playlist=${id}&modestbranding=1&playsinline=1`;
+        item.appendChild(preview);
+      }, 300);
+    });
 
-      const iframe = document.createElement('iframe');
-      iframe.className = 'video-foto';
-      iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
-      iframe.title = titulo;
-      iframe.loading = 'lazy';
-      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-      iframe.allowFullscreen = true;
+    container.addEventListener('mouseout', (evento) => {
+      const item = evento.target.closest('.video-item');
+      if(!item || item.contains(evento.relatedTarget)) return;
+      clearTimeout(Number(item.dataset.previewTimeout));
+      const preview = item.querySelector('.video-card-preview');
+      if(preview) preview.remove();
+    });
+  }
 
-      botao.replaceWith(iframe);
-      if(window.Rastreio) Rastreio.videoView(id, titulo);
+  // Lightbox de vídeo: abre o vídeo ampliado e centralizado, com som,
+  // por cima de toda a página. Fecha no X, no fundo escuro ou na tecla Esc.
+  function abrirLightboxVideo(id, titulo){
+    const player = document.getElementById('video-lightbox-player');
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&playsinline=1`;
+    iframe.title = titulo;
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    iframe.allowFullscreen = true;
+    player.innerHTML = '';
+    player.appendChild(iframe);
+    document.getElementById('video-lightbox').hidden = false;
+    document.body.style.overflow = 'hidden';
+    if(window.Rastreio) Rastreio.videoView(id, titulo);
+  }
+
+  function fecharLightboxVideo(){
+    document.getElementById('video-lightbox').hidden = true;
+    document.getElementById('video-lightbox-player').innerHTML = '';
+    document.body.style.overflow = '';
+  }
+
+  function configurarLightboxVideo(){
+    document.getElementById('video-lightbox-fechar').addEventListener('click', fecharLightboxVideo);
+    document.getElementById('video-lightbox-backdrop').addEventListener('click', fecharLightboxVideo);
+    document.addEventListener('keydown', (evento) => {
+      if(evento.key === 'Escape' && !document.getElementById('video-lightbox').hidden) fecharLightboxVideo();
     });
   }
 
@@ -2245,6 +2359,8 @@
     configurarAnimacaoEntrada();
     configurarFormulario();
     configurarCarrosselVideos();
+    configurarPreviewHoverVideos();
+    configurarLightboxVideo();
     configurarCarrosselServicos();
     configurarRastreioCliques();
   });
