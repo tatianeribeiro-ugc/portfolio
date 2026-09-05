@@ -88,7 +88,6 @@
        aparecer mais cedo na tela e a página "andar" mais rápido. */
     .portfolio-cabecalho,
     .servicos-cabecalho,
-    .investimento-cabecalho,
     .processo-cabecalho{ margin-bottom: 28px; }
     .fotos-cabecalho{ margin-top: 36px; }
   }
@@ -401,8 +400,8 @@
   }
   /* As duas fotos também têm a classe .revelar (fade + subida ao rolar), que
      define seu próprio "transform" e venceria uma rotação simples por ter mais
-     especificidade. Por isso a rotação entra combinada aqui, no mesmo padrão
-     já usado no carrossel do portfólio (.portfolio-item.revelar). */
+     especificidade. Por isso a rotação entra combinada aqui, junto com o
+     transform do próprio .revelar. */
   .hero-imagem.revelar{ transform: translateY(24px) rotate(3deg); }
   .hero-imagem.revelar.visivel{ transform: translateY(0) rotate(3deg); }
   .hero-foto-secundaria.revelar{ transform: translateY(24px) rotate(-6deg); }
@@ -645,11 +644,28 @@
   .atalho-nicho:focus-visible{ background: var(--laranja); color: var(--branco); }
   .atalho-nicho:focus-visible{ outline: 3px solid var(--azul); outline-offset: 2px; }
 
-  .fotos-cabecalho h3{
-    font-size: 1.3rem;
-    margin-bottom: 20px;
+  .fotos-cabecalho{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    flex-wrap:wrap;
+    gap: 24px;
+    margin-top: 80px;
+    margin-bottom: 40px;
   }
-  .fotos-cabecalho{ margin-top: 56px; }
+  .fotos-intro{ max-width: 560px; }
+
+  /* Nota manuscrita discreta ao lado do título, mesma fonte cursiva do
+     Hero (--fonte-manuscrita), sem competir com o título ou as fotos. */
+  .fotos-nota-manuscrita{
+    font-family: var(--fonte-manuscrita);
+    font-size: 1.05rem;
+    line-height: 1.25;
+    text-align: right;
+    color: var(--azul);
+    margin: 4px 0 0 0;
+  }
+  .fotos-nota-manuscrita .laranja{ color: var(--laranja); }
 
   /* Um bloco por nicho, empilhados, sem filtro/botão — cada um com seu
      próprio título+contagem e seu próprio carrossel independente. */
@@ -797,137 +813,56 @@
     .carrossel-seta{ display:none; }
   }
 
-  .filtros{
+  /* Galeria de fotos: uma única fileira horizontal, minimalista — sem
+     moldura, sem legenda, sem etiqueta de nicho. As fotos são o centro das
+     atenções. Mesmo padrão de carrossel/setas usado em Vídeos e Serviços. */
+  .fotos-carrossel-wrap{ position:relative; }
+  .fotos-carrossel{
     display:flex;
-    flex-wrap:wrap;
-    gap: 10px;
-    margin-bottom: 36px;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding-bottom: 6px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
-  .filtro-botao{
-    padding: 9px 20px;
-    border-radius: 100px;
-    border: 1.5px solid var(--borda);
-    background: transparent;
-    font-family: var(--fonte-corpo);
-    font-weight: 600;
-    font-size: 0.88rem;
-    cursor:pointer;
-    color: var(--tinta);
-    transition: all 0.25s ease;
-  }
-  .filtro-botao:hover{ border-color: var(--tinta); }
-  .filtro-botao:focus-visible{ outline: 3px solid var(--azul); outline-offset: 2px; }
-  .filtro-botao.ativo{ background: var(--tinta); color: var(--creme); border-color: var(--tinta); }
-
-  /* Grade em estilo "colagem de fotos reveladas": cada card é uma moldura
-     branca com leve inclinação alternada, foto dentro e legenda na borda
-     de baixo (o mesmo espírito das Polaroids da seção Sobre Mim). */
-  .portfolio-grade{
-    display:grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px 20px;
-  }
-  .portfolio-item{
-    --rotacao: 0deg;
-    background: var(--branco);
-    border-radius: var(--raio-pequeno);
-    box-shadow: var(--sombra);
-    padding: 10px 10px 0 10px;
-    display:flex;
-    flex-direction:column;
-    transition: transform 0.35s ease, box-shadow 0.35s ease;
-  }
-  .portfolio-item:nth-child(6n+1){ --rotacao: -1.6deg; }
-  .portfolio-item:nth-child(6n+2){ --rotacao: 1deg; }
-  .portfolio-item:nth-child(6n+3){ --rotacao: -0.7deg; }
-  .portfolio-item:nth-child(6n+4){ --rotacao: 1.4deg; }
-  .portfolio-item:nth-child(6n+5){ --rotacao: -1deg; }
-  .portfolio-item:nth-child(6n+6){ --rotacao: 0.7deg; }
-  /* A rotação entra como variável para não brigar com a animação de entrada
-     (.revelar), que também usa "transform". Estas duas regras combinam os dois. */
-  .portfolio-item.revelar{ transform: translateY(24px) rotate(var(--rotacao)); }
-  .portfolio-item.revelar.visivel{ transform: translateY(0) rotate(var(--rotacao)); }
-  .portfolio-item:hover{ box-shadow: var(--sombra-forte); z-index: 5; }
-  .portfolio-item.revelar:hover,
-  .portfolio-item.revelar.visivel:hover{
-    transform: rotate(0deg) translateY(-6px);
-  }
-  .portfolio-foto-moldura{
-    position:relative;
-    aspect-ratio: 3/4;
-    border-radius: 4px;
+  .fotos-carrossel::-webkit-scrollbar{ display:none; }
+  /* ~5-6 fotos inteiras visíveis no desktop, com uma pontinha da próxima
+     espiando do lado, indicando que dá pra continuar navegando. */
+  .foto-item{
+    flex: 0 0 calc((100% - 5 * 20px) / 5.5);
+    aspect-ratio: 4/5;
+    border-radius: var(--raio);
     overflow:hidden;
+    box-shadow: var(--sombra);
+    position:relative;
     background: var(--tinta);
+    scroll-snap-align: start;
+    transition: box-shadow 0.3s ease;
   }
-  /* Foto real por cima do gradiente do card. Enquanto o arquivo não existir,
-     o onerror no HTML esconde a tag <img> e o gradiente de fundo continua visível. */
-  .portfolio-foto{
+  .foto-item:hover{ box-shadow: var(--sombra-forte); z-index: 4; }
+  .foto-item img{
     position:absolute;
     inset:0;
     width:100%;
     height:100%;
     object-fit: cover;
+    transition: transform 0.4s ease;
   }
+  .foto-item:hover img{ transform: scale(1.05); }
   /* Ajustes finos de enquadramento por foto (quando o corte padrão, centralizado,
-     acaba cortando um rosto). EDITE AQUI: para uma foto nova que cortar errado,
-     adicione uma regra como esta usando um trecho do nome do arquivo. */
-  .portfolio-foto[src*="casaelimpeza-2"]{ object-position: center 12%; }
-  .portfolio-legenda{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap: 10px;
-    padding: 12px 6px 14px 6px;
-  }
-  .portfolio-tag{
-    padding: 5px 12px;
-    border-radius: 100px;
-    background: var(--creme);
-    color: var(--tinta);
-    font-size: 0.66rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    flex-shrink:0;
-  }
-  .portfolio-item-titulo{
-    font-family: var(--fonte-titulo);
-    font-style: italic;
-    font-size: 0.92rem;
-    color: var(--tinta);
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    min-width:0;
-    flex-shrink:1;
-  }
-  .portfolio-item.escondido{ display:none; }
+     acaba cortando algo importante). EDITE AQUI: para uma foto nova que cortar
+     errado, adicione uma regra como esta usando um trecho do nome do arquivo. */
+  .foto-item img[src*="casaelimpeza-2"]{ object-position: center 12%; }
 
-  @media (max-width: 1000px){
-    .portfolio-grade{ grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 900px){
+    .foto-item{ flex-basis: calc((100% - 2 * 20px) / 2.3); }
   }
-  /* No celular, a grade vira um carrossel horizontal (arraste para o lado),
-     em vez de empilhar as fotos numa coluna só. Sem inclinação e com a
-     legenda empilhada, para não espremer o título. */
-  @media (max-width: 640px){
-    .portfolio-grade{
-      display:flex;
-      grid-template-columns: unset;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      gap: 16px;
-      padding-bottom: 6px;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-    .portfolio-grade::-webkit-scrollbar{ display:none; }
-    .portfolio-item{
-      --rotacao: 0deg;
-      flex: 0 0 64%;
-      scroll-snap-align: start;
-    }
-    .portfolio-legenda{ flex-direction: column; align-items:flex-start; gap: 6px; }
-    .portfolio-item-titulo{ white-space: normal; }
+  /* No celular, ~1-2 fotos por vez. As setas continuam ativas (diferente do
+     carrossel de Serviços) porque a galeria é o conteúdo principal aqui. */
+  @media (max-width: 560px){
+    .foto-item{ flex-basis: 78vw; }
   }
 
   /* ============================================================
@@ -1064,115 +999,6 @@
   }
 
   /* ============================================================
-     INVESTIMENTO (tabela de pacotes e valores)
-     ============================================================ */
-  .investimento-cabecalho{ max-width: 640px; margin-bottom: 40px; }
-
-  .pacotes-grade{
-    display:grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin-bottom: 32px;
-  }
-  .pacote-card{
-    background: var(--branco);
-    border: 1px solid var(--borda);
-    border-radius: var(--raio);
-    box-shadow: var(--sombra);
-    padding: 28px 20px;
-    text-align:center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  .pacote-card:hover{ transform: translateY(-6px); box-shadow: var(--sombra-forte); }
-  .pacote-nome{
-    font-family: var(--fonte-titulo);
-    font-weight: 600;
-    font-size: 1.05rem;
-  }
-  .pacote-linha{ height:1px; background: var(--borda); margin: 16px 0; }
-  .pacote-itens{ font-size: 0.88rem; color: rgba(20,17,13,0.7); }
-  .pacote-preco{
-    font-family: var(--fonte-titulo);
-    font-style: italic;
-    font-weight: 600;
-    font-size: 1.5rem;
-    color: var(--laranja);
-  }
-  /* O pacote mais completo ganha destaque laranja. */
-  .pacote-destaque{ background: var(--laranja); border-color: var(--laranja); }
-  .pacote-destaque .pacote-nome{ color: var(--branco); }
-  .pacote-destaque .pacote-itens{ color: rgba(255,255,255,0.85); }
-  .pacote-destaque .pacote-linha{ background: rgba(255,255,255,0.3); }
-  .pacote-destaque .pacote-preco{ color: var(--branco); }
-
-  .investimento-detalhes{
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 22px;
-  }
-  .detalhes-cartao{
-    background: var(--branco);
-    border: 1px solid var(--borda);
-    border-radius: var(--raio);
-    box-shadow: var(--sombra);
-    padding: 28px;
-  }
-  .detalhes-cartao h3{ font-size: 1.05rem; margin-bottom: 16px; }
-  .inclusos-lista{ list-style:none; padding:0; margin:0; display:grid; gap: 10px; }
-  .inclusos-lista li{ display:flex; align-items:flex-start; gap: 10px; font-size: 0.92rem; }
-  .inclusos-lista li::before{
-    content:'';
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--azul);
-    margin-top: 7px;
-    flex-shrink:0;
-  }
-  .adicionais-lista{ list-style:none; padding:0; margin:0; display:grid; gap: 12px; }
-  .adicionais-lista li{
-    display:flex;
-    justify-content:space-between;
-    align-items:baseline;
-    gap: 12px;
-    font-size: 0.92rem;
-    border-bottom: 1px dashed var(--borda);
-    padding-bottom: 8px;
-  }
-  .adicionais-preco{ font-weight: 700; color: var(--laranja); flex-shrink:0; white-space:nowrap; }
-
-  .investimento-nota{
-    text-align:center;
-    margin: 28px 0 0 0;
-    font-family: var(--fonte-titulo);
-    font-style: italic;
-    font-size: 0.88rem;
-    color: rgba(20,17,13,0.6);
-  }
-
-  @media (max-width: 700px){
-    .investimento-detalhes{ grid-template-columns: 1fr; }
-  }
-  /* No celular, os pacotes viram um carrossel horizontal: dá pra "folhear"
-     as opções (como comparar planos), em vez de empilhar os 3 cartões. */
-  @media (max-width: 640px){
-    .pacotes-grade{
-      display:flex;
-      grid-template-columns: unset;
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
-      gap: 16px;
-      padding-bottom: 6px;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-    }
-    .pacotes-grade::-webkit-scrollbar{ display:none; }
-    .pacote-card{
-      flex: 0 0 72%;
-      scroll-snap-align: start;
-    }
-  }
-
-  /* ============================================================
      CONTATO
      ============================================================ */
   .contato-grid{
@@ -1211,6 +1037,7 @@
   }
   .campo{ margin-bottom: 20px; }
   .campo label{ display:block; font-weight: 700; font-size: 0.85rem; margin-bottom: 8px; }
+  .campo-opcional{ font-weight: 400; color: rgba(20,17,13,0.5); }
   .campo input, .campo textarea, .campo select{
     width: 100%;
     padding: 13px 16px;
@@ -1520,12 +1347,26 @@
            Cada nicho vira um bloco com título + contagem e seu próprio carrossel. -->
       <div class="nichos-videos" id="nichos-videos"></div>
 
-      <!-- GALERIA DE FOTOS COM FILTRO POR NICHO -->
-      <div class="fotos-cabecalho revelar">
-        <h3>Fotos por nicho</h3>
+      <!-- GALERIA DE FOTOS: uma única fileira, sem filtro por nicho (o campo
+           "categoria" de cada foto continua existindo em CONFIG.portfolio,
+           só não aparece mais como botão de filtro para quem visita). -->
+      <div class="fotos-cabecalho revelar" id="fotos">
+        <div class="fotos-intro">
+          <span class="rotulo-secao">Fotos</span>
+          <h2>Detalhes que contam <em class="destaque-laranja-em">histórias</em></h2>
+          <p style="color: rgba(20,17,13,0.7); font-size:0.98rem; max-width:520px;">Fotos que valorizam produtos no contexto da vida real.</p>
+        </div>
+        <p class="fotos-nota-manuscrita">Produtos reais.<br><span class="laranja">Rotina real.</span><br>Histórias reais.</p>
       </div>
-      <div class="filtros revelar" id="filtros" role="group" aria-label="Filtrar portfólio por categoria"></div>
-      <div class="portfolio-grade" id="grade-portfolio"></div>
+      <div class="fotos-carrossel-wrap revelar" id="fotos-carrossel-wrap">
+        <button type="button" class="carrossel-seta carrossel-seta-esq" id="seta-fotos-esq" aria-label="Fotos anteriores" hidden>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div class="fotos-carrossel" id="fotos-carrossel"></div>
+        <button type="button" class="carrossel-seta carrossel-seta-dir" id="seta-fotos-dir" aria-label="Mais fotos">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+      </div>
     </div>
   </section>
 
@@ -1565,33 +1406,6 @@
   </section>
 
   <!-- ============================================================
-       INVESTIMENTO
-       ============================================================ -->
-  <section id="investimento">
-    <div class="container">
-      <div class="investimento-cabecalho revelar">
-        <span class="rotulo-secao">Investimento</span>
-        <h2 id="investimento-titulo"></h2>
-      </div>
-
-      <div class="pacotes-grade" id="grade-pacotes"></div>
-
-      <div class="investimento-detalhes">
-        <div class="detalhes-cartao revelar">
-          <h3>Todos os pacotes incluem</h3>
-          <ul class="inclusos-lista" id="lista-inclusos"></ul>
-        </div>
-        <div class="detalhes-cartao revelar">
-          <h3>Adicionais</h3>
-          <ul class="adicionais-lista" id="lista-adicionais"></ul>
-        </div>
-      </div>
-
-      <p class="investimento-nota revelar" id="investimento-nota"></p>
-    </div>
-  </section>
-
-  <!-- ============================================================
        9. CONTATO COM FORMULÁRIO
        ============================================================ -->
   <section id="contato">
@@ -1622,6 +1436,10 @@
             <option value="Roteiro Estratégico">Roteiro Estratégico</option>
             <option value="Não sei ainda">Não sei ainda</option>
           </select>
+        </div>
+        <div class="campo">
+          <label for="campo-orcamento">Orçamento estimado <span class="campo-opcional">(opcional)</span></label>
+          <input type="text" id="campo-orcamento" name="orcamento" placeholder="Ex: R$ 300 a R$ 500" autocomplete="off">
         </div>
         <div class="campo">
           <label for="campo-mensagem">Mensagem</label>
@@ -1701,11 +1519,12 @@
     },
 
     // EDITE AQUI: links do menu de navegação. Use "alvo" para rolar até uma
-    // seção desta mesma página, ou "href" para apontar para outra página (ex: videos.html)
+    // seção desta mesma página (ex: "sobre", "portfolio", "fotos"), ou "href"
+    // para apontar para outra página.
     navegacao: [
       { texto: "Sobre mim", alvo: "sobre" },
-      { texto: "Vídeos UGC", href: "videos.html" },
-      { texto: "Fotos UGC", alvo: "portfolio" },
+      { texto: "Vídeos UGC", alvo: "portfolio" },
+      { texto: "Fotos UGC", alvo: "fotos" },
       { texto: "Serviços", alvo: "servicos" },
       { texto: "Meu processo", alvo: "processo" },
       { texto: "Contato", alvo: "contato" }
@@ -1860,35 +1679,6 @@
         pergunta: "Como isso gera identificação?"
       }
     ],
-
-    // EDITE AQUI: seção Investimento (tabela de pacotes e valores).
-    // Em "pacotes", marque "destaque: true" no pacote que quer realçar em escuro.
-    investimento: {
-      titulo: "Quanto vale transformar o seu <span class=\"hero-destaque-azul\">produto</span> em uma <em class=\"hero-destaque-laranja\">necessidade de compra</em>?",
-      pacotes: [
-        { nome: "Pacote Básico", itens: "1 vídeo + 2 fotos", preco: "R$ 280,00" },
-        { nome: "Pacote Pro", itens: "3 vídeos + 6 fotos", preco: "R$ 750,00" },
-        { nome: "Pacote Completo", itens: "5 vídeos + 10 fotos", preco: "R$ 1.120,00", destaque: true }
-      ],
-      inclusos: [
-        "Roteiro individualizado",
-        "Gravação",
-        "Edição",
-        "Aprovação prévia",
-        "Entrega via Google Drive",
-        "Licença para ADS por 90 dias"
-      ],
-      adicionais: [
-        { nome: "Roteiro avulso (sem gravação/edição)", preco: "R$ 80,00" },
-        { nome: "Vídeo extra", preco: "R$ 180,00" },
-        { nome: "Foto extra", preco: "R$ 40,00" },
-        { nome: "Post Collab", preco: "R$ 100,00" },
-        { nome: "Gancho extra", preco: "R$ 40,00" },
-        { nome: "CTA extra", preco: "R$ 40,00" },
-        { nome: "Licença para ADS (90 dias)", preco: "R$ 100,00" }
-      ],
-      nota: "Os valores apresentados, a forma e a data de pagamento são formalizados em contrato."
-    },
 
     anoFundacao: 2026
   };
@@ -2085,51 +1875,45 @@
     });
   }
 
-  function montarFiltros(){
-    const container = document.getElementById('filtros');
-    container.innerHTML = CONFIG.categorias.map((cat, indice) => {
-      const chave = cat.toLowerCase();
-      const ativo = indice === 0 ? ' ativo' : '';
-      return `<button type="button" class="filtro-botao${ativo}" data-categoria="${chave}" aria-pressed="${indice === 0}">${cat}</button>`;
-    }).join('');
-
-    container.addEventListener('click', (evento) => {
-      const botao = evento.target.closest('.filtro-botao');
-      if(!botao) return;
-      container.querySelectorAll('.filtro-botao').forEach(b => {
-        b.classList.remove('ativo');
-        b.setAttribute('aria-pressed', 'false');
-      });
-      botao.classList.add('ativo');
-      botao.setAttribute('aria-pressed', 'true');
-      filtrarPortfolio(botao.dataset.categoria);
-    });
-  }
-
+  // Galeria de fotos: uma única fileira, sem filtro visível. O campo
+  // "categoria" de cada foto (CONFIG.portfolio) continua indo pro data-categoria
+  // de cada item — só não existe mais botão de filtro para escondê-las por nicho.
+  // EDITE AQUI: cada item tem um campo "foto" apontando para um arquivo em /fotos.
+  // Se o arquivo não existir, o onerror esconde a <img> e o gradiente de fundo
+  // continua aparecendo sozinho.
   function montarPortfolio(){
-    const grade = document.getElementById('grade-portfolio');
-    // Blocos em gradiente com foto real por cima.
-    // EDITE AQUI: cada item do CONFIG.portfolio tem um campo "foto" apontando para
-    // um arquivo em /fotos. Se o arquivo não existir, o onerror esconde a <img> e
-    // o gradiente de fundo continua aparecendo sozinho.
+    const grade = document.getElementById('fotos-carrossel');
     grade.innerHTML = CONFIG.portfolio.map(item => `
-      <div class="portfolio-item revelar" data-categoria="${item.categoria}">
-        <div class="portfolio-foto-moldura" role="img" aria-label="Trabalho de ${item.categoria}: ${item.titulo}" style="background:${item.gradiente};">
-          <img class="portfolio-foto" src="${item.foto}" alt="${item.titulo}" onerror="this.style.display='none'">
-        </div>
-        <div class="portfolio-legenda">
-          <span class="portfolio-item-titulo">${item.titulo}</span>
-          <span class="portfolio-tag">${item.categoria}</span>
-        </div>
+      <div class="foto-item" data-categoria="${item.categoria}" style="background:${item.gradiente};">
+        <img src="${item.foto}" alt="${item.titulo}" loading="lazy" onerror="this.style.display='none'">
       </div>
     `).join('');
+    atualizarSetasFotos();
   }
 
-  function filtrarPortfolio(categoria){
-    document.querySelectorAll('.portfolio-item').forEach(item => {
-      const mostrar = categoria === 'todos' || item.dataset.categoria === categoria;
-      item.classList.toggle('escondido', !mostrar);
+  // Mostra/esconde as setas da galeria de fotos dependendo de quanto ainda dá para rolar.
+  function atualizarSetasFotos(){
+    const track = document.getElementById('fotos-carrossel');
+    const setaEsq = document.getElementById('seta-fotos-esq');
+    const setaDir = document.getElementById('seta-fotos-dir');
+    if(!track) return;
+    const maximo = track.scrollWidth - track.clientWidth - 2;
+    setaEsq.hidden = track.scrollLeft <= 4;
+    setaDir.hidden = maximo <= 4 || track.scrollLeft >= maximo;
+  }
+
+  function configurarCarrosselFotos(){
+    const track = document.getElementById('fotos-carrossel');
+    if(!track) return;
+
+    document.getElementById('seta-fotos-esq').addEventListener('click', () => {
+      track.scrollBy({ left: -track.clientWidth * 0.9, behavior: 'smooth' });
     });
+    document.getElementById('seta-fotos-dir').addEventListener('click', () => {
+      track.scrollBy({ left: track.clientWidth * 0.9, behavior: 'smooth' });
+    });
+    track.addEventListener('scroll', atualizarSetasFotos);
+    window.addEventListener('resize', atualizarSetasFotos);
   }
 
   const ICONE_WHATSAPP_PEQUENO = '<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2.003c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.38 1.26 4.84L2 22l5.36-1.35a9.9 9.9 0 0 0 4.68 1.19h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01a9.82 9.82 0 0 0-7-2.9zm5.78 14.02c-.24.68-1.4 1.3-1.94 1.38-.5.08-1.13.11-1.82-.12-.42-.13-.96-.31-1.65-.6-2.9-1.25-4.79-4.17-4.94-4.36-.14-.2-1.18-1.57-1.18-3 0-1.42.75-2.12 1.01-2.41.27-.29.58-.36.78-.36.19 0 .39 0 .56.01.18.01.42-.07.66.5.24.58.82 2.01.9 2.15.07.15.12.32.02.51-.1.19-.15.31-.29.48-.15.17-.31.38-.44.51-.15.14-.3.3-.13.58.17.29.75 1.24 1.61 2.01 1.11.98 2.04 1.29 2.33 1.44.29.14.46.12.63-.07.17-.19.72-.84.91-1.13.19-.29.38-.24.63-.15.26.1 1.63.77 1.91.91.28.14.47.21.54.33.06.12.06.7-.18 1.38z"/></svg>';
@@ -2186,29 +1970,6 @@
         <p class="passo-pergunta">${passo.pergunta}</p>
       </div>
     `).join('');
-  }
-
-  function montarInvestimento(){
-    document.getElementById('investimento-titulo').innerHTML = CONFIG.investimento.titulo;
-
-    document.getElementById('grade-pacotes').innerHTML = CONFIG.investimento.pacotes.map(pacote => `
-      <div class="pacote-card${pacote.destaque ? ' pacote-destaque' : ''} revelar">
-        <div class="pacote-nome">${pacote.nome}</div>
-        <div class="pacote-linha"></div>
-        <div class="pacote-itens">${pacote.itens}</div>
-        <div class="pacote-linha"></div>
-        <div class="pacote-preco">${pacote.preco}</div>
-      </div>
-    `).join('');
-
-    document.getElementById('lista-inclusos').innerHTML = CONFIG.investimento.inclusos
-      .map(item => `<li>${item}</li>`).join('');
-
-    document.getElementById('lista-adicionais').innerHTML = CONFIG.investimento.adicionais.map(item => `
-      <li><span>${item.nome}</span><span class="adicionais-preco">${item.preco}</span></li>
-    `).join('');
-
-    document.getElementById('investimento-nota').textContent = CONFIG.investimento.nota;
   }
 
   function montarContato(){
@@ -2312,16 +2073,18 @@
       const nome = document.getElementById('campo-nome').value.trim();
       const email = document.getElementById('campo-email').value.trim();
       const servico = document.getElementById('campo-servico').value;
+      const orcamento = document.getElementById('campo-orcamento').value.trim();
       const mensagem = document.getElementById('campo-mensagem').value.trim();
+      const linhaOrcamento = orcamento ? `\nOrçamento estimado: ${orcamento}` : '';
 
       const assunto = encodeURIComponent(`Proposta de parceria, contato de ${nome}`);
-      const corpo = encodeURIComponent(`Nome: ${nome}\nE-mail: ${email}\nServiço de interesse: ${servico}\n\nMensagem:\n${mensagem}`);
+      const corpo = encodeURIComponent(`Nome: ${nome}\nE-mail: ${email}\nServiço de interesse: ${servico}${linhaOrcamento}\n\nMensagem:\n${mensagem}`);
 
       window.location.href = `mailto:${CONFIG.contato.email}?subject=${assunto}&body=${corpo}`;
 
       if(window.Rastreio){
         Rastreio.buttonClick('contact_formulario');
-        Rastreio.lead({ name: nome, email: email, message: `Serviço de interesse: ${servico}\n\n${mensagem}`, source: 'contact' });
+        Rastreio.lead({ name: nome, email: email, message: `Serviço de interesse: ${servico}${linhaOrcamento}\n\n${mensagem}`, source: 'contact' });
       }
 
       confirmacao.classList.add('visivel');
@@ -2347,11 +2110,9 @@
     montarSobre();
     montarAtalhosNichos();
     montarNichosVideos();
-    montarFiltros();
     montarPortfolio();
     montarServicos();
     montarProcesso();
-    montarInvestimento();
     montarContato();
     montarRodape();
 
@@ -2361,6 +2122,7 @@
     configurarCarrosselVideos();
     configurarPreviewHoverVideos();
     configurarLightboxVideo();
+    configurarCarrosselFotos();
     configurarCarrosselServicos();
     configurarRastreioCliques();
   });

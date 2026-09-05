@@ -1,6 +1,6 @@
 /* ==================================================================================
    RASTREAMENTO DE VISITAS
-   Carregado em index.html e videos.html, sempre depois do <script> do CDN do
+   Carregado em index.html, sempre depois do <script> do CDN do
    Supabase. Grava visitas, cliques e vídeos assistidos no Supabase, para
    aparecerem no painel administrativo (painel.html).
 
@@ -55,7 +55,7 @@
     });
   }
 
-  // API usada pelo restante da página (index.html e videos.html).
+  // API usada pelo restante da página (index.html).
   window.Rastreio = {
     buttonClick(nome, metadata){ registrarEvento('button_click', nome, metadata); },
     videoView(youtubeId, titulo){ registrarEvento('video_view', youtubeId, titulo ? { title: titulo } : null); },
